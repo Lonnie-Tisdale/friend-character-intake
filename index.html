@@ -75,6 +75,12 @@
     .asset-table th, .asset-table td { border-bottom: 1px solid var(--line); padding: 7px; text-align: left; vertical-align: top; }
     #assetTableWrap { overflow-x: auto; }
     .asset-preview { border: 1px solid var(--line); border-radius: var(--radius); padding: 10px; background: #fbfbf9; min-height: 90px; }
+    .graph-view { border: 1px solid var(--line); border-radius: var(--radius); background: #fbfbf9; min-height: 260px; overflow: auto; }
+    .graph-view svg { width: 100%; min-width: 680px; height: 340px; display: block; }
+    .node-list { display: grid; gap: 8px; max-height: 260px; overflow: auto; }
+    .node-item { border: 1px solid var(--line); border-radius: 6px; padding: 8px; background: #fff; cursor: pointer; }
+    .timeline-list { display: grid; gap: 8px; }
+    .timeline-item { border-left: 3px solid var(--accent); padding: 6px 8px; background: #fff; border-radius: 0 6px 6px 0; }
     aside { position: sticky; top: 70px; padding: 14px; }
     pre { margin: 0; min-height: 460px; max-height: calc(100vh - 190px); overflow: auto; border-radius: 6px; padding: 12px; background: #17201f; color: #e8f5f1; font-size: .8rem; white-space: pre-wrap; word-break: break-word; }
     input[type="file"] { display: none; }
@@ -93,7 +99,7 @@
 <body>
   <header>
     <h1>K Street Person Profile Database</h1>
-    <p>Canonical source-of-truth profiles for K Street projects, dialogue systems, NPC generation, art prompts, relationship simulations, narrative systems, and agent memory. Schema <strong>3.0.0</strong>.</p>
+    <p>Canonical source-of-truth profiles and graph-aware entities for K Street projects, dialogue systems, NPC generation, art prompts, relationship simulations, narrative systems, and agent memory. Person schema <strong>3.0.0</strong> with Knowledge Graph v4 foundation.</p>
   </header>
 
   <main>
@@ -107,6 +113,12 @@
         <button type="button" id="generateNpcBtn">Generate NPC Summary</button>
         <button type="button" id="generateRelationshipBtn">Generate Relationship Summary</button>
         <button type="button" id="generateVisualRefBtn">Generate Visual Reference Sheet</button>
+        <button type="button" id="generateCharacterContextBtn">Generate Character Context</button>
+        <button type="button" id="generateOrganizationBtn">Generate Organization Summary</button>
+        <button type="button" id="generateProjectBtn">Generate Project Summary</button>
+        <button type="button" id="generateTimelineBtn">Generate Timeline Summary</button>
+        <button type="button" id="generateLoreBtn">Generate Lore Summary</button>
+        <button type="button" id="generateAgentContextBtn">Generate AI Agent Context</button>
         <button type="button" id="copyJsonBtn">Copy JSON</button>
         <button type="button" id="copyMarkdownBtn">Copy Markdown</button>
         <button type="button" id="downloadAllBtn">Download All</button>
@@ -162,6 +174,27 @@
         </div>
       </section>
 
+      <section class="export-panel" id="knowledge-graph-manager">
+        <h2>Knowledge Graph</h2>
+        <div class="grid">
+          <label>Graph search
+            <input id="graph_search" placeholder="Search people, organizations, locations, events, projects, stories, concepts, assets">
+          </label>
+          <label>Entity type filter
+            <select id="graph_filter_type"><option value="">All entity types</option></select>
+          </label>
+        </div>
+        <div class="toolbar" aria-label="Knowledge graph actions">
+          <button type="button" id="renderGraphBtn">Network View</button>
+          <button type="button" id="renderTimelineBtn">Timeline View</button>
+          <button type="button" id="renderEntitiesBtn">Entity Explorer</button>
+        </div>
+        <div class="grid">
+          <div class="full graph-view" id="graphView"></div>
+          <div class="full asset-preview" id="graphInspector">Select a node or relationship to inspect it.</div>
+        </div>
+      </section>
+
       <section class="export-panel" id="export-import">
         <h2>Export / Import</h2>
         <div class="grid">
@@ -178,6 +211,14 @@
           <button type="button" id="downloadVisualRefBtn">Visual Reference</button>
           <button type="button" id="downloadArtRefBtn">Art Reference</button>
           <button type="button" id="downloadSpriteRefBtn">Sprite Reference</button>
+          <button type="button" id="downloadGraphFullBtn">Graph Full JSON</button>
+          <button type="button" id="downloadGraphPeopleBtn">Graph People</button>
+          <button type="button" id="downloadGraphRelationshipsBtn">Graph Relationships</button>
+          <button type="button" id="downloadGraphOrganizationsBtn">Graph Organizations</button>
+          <button type="button" id="downloadGraphLocationsBtn">Graph Locations</button>
+          <button type="button" id="downloadGraphEventsBtn">Graph Events</button>
+          <button type="button" id="downloadGraphAssetsBtn">Graph Assets</button>
+          <button type="button" id="downloadGraphProjectsBtn">Graph Projects</button>
           <button type="button" id="validateJsonBtn">Validate JSON</button>
           <button type="button" id="copyShareLinkBtn">Copy Share Link</button>
           <label class="full">Search fields
@@ -224,6 +265,7 @@
     const ASSET_CANON_LEVELS = ["primary_reference", "secondary_reference", "historical_reference", "current_reference", "legacy_reference", "semi_canon", "canon", "noncanon", "prototype", "deprecated"];
     const ASSET_CONSENT_STATUSES = ["approved", "limited_use", "private_only", "internal_only", "do_not_use", "unknown"];
     const ASSET_USE_CASES = ["portrait_generation", "art_generation", "sprite_generation", "npc_generation", "dialogue_generation", "relationship_system", "historical_reference", "worldbuilding", "animation_reference", "voice_reference", "3d_model_reference", "marketing", "documentation"];
+    const ENTITY_TYPES = ["person", "relationship", "organization", "location", "event", "asset", "story_object", "project", "faction", "concept"];
 
     const FIELD_SECTIONS = [
       {
@@ -302,6 +344,34 @@
           rows("asset_group_entries", "Asset groups", "group_id | group_name | description | asset_ids comma-list | tags comma-list | notes", "group_face | Lonnie Face References | approved face references | asset_001,asset_002 | face,current | use for portraits"),
           rows("style_guide_entries", "Style guides", "guide_name | description | asset_ids comma-list | prompt_notes | negative_prompt_notes", "Retro JRPG Style | 32-bit RPG interpretation | asset_003 | bold readable sprite silhouette | avoid modern photo-realism"),
           f("visual_reference_sheet", "Visual reference sheet", "textarea", "Generated artist/image model reference summary.", "")
+        ]
+      },
+      {
+        id: "knowledge_graph",
+        title: "Knowledge Graph",
+        note: "v4 foundation fields. The current person profile becomes one graph node, and these rows add linked entities, relationships, events, projects, lore, and concepts.",
+        fields: [
+          f("entity_id", "Entity ID", "text", "Stable graph ID for this person node.", "person_lonnie"),
+          s("entity_type", "Entity type", ENTITY_TYPES, "The current profile should usually remain person."),
+          l("graph_tags", "Graph tags", "Tags used across the knowledge graph.", "person\nk-street\nparkour"),
+          f("graph_notes", "Graph notes", "textarea", "Graph-level notes for this person node.", "Central profile node for project graph queries."),
+          rows("graph_link_entries", "Graph links", "target entity id | relationship type | strength 1-10 | notes", "org_sdpk | founder_of | 9 | founded / helped establish community\nproject_tao_of_parkour | author_of | 10 | major concept project"),
+          rows("graph_entity_entries", "Linked entities", "entity_id | entity_type | display_name | created_at | updated_at | tags comma-list | notes", "org_sdpk | organization | SDPK | 2003-01-01 | 2026-06-01 | parkour,community | San Diego parkour organization\nloc_san_diego | location | San Diego |  |  | city,parkour | early movement history"),
+          rows("relationship_entity_entries", "Relationship entities", "relationship_id | person_a | person_b | relationship_type | trust level | conflict level | history level | influence level | communication frequency | relationship health | running dynamic | inside jokes | shared history | relationship notes", "rel_lonnie_damien | person_lonnie | person_damien | friend | 8 | 2 | 7 | 6 | frequent | healthy | creative pressure-testing | old bits | shared movement history | example relationship"),
+          rows("organization_entity_entries", "Organization entities", "entity_id | organization name | founding date | description | members comma-list | roles comma-list | projects comma-list | associated locations comma-list | assets comma-list | history | status", "org_kstreet | K Street | 2026-01-01 | umbrella creative system | person_lonnie | founder | project_oregon_fail | loc_oregon | asset_logo | evolving project network | active"),
+          rows("faction_entity_entries", "Faction entities", "entity_id | faction name | description | members comma-list | roles comma-list | projects comma-list | associated locations comma-list | assets comma-list | goals | status", "faction_rooftop_pragmatists | Rooftop Pragmatists | informal movement crew | person_lonnie,person_damien | scout,planner | project_oregon_fail | loc_san_diego | asset_patch | protect the route | active"),
+          rows("location_entity_entries", "Location entities", "entity_id | display name | location type | description | associated people comma-list | associated events comma-list | associated organizations comma-list | associated assets comma-list | coordinates optional | tags comma-list", "loc_san_diego | San Diego | real_world | early community location | person_lonnie | event_sdpk_founding | org_sdpk | asset_photo |  | parkour,history"),
+          rows("event_entity_entries", "Event entities", "entity_id | title | event date | participants comma-list | organizations comma-list | locations comma-list | assets comma-list | stories comma-list | outcomes | notes", "event_sdpk_founding | SDPK Founding | 2003-01-01 | person_lonnie | org_sdpk | loc_san_diego |  | story_sdpk_origin | community formed | approximate date"),
+          rows("story_object_entries", "Story object entities", "entity_id | title | summary | participants comma-list | related events comma-list | related locations comma-list | related people comma-list | related assets comma-list | importance | canonical status", "story_running_joke | Running Joke | recurring community bit | person_lonnie,person_damien |  | loc_san_diego | person_shawn |  | medium | semi_canon"),
+          rows("project_entity_entries", "Project entities", "entity_id | project name | description | contributors comma-list | organizations comma-list | assets comma-list | related people comma-list | related events comma-list | status | repository links comma-list", "project_oregon_fail | Oregon Fail | game/story project | person_lonnie | org_kstreet | asset_logo | person_damien | event_game_jam | active | https://github.com/example"),
+          rows("concept_entity_entries", "Concept entities", "entity_id | concept name | definition | summary | related people comma-list | related projects comma-list | related stories comma-list | related assets comma-list", "concept_empirical_neoshamanism | Empirical Neoshamanism | practice concept | reality testing plus symbolic practice | person_lonnie | project_empirical_neoshamanism | story_spiral | asset_symbol"),
+          rows("timeline_entries", "Timeline entries", "date | entity_id | timeline type | title | summary | related entities comma-list", "2026-06-01 | project_oregon_fail | milestone | Public graph foundation | v4 graph exports added | person_lonnie,org_kstreet,project_oregon_fail"),
+          f("character_context_output", "Character context", "textarea", "Generated graph-aware character context.", ""),
+          f("organization_summary_output", "Organization summary", "textarea", "Generated organization and faction summary.", ""),
+          f("project_summary_output", "Project summary", "textarea", "Generated project summary.", ""),
+          f("timeline_summary", "Timeline summary", "textarea", "Generated chronological summary.", ""),
+          f("lore_summary", "Lore summary", "textarea", "Generated lore/community summary.", ""),
+          f("ai_agent_context", "AI agent context", "textarea", "Generated context for agents and graph-aware NPC systems.", "")
         ]
       },
       {
@@ -553,7 +623,7 @@
         return Object.fromEntries(keys.map((key, index) => [key, listLikeRowKeys.has(key) ? splitList(cells[index] || "") : (cells[index] || "")]));
       });
     }
-    const listLikeRowKeys = new Set(["tags", "associated_projects", "use_cases", "do_not_use_for", "asset_ids"]);
+    const listLikeRowKeys = new Set(["tags", "associated_projects", "use_cases", "do_not_use_for", "asset_ids", "members", "roles", "projects", "associated_locations", "assets", "associated_people", "associated_events", "associated_organizations", "associated_assets", "participants", "organizations", "locations", "stories", "related_events", "related_locations", "related_people", "related_assets", "contributors", "repository_links", "related_projects", "related_stories", "related_entities"]);
     function rowsToText(rows, keys) {
       if (!Array.isArray(rows)) return "";
       return rows.map(row => keys.map(key => Array.isArray(row?.[key]) ? row[key].join(",") : (row?.[key] || "")).join(" | ")).join("\n");
@@ -583,7 +653,18 @@
         signature_behavior_entries: ["behavior", "context", "frequency", "comedic_exaggeration_potential", "game_use_notes", "dialogue_use_notes"],
         asset_entries: assetObjectKeys,
         asset_group_entries: ["group_id", "group_name", "description", "asset_ids", "tags", "notes"],
-        style_guide_entries: ["guide_name", "description", "asset_ids", "prompt_notes", "negative_prompt_notes"]
+        style_guide_entries: ["guide_name", "description", "asset_ids", "prompt_notes", "negative_prompt_notes"],
+        graph_link_entries: ["target_entity_id", "relationship_type", "strength", "notes"],
+        graph_entity_entries: ["entity_id", "entity_type", "display_name", "created_at", "updated_at", "tags", "notes"],
+        relationship_entity_entries: ["relationship_id", "person_a", "person_b", "relationship_type", "trust_level", "conflict_level", "history_level", "influence_level", "communication_frequency", "relationship_health", "running_dynamic", "inside_jokes", "shared_history", "relationship_notes"],
+        organization_entity_entries: ["entity_id", "organization_name", "founding_date", "description", "members", "roles", "projects", "associated_locations", "assets", "history", "status"],
+        faction_entity_entries: ["entity_id", "faction_name", "description", "members", "roles", "projects", "associated_locations", "assets", "goals", "status"],
+        location_entity_entries: ["entity_id", "display_name", "location_type", "description", "associated_people", "associated_events", "associated_organizations", "associated_assets", "coordinates_optional", "tags"],
+        event_entity_entries: ["entity_id", "title", "event_date", "participants", "organizations", "locations", "assets", "stories", "outcomes", "notes"],
+        story_object_entries: ["entity_id", "title", "summary", "participants", "related_events", "related_locations", "related_people", "related_assets", "importance", "canonical_status"],
+        project_entity_entries: ["entity_id", "project_name", "description", "contributors", "organizations", "assets", "related_people", "related_events", "status", "repository_links"],
+        concept_entity_entries: ["entity_id", "concept_name", "definition", "summary", "related_people", "related_projects", "related_stories", "related_assets"],
+        timeline_entries: ["date", "entity_id", "timeline_type", "title", "summary", "related_entities"]
       }[id] || ["value"];
     }
     function setStatus(message, type = "") {
@@ -636,6 +717,7 @@
         profile_id: profileId,
         created_at: created,
         updated_at: nowIso(),
+        entity: buildRootEntity(values, profileId, created),
         consent: {
           permission_to_store: values.permission_to_store,
           permission_to_fictionalize: values.permission_to_fictionalize,
@@ -664,6 +746,7 @@
           style_guides: values.style_guide_entries,
           visual_reference_sheet: values.visual_reference_sheet
         },
+        knowledge_graph: buildKnowledgeGraph(values),
         personality: pick(values, ["primary_social_energy", "secondary_social_energy", "personality_traits", "custom_traits", "strengths", "flaws", "temperament", "biggest_contradiction"]),
         motivation: pick(values, ["core_motivation", "ranked_values", "what_they_optimize_for", "what_they_refuse_to_compromise", "what_tempts_them", "what_they_are_trying_to_become", "greatest_need", "greatest_fear", "moral_center", "shadow_desire"]),
         decision_making: pick(values, ["decision_style", "risk_tolerance", "planning_horizon", "under_pressure_behavior", "common_blind_spot", "failure_mode", "recovery_pattern", "what_makes_them_act", "what_makes_them_freeze"]),
@@ -678,12 +761,104 @@
         ai_generation: pick(values, ["canonical_short_description", "canonical_long_description", "art_prompt_summary", "dialogue_prompt_summary", "behavioral_prompt_summary", "game_design_summary", "do_not_misrepresent", "sensitive_topics", "safe_exaggerations", "unsafe_exaggerations", "prompt_tags", "negative_prompt_tags"]),
         project_usage: pick(values, ["approved_projects", "project_specific_notes", "canon_level"]),
         source_notes: pick(values, ["source_images", "source_interviews", "source_notes", "contributors", "reviewers", "last_reviewed", "accuracy_confidence", "unresolved_questions"]),
-        generated_content: pick(values, ["character_summary", "ai_context_output", "art_prompt_output", "dialogue_prompt_output", "npc_summary", "relationship_summary"]),
+        generated_content: pick(values, ["character_summary", "ai_context_output", "art_prompt_output", "dialogue_prompt_output", "npc_summary", "relationship_summary", "character_context_output", "organization_summary_output", "project_summary_output", "timeline_summary", "lore_summary", "ai_agent_context"]),
         extensions: importedExtensions.unknown_fields || {}
       };
     }
 
     function pick(source, keys) { return Object.fromEntries(keys.map(key => [key, source[key]])); }
+
+    function buildRootEntity(values, profileId, createdAt = nowIso()) {
+      const personEntityId = values.entity_id || profileId || slugify(values.display_name || values.in_world_name || values.real_name_optional);
+      return {
+        entity_id: personEntityId,
+        entity_type: values.entity_type || "person",
+        display_name: values.display_name || values.in_world_name || personEntityId,
+        created_at: createdAt,
+        updated_at: nowIso(),
+        tags: values.graph_tags,
+        notes: values.graph_notes,
+        relationships: values.graph_link_entries
+      };
+    }
+
+    function buildKnowledgeGraph(values) {
+      const personEntityId = values.entity_id || slugify(values.display_name || values.in_world_name || values.real_name_optional);
+      const personNode = {
+        ...buildRootEntity(values, personEntityId, importedExtensions.created_at || nowIso()),
+        profile_ref: "current_profile"
+      };
+      const assetEntities = values.asset_entries.filter(asset => asset.asset_id || asset.title || asset.file_name).map(asset => ({
+        entity_id: asset.asset_id,
+        entity_type: "asset",
+        display_name: asset.title || asset.file_name || asset.asset_id,
+        created_at: asset.date_added || "",
+        updated_at: asset.last_modified || "",
+        tags: asset.tags || [],
+        notes: asset.notes || "",
+        relationships: [
+          { target_entity_id: personEntityId, relationship_type: "asset_of", strength: "7", notes: asset.use_cases?.join(", ") || "" }
+        ],
+        asset_ref: asset.asset_id
+      }));
+      return {
+        graph_schema_version: "4.0.0-foundation",
+        graph_id: `${personEntityId}_graph`,
+        root_entity_id: personEntityId,
+        entities: [personNode, ...values.graph_entity_entries.filter(hasEntityId), ...assetEntities],
+        relationship_entities: values.relationship_entity_entries.filter(row => row.relationship_id || row.person_a || row.person_b),
+        organizations: values.organization_entity_entries.filter(hasEntityId),
+        factions: values.faction_entity_entries.filter(hasEntityId),
+        locations: values.location_entity_entries.filter(hasEntityId),
+        events: values.event_entity_entries.filter(hasEntityId),
+        assets: assetEntities,
+        story_objects: values.story_object_entries.filter(hasEntityId),
+        projects: values.project_entity_entries.filter(hasEntityId),
+        concepts: values.concept_entity_entries.filter(hasEntityId),
+        links: values.graph_link_entries,
+        timeline: buildTimeline(values),
+        generated: {
+          timeline_summary: values.timeline_summary,
+          lore_summary: values.lore_summary,
+          ai_agent_context: values.ai_agent_context
+        }
+      };
+    }
+
+    function hasEntityId(row) { return Boolean(row && row.entity_id); }
+
+    function buildTimeline(values) {
+      const manual = values.timeline_entries.filter(entry => entry.date || entry.entity_id || entry.title).map(entry => ({
+        date: entry.date || "",
+        entity_id: entry.entity_id || "",
+        type: entry.timeline_type || "milestone",
+        title: entry.title || entry.entity_id || "Timeline entry",
+        notes: entry.summary || "",
+        related_entities: entry.related_entities || []
+      }));
+      const events = values.event_entity_entries.filter(hasEntityId).map(event => ({
+        date: event.event_date || "",
+        entity_id: event.entity_id,
+        type: "event",
+        title: event.title,
+        notes: event.notes || event.outcomes || ""
+      }));
+      const projects = values.project_entity_entries.filter(hasEntityId).map(project => ({
+        date: "",
+        entity_id: project.entity_id,
+        type: "project",
+        title: project.project_name,
+        notes: project.status || project.description || ""
+      }));
+      const relationships = values.relationship_entity_entries.filter(row => row.relationship_id).map(row => ({
+        date: "",
+        entity_id: row.relationship_id,
+        type: "relationship",
+        title: `${row.person_a || "person"} ${row.relationship_type || "linked to"} ${row.person_b || "person"}`,
+        notes: row.shared_history || row.relationship_notes || ""
+      }));
+      return manual.concat(events, projects, relationships).sort((a, b) => String(a.date || "9999").localeCompare(String(b.date || "9999")));
+    }
 
     function compactProfile(profile = buildProfile()) {
       return pruneEmpty(JSON.parse(JSON.stringify(profile)));
@@ -785,18 +960,33 @@
 
     function generateRelationshipSummary() {
       const p = buildProfile();
+      const graphText = generateGraphSummary("relationship");
       const text = [
         `Group role: ${p.social_model.group_role || "unspecified"}.`,
         `Friendship style: ${p.social_model.friendship_style || "unspecified"}.`,
         `Shows care: ${p.social_model.how_they_show_care || "unspecified"}.`,
         `Trust builders: ${p.social_model.trust_builders.join("; ") || "unspecified"}.`,
         `Trust breakers: ${p.social_model.trust_breakers.join("; ") || "unspecified"}.`,
-        `Relationship entries: ${p.relationship_graph.length}.`
+        `Relationship entries: ${p.relationship_graph.length}.`,
+        "",
+        graphText
       ].join("\n");
       setField("relationship_summary", text);
       dirty = true;
       updatePreview();
       setStatus("Generated relationship summary.", "ok");
+      return text;
+    }
+
+    function generateAgentContextOutput() {
+      const text = generateGraphSummary("agent");
+      setField("ai_agent_context", text);
+      setField("timeline_summary", generateGraphSummary("timeline"));
+      setField("lore_summary", generateGraphSummary("lore"));
+      dirty = true;
+      updatePreview();
+      renderGraphView();
+      setStatus("Generated graph-aware AI agent context.", "ok");
       return text;
     }
 
@@ -815,6 +1005,7 @@
       const sectionMap = [
         ["Identity", profile.identity], ["Appearance", profile.appearance], ["Personality", profile.personality],
         ["Asset Library", profile.asset_library],
+        ["Knowledge Graph", profile.knowledge_graph],
         ["Motivation", profile.motivation], ["Decision-Making", profile.decision_making],
         ["Social Model", profile.social_model], ["Relationship Graph", profile.relationship_graph],
         ["Knowledge Domains", profile.knowledge_domains],
@@ -1014,6 +1205,137 @@
       ].join("\n");
     }
 
+    function graphFull(profile = buildProfile()) {
+      return {
+        graph_schema_version: profile.knowledge_graph.graph_schema_version,
+        schema_version: profile.schema_version,
+        schema_id: "kstreet_knowledge_graph.v4_foundation",
+        generated_at: nowIso(),
+        profile_id: profile.profile_id,
+        root_entity: profile.entity,
+        person_profile: profile,
+        knowledge_graph: profile.knowledge_graph
+      };
+    }
+
+    function graphPeople(profile = buildProfile()) {
+      return profile.knowledge_graph.entities.filter(entity => entity.entity_type === "person");
+    }
+
+    function graphEntitiesByType(type, profile = buildProfile()) {
+      const graph = profile.knowledge_graph;
+      if (type === "relationship") return graph.relationship_entities;
+      if (type === "organization") return graph.organizations;
+      if (type === "faction") return graph.factions;
+      if (type === "location") return graph.locations;
+      if (type === "event") return graph.events;
+      if (type === "asset") return graph.entities.filter(entity => entity.entity_type === "asset");
+      if (type === "project") return graph.projects;
+      if (type === "story_object") return graph.story_objects;
+      if (type === "concept") return graph.concepts;
+      return graph.entities.filter(entity => entity.entity_type === type);
+    }
+
+    function graphNodes(profile = buildProfile()) {
+      const graph = profile.knowledge_graph;
+      const typed = [
+        ...graph.organizations.map(row => ({ ...row, entity_type: "organization", display_name: row.organization_name || row.display_name })),
+        ...graph.factions.map(row => ({ ...row, entity_type: "faction", display_name: row.faction_name || row.display_name })),
+        ...graph.locations.map(row => ({ ...row, entity_type: "location", display_name: row.display_name })),
+        ...graph.events.map(row => ({ ...row, entity_type: "event", display_name: row.title || row.display_name })),
+        ...graph.story_objects.map(row => ({ ...row, entity_type: "story_object", display_name: row.title || row.display_name })),
+        ...graph.projects.map(row => ({ ...row, entity_type: "project", display_name: row.project_name || row.display_name })),
+        ...graph.concepts.map(row => ({ ...row, entity_type: "concept", display_name: row.concept_name || row.display_name }))
+      ];
+      const byId = new Map();
+      [...graph.entities, ...typed].forEach(node => {
+        if (!node?.entity_id) return;
+        byId.set(node.entity_id, {
+          ...node,
+          entity_type: node.entity_type || "concept",
+          display_name: node.display_name || node.organization_name || node.faction_name || node.project_name || node.concept_name || node.title || node.entity_id
+        });
+      });
+      return Array.from(byId.values());
+    }
+
+    function graphRelationshipLinks(profile = buildProfile()) {
+      const graph = profile.knowledge_graph;
+      const root = graph.root_entity_id;
+      const direct = (graph.links || []).filter(link => link.target_entity_id).map(link => ({
+        source: root,
+        target: link.target_entity_id,
+        relationship_type: link.relationship_type || "linked_to",
+        strength: link.strength || "",
+        notes: link.notes || ""
+      }));
+      const relationshipEntities = graph.relationship_entities.map(rel => ({
+        source: rel.person_a,
+        target: rel.person_b,
+        relationship_type: rel.relationship_type || "relationship",
+        strength: rel.trust_level || rel.influence_level || "",
+        notes: rel.relationship_notes || rel.running_dynamic || "",
+        relationship_id: rel.relationship_id
+      })).filter(link => link.source && link.target);
+      return direct.concat(relationshipEntities);
+    }
+
+    function generateGraphSummary(kind) {
+      const profile = buildProfile();
+      const graph = profile.knowledge_graph;
+      if (kind === "character") return [
+        "# Character Context",
+        "",
+        `Root entity: ${graph.root_entity_id}`,
+        `Display name: ${profile.entity.display_name}`,
+        `Entity type: ${profile.entity.entity_type}`,
+        "",
+        profile.generated_content.character_summary || profile.ai_generation.canonical_long_description || profile.ai_generation.canonical_short_description || "_No generated character summary yet._",
+        "",
+        "## Core Motivations",
+        formatMarkdownValue(profile.motivation),
+        "",
+        "## Graph Links",
+        formatMarkdownValue(graph.links)
+      ].join("\n");
+      if (kind === "relationship") return [
+        "# Relationship Summary",
+        "",
+        `Root entity: ${graph.root_entity_id}`,
+        `Relationship entities: ${graph.relationship_entities.length}`,
+        "",
+        formatMarkdownValue(graph.relationship_entities)
+      ].join("\n");
+      if (kind === "organization") return ["# Organization Summary", "", "## Organizations", formatMarkdownValue(graph.organizations), "", "## Factions", formatMarkdownValue(graph.factions)].join("\n");
+      if (kind === "project") return ["# Project Summary", "", formatMarkdownValue(graph.projects)].join("\n");
+      if (kind === "timeline") return ["# Timeline Summary", "", formatMarkdownValue(graph.timeline)].join("\n");
+      if (kind === "lore") return ["# Lore Summary", "", "## Stories", formatMarkdownValue(graph.story_objects), "", "## Concepts", formatMarkdownValue(graph.concepts)].join("\n");
+      if (kind === "agent") return [
+        "# AI Agent Context",
+        "",
+        "Use this graph-aware context to answer questions about people, relationships, organizations, locations, events, assets, stories, projects, and concepts.",
+        "",
+        "## Root Person",
+        markdownProfile(profile),
+        "",
+        "## Knowledge Graph JSON",
+        "```json",
+        JSON.stringify(graph, null, 2),
+        "```"
+      ].join("\n");
+      return "";
+    }
+
+    function generateGraphOutput(kind, fieldId, label) {
+      const text = generateGraphSummary(kind);
+      setField(fieldId, text);
+      dirty = true;
+      updatePreview();
+      renderGraphView();
+      setStatus(`Generated ${label}.`, "ok");
+      return text;
+    }
+
     async function copyText(text, message) {
       await navigator.clipboard.writeText(text);
       setStatus(message, "ok");
@@ -1110,7 +1432,7 @@
         <div class="asset-card" data-asset-id="${escapeHtml(asset.asset_id)}">
           <div class="asset-thumb">${asset.thumbnail_url ? `<img src="${escapeHtml(asset.thumbnail_url)}" alt="">` : escapeHtml(asset.asset_type || "asset")}</div>
           <strong>${escapeHtml(asset.title || asset.file_name || asset.asset_id)}</strong>
-          <div class="hint">${escapeHtml(asset.asset_type)} · ${escapeHtml(asset.canon_level)} · ${escapeHtml(asset.consent_status)}</div>
+          <div class="hint">${escapeHtml(asset.asset_type)} &middot; ${escapeHtml(asset.canon_level)} &middot; ${escapeHtml(asset.consent_status)}</div>
         </div>
       `).join("") || "<p class='hint'>No assets match the current filters.</p>";
       table.innerHTML = `<table class="asset-table"><thead><tr><th>ID</th><th>Type</th><th>Title</th><th>Canon</th><th>Consent</th><th>Tags</th></tr></thead><tbody>${assets.map(asset => `
@@ -1151,6 +1473,93 @@
       updatePreview();
       renderAssetLibrary();
     }
+
+    function filteredGraphNodes() {
+      const q = el("graph_search").value.trim().toLowerCase();
+      const type = el("graph_filter_type").value;
+      return graphNodes().filter(node => {
+        const haystack = JSON.stringify(node).toLowerCase();
+        return (!q || haystack.includes(q)) && (!type || node.entity_type === type);
+      });
+    }
+
+    function renderGraphView(mode = renderGraphView.mode || "network") {
+      renderGraphView.mode = mode;
+      const profile = buildProfile();
+      const nodes = filteredGraphNodes();
+      const nodeIds = new Set(nodes.map(node => node.entity_id));
+      const links = graphRelationshipLinks(profile).filter(link => nodeIds.has(link.source) && nodeIds.has(link.target));
+      if (mode === "timeline") return renderGraphTimeline(profile);
+      if (mode === "entities") return renderGraphEntities(nodes, links);
+      return renderGraphNetwork(nodes, links);
+    }
+
+    function renderGraphEntities(nodes, links) {
+      el("graphView").innerHTML = `
+        <div class="node-list">
+          ${nodes.map(node => `<div class="node-item" data-graph-node="${escapeHtml(node.entity_id)}"><strong>${escapeHtml(node.display_name || node.entity_id)}</strong><div class="hint">${escapeHtml(node.entity_type)} &middot; ${escapeHtml(node.entity_id)}</div></div>`).join("") || "<p class='hint'>No entities match the current filters.</p>"}
+        </div>
+        <h3>Relationships</h3>
+        <div class="node-list">
+          ${links.map((link, index) => `<div class="node-item" data-graph-link="${index}"><strong>${escapeHtml(link.source)} -&gt; ${escapeHtml(link.target)}</strong><div class="hint">${escapeHtml(link.relationship_type)} ${link.strength ? `&middot; strength ${escapeHtml(link.strength)}` : ""}</div></div>`).join("") || "<p class='hint'>No relationships match the current filters.</p>"}
+        </div>
+      `;
+      bindGraphInspectors(nodes, links);
+    }
+
+    function renderGraphTimeline(profile = buildProfile()) {
+      const q = el("graph_search").value.trim().toLowerCase();
+      const entries = profile.knowledge_graph.timeline.filter(item => !q || JSON.stringify(item).toLowerCase().includes(q));
+      el("graphView").innerHTML = `<div class="timeline-list">${entries.map(item => `
+        <div class="timeline-item" data-graph-timeline="${escapeHtml(item.entity_id || item.title)}">
+          <strong>${escapeHtml(item.date || "Undated")} &middot; ${escapeHtml(item.title || item.entity_id || "Timeline entry")}</strong>
+          <div class="hint">${escapeHtml(item.type || "milestone")} &middot; ${escapeHtml(item.entity_id || "")}</div>
+          <div>${escapeHtml(item.notes || "")}</div>
+        </div>
+      `).join("") || "<p class='hint'>No timeline entries yet. Add events, projects, relationships, or manual timeline rows.</p>"}</div>`;
+      document.querySelectorAll("[data-graph-timeline]").forEach(node => node.addEventListener("click", () => {
+        const key = node.getAttribute("data-graph-timeline");
+        const entry = entries.find(item => (item.entity_id || item.title) === key);
+        el("graphInspector").innerHTML = entry ? `<strong>${escapeHtml(entry.title || entry.entity_id)}</strong><pre>${escapeHtml(JSON.stringify(entry, null, 2))}</pre>` : "Select a timeline entry.";
+      }));
+    }
+
+    function renderGraphNetwork(nodes, links) {
+      const width = 760, height = 340, cx = width / 2, cy = height / 2;
+      const radius = Math.min(width, height) * 0.36;
+      const positions = new Map(nodes.map((node, index) => {
+        const angle = nodes.length ? (Math.PI * 2 * index) / nodes.length - Math.PI / 2 : 0;
+        return [node.entity_id, { x: cx + Math.cos(angle) * radius, y: cy + Math.sin(angle) * radius }];
+      }));
+      const color = type => ({ person: "#216b68", relationship: "#7b4e9d", organization: "#385f9d", faction: "#8d5b28", location: "#568f4d", event: "#9a5b00", asset: "#60717a", story_object: "#8a3e55", project: "#4f6b2d", concept: "#6b5b95" }[type] || "#666");
+      el("graphView").innerHTML = `
+        <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Knowledge graph network view">
+          ${links.map((link, index) => {
+            const a = positions.get(link.source), b = positions.get(link.target);
+            if (!a || !b) return "";
+            return `<g data-graph-link="${index}"><line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="#9aa5a1" stroke-width="${Math.max(1, Number(link.strength) || 2)}" opacity=".62"/><text x="${(a.x + b.x) / 2}" y="${(a.y + b.y) / 2}" font-size="10" fill="#37413f">${escapeHtml(link.relationship_type)}</text></g>`;
+          }).join("")}
+          ${nodes.map(node => {
+            const p = positions.get(node.entity_id);
+            return `<g data-graph-node="${escapeHtml(node.entity_id)}" style="cursor:pointer"><circle cx="${p.x}" cy="${p.y}" r="22" fill="${color(node.entity_type)}"/><text x="${p.x}" y="${p.y + 38}" text-anchor="middle" font-size="11" fill="#1f2328">${escapeHtml((node.display_name || node.entity_id).slice(0, 22))}</text><text x="${p.x}" y="${p.y + 4}" text-anchor="middle" font-size="10" fill="#fff">${escapeHtml(node.entity_type.slice(0, 3))}</text></g>`;
+          }).join("")}
+        </svg>
+      `;
+      bindGraphInspectors(nodes, links);
+    }
+
+    function bindGraphInspectors(nodes, links) {
+      document.querySelectorAll("[data-graph-node]").forEach(node => node.addEventListener("click", () => {
+        const id = node.getAttribute("data-graph-node");
+        const entity = nodes.find(item => item.entity_id === id);
+        el("graphInspector").innerHTML = entity ? `<strong>${escapeHtml(entity.display_name || entity.entity_id)}</strong><pre>${escapeHtml(JSON.stringify(entity, null, 2))}</pre>` : "Select a node.";
+      }));
+      document.querySelectorAll("[data-graph-link]").forEach(node => node.addEventListener("click", () => {
+        const link = links[Number(node.getAttribute("data-graph-link"))];
+        el("graphInspector").innerHTML = link ? `<strong>${escapeHtml(link.source)} -&gt; ${escapeHtml(link.target)}</strong><pre>${escapeHtml(JSON.stringify(link, null, 2))}</pre>` : "Select a relationship.";
+      }));
+    }
+
     async function downloadAll() {
       const profile = buildProfile();
       const schema = await fetch("schema/friend_descriptor_schema.json").then(r => r.ok ? r.text() : "{}").catch(() => "{}");
@@ -1168,6 +1577,14 @@
         ["profile.visual-reference.md", visualReferenceSheet(profile)],
         ["profile.art-reference.md", artReference(profile)],
         ["profile.sprite-reference.md", spriteReference(profile)],
+        ["graph.full.json", JSON.stringify(graphFull(profile), null, 2)],
+        ["graph.people.json", JSON.stringify(graphPeople(profile), null, 2)],
+        ["graph.relationships.json", JSON.stringify(graphEntitiesByType("relationship", profile), null, 2)],
+        ["graph.organizations.json", JSON.stringify(graphEntitiesByType("organization", profile), null, 2)],
+        ["graph.locations.json", JSON.stringify(graphEntitiesByType("location", profile), null, 2)],
+        ["graph.events.json", JSON.stringify(graphEntitiesByType("event", profile), null, 2)],
+        ["graph.assets.json", JSON.stringify(graphEntitiesByType("asset", profile), null, 2)],
+        ["graph.projects.json", JSON.stringify(graphEntitiesByType("project", profile), null, 2)],
         ["schema.json", schema]
       ];
       downloadText(`${profile.profile_id || "character"}-profile-package-${timestampSlug()}.zip`, makeZip(files), "application/zip");
@@ -1214,7 +1631,7 @@
     function migrateImport(input) {
       importedExtensions = { unknown_fields: {}, migrated_from: input.schema_version || input.schema || "unknown" };
       importedWarnings = [];
-      const source = input.record || input;
+      const source = input.person_profile || input.record || input;
       const set = {};
       if (source.schema_version === SCHEMA_VERSION) {
         flattenModern(source, set);
@@ -1222,7 +1639,7 @@
         importedWarnings.push(`Imported ${source.schema_version || source.schema || "legacy"} and migrated safely to 3.0.0.`);
         flattenLegacy(source, set);
       }
-      const knownTop = new Set(["schema_version", "schema_id", "schema_name", "profile_id", "created_at", "updated_at", "metadata", "consent", "identity", "appearance", "asset_library", "personality", "motivation", "motivation_values", "decision_making", "social_model", "social_relationship_model", "relationship_graph", "knowledge_domains", "humor_and_voice", "humor_communication", "conflict_and_stress", "conflict_stress_response", "signature_behaviors", "narrative_engine", "game_mechanics", "ai_generation", "ai_generation_metadata", "project_usage", "source_notes", "generated_content", "privacy", "exports", "generated", "character_core", "voice_and_behavior", "narrative_design", "extensions"]);
+      const knownTop = new Set(["schema_version", "schema_id", "schema_name", "profile_id", "created_at", "updated_at", "metadata", "entity", "knowledge_graph", "consent", "identity", "appearance", "asset_library", "personality", "motivation", "motivation_values", "decision_making", "social_model", "social_relationship_model", "relationship_graph", "knowledge_domains", "humor_and_voice", "humor_communication", "conflict_and_stress", "conflict_stress_response", "signature_behaviors", "narrative_engine", "game_mechanics", "ai_generation", "ai_generation_metadata", "project_usage", "source_notes", "generated_content", "privacy", "exports", "generated", "character_core", "voice_and_behavior", "narrative_design", "extensions"]);
       const existingExtensions = source.extensions && typeof source.extensions === "object" && !Array.isArray(source.extensions) ? source.extensions : {};
       const unknownTopLevel = Object.fromEntries(Object.entries(source).filter(([key]) => !knownTop.has(key)));
       importedExtensions.unknown_fields = { ...existingExtensions, ...unknownTopLevel };
@@ -1233,6 +1650,8 @@
       importedWarnings.push(...validateProfile(profile));
       el("migration_report").value = importedWarnings.join("\n") || "Imported profile without warnings.";
       updatePreview();
+      renderAssetLibrary();
+      renderGraphView();
       dirty = false;
       setStatus("Imported and migrated profile.", "ok");
     }
@@ -1250,6 +1669,37 @@
         set.asset_entries = source.asset_library.assets || [];
         set.asset_group_entries = source.asset_library.asset_groups || [];
         set.style_guide_entries = source.asset_library.style_guides || [];
+      }
+      if (source.entity) {
+        set.entity_id = source.entity.entity_id || "";
+        set.entity_type = source.entity.entity_type || "person";
+        set.graph_tags = source.entity.tags || [];
+        set.graph_notes = source.entity.notes || "";
+        set.graph_link_entries = source.entity.relationships || [];
+      }
+      if (source.knowledge_graph) {
+        const graph = source.knowledge_graph;
+        set.graph_link_entries = graph.links || set.graph_link_entries || [];
+        set.graph_entity_entries = graph.entities?.filter(entity => entity.profile_ref !== "current_profile" && entity.entity_type !== "asset") || [];
+        set.relationship_entity_entries = graph.relationship_entities || [];
+        set.organization_entity_entries = graph.organizations || [];
+        set.faction_entity_entries = graph.factions || [];
+        set.location_entity_entries = graph.locations || [];
+        set.event_entity_entries = graph.events || [];
+        set.story_object_entries = graph.story_objects || [];
+        set.project_entity_entries = graph.projects || [];
+        set.concept_entity_entries = graph.concepts || [];
+        set.timeline_entries = (graph.timeline || []).map(item => ({
+          date: item.date || "",
+          entity_id: item.entity_id || "",
+          timeline_type: item.timeline_type || item.type || "milestone",
+          title: item.title || "",
+          summary: item.summary || item.notes || "",
+          related_entities: item.related_entities || []
+        }));
+        set.timeline_summary = graph.generated?.timeline_summary || source.generated_content?.timeline_summary || "";
+        set.lore_summary = graph.generated?.lore_summary || source.generated_content?.lore_summary || "";
+        set.ai_agent_context = graph.generated?.ai_agent_context || source.generated_content?.ai_agent_context || "";
       }
       set.relationship_entries = source.relationship_graph || source.social_relationship_model?.relationship_graph || [];
       set.knowledge_domain_entries = Array.isArray(source.knowledge_domains) ? source.knowledge_domains : (source.knowledge_domains?.domains || []);
@@ -1337,6 +1787,7 @@
         optional_contact: profile.identity.optional_contact,
         full_json: JSON.stringify(profile, null, 2),
         compact_json: JSON.stringify(compactProfile(profile)),
+        graph_full_json: JSON.stringify(graphFull(profile), null, 2),
         markdown_profile: markdownProfile(profile),
         ai_context_markdown: aiContext(profile),
         game_design_summary: gameDesignSummary(profile),
@@ -1408,7 +1859,9 @@
     ASSET_TYPES.forEach(type => el("asset_filter_type").insertAdjacentHTML("beforeend", `<option value="${type}">${type}</option>`));
     ASSET_CANON_LEVELS.forEach(level => el("asset_filter_canon").insertAdjacentHTML("beforeend", `<option value="${level}">${level}</option>`));
     ASSET_CONSENT_STATUSES.forEach(status => el("asset_filter_consent").insertAdjacentHTML("beforeend", `<option value="${status}">${status}</option>`));
+    ENTITY_TYPES.forEach(type => el("graph_filter_type").insertAdjacentHTML("beforeend", `<option value="${type}">${type}</option>`));
     renderAssetLibrary();
+    renderGraphView();
     document.addEventListener("input", () => { dirty = true; updatePreview(); });
     document.addEventListener("change", () => { dirty = true; updatePreview(); });
     el("submitBtn").addEventListener("click", submitProfile);
@@ -1419,6 +1872,12 @@
     el("generateNpcBtn").addEventListener("click", generateNpcSummary);
     el("generateRelationshipBtn").addEventListener("click", generateRelationshipSummary);
     el("generateVisualRefBtn").addEventListener("click", generateVisualReferenceSheet);
+    el("generateCharacterContextBtn").addEventListener("click", () => generateGraphOutput("character", "character_context_output", "character context"));
+    el("generateOrganizationBtn").addEventListener("click", () => generateGraphOutput("organization", "organization_summary_output", "organization summary"));
+    el("generateProjectBtn").addEventListener("click", () => generateGraphOutput("project", "project_summary_output", "project summary"));
+    el("generateTimelineBtn").addEventListener("click", () => generateGraphOutput("timeline", "timeline_summary", "timeline summary"));
+    el("generateLoreBtn").addEventListener("click", () => generateGraphOutput("lore", "lore_summary", "lore summary"));
+    el("generateAgentContextBtn").addEventListener("click", generateAgentContextOutput);
     el("copyJsonBtn").addEventListener("click", () => copyText(JSON.stringify(buildProfile(), null, 2), "Copied full JSON."));
     el("copyMarkdownBtn").addEventListener("click", () => copyText(markdownProfile(), "Copied markdown profile."));
     el("downloadAllBtn").addEventListener("click", downloadAll);
@@ -1435,6 +1894,14 @@
     el("downloadVisualRefBtn").addEventListener("click", () => downloadText(`profile.visual-reference-${timestampSlug()}.md`, visualReferenceSheet(), "text/markdown"));
     el("downloadArtRefBtn").addEventListener("click", () => downloadText(`profile.art-reference-${timestampSlug()}.md`, artReference(), "text/markdown"));
     el("downloadSpriteRefBtn").addEventListener("click", () => downloadText(`profile.sprite-reference-${timestampSlug()}.md`, spriteReference(), "text/markdown"));
+    el("downloadGraphFullBtn").addEventListener("click", () => downloadText(`graph.full-${timestampSlug()}.json`, JSON.stringify(graphFull(), null, 2), "application/json"));
+    el("downloadGraphPeopleBtn").addEventListener("click", () => downloadText(`graph.people-${timestampSlug()}.json`, JSON.stringify(graphPeople(), null, 2), "application/json"));
+    el("downloadGraphRelationshipsBtn").addEventListener("click", () => downloadText(`graph.relationships-${timestampSlug()}.json`, JSON.stringify(graphEntitiesByType("relationship"), null, 2), "application/json"));
+    el("downloadGraphOrganizationsBtn").addEventListener("click", () => downloadText(`graph.organizations-${timestampSlug()}.json`, JSON.stringify(graphEntitiesByType("organization"), null, 2), "application/json"));
+    el("downloadGraphLocationsBtn").addEventListener("click", () => downloadText(`graph.locations-${timestampSlug()}.json`, JSON.stringify(graphEntitiesByType("location"), null, 2), "application/json"));
+    el("downloadGraphEventsBtn").addEventListener("click", () => downloadText(`graph.events-${timestampSlug()}.json`, JSON.stringify(graphEntitiesByType("event"), null, 2), "application/json"));
+    el("downloadGraphAssetsBtn").addEventListener("click", () => downloadText(`graph.assets-${timestampSlug()}.json`, JSON.stringify(graphEntitiesByType("asset"), null, 2), "application/json"));
+    el("downloadGraphProjectsBtn").addEventListener("click", () => downloadText(`graph.projects-${timestampSlug()}.json`, JSON.stringify(graphEntitiesByType("project"), null, 2), "application/json"));
     el("validateJsonBtn").addEventListener("click", () => {
       const warnings = validateProfile(buildProfile());
       importedWarnings = warnings.length ? warnings : ["Profile validates against the app's required v3 checks."];
@@ -1446,6 +1913,11 @@
     el("field_search").addEventListener("input", event => filterFields(event.target.value));
     ["asset_search", "asset_filter_type", "asset_filter_canon", "asset_filter_consent", "asset_filter_project", "asset_filter_tag", "asset_filter_creator", "asset_filter_date"].forEach(id => el(id).addEventListener("input", () => renderAssetLibrary()));
     ["asset_filter_type", "asset_filter_canon", "asset_filter_consent"].forEach(id => el(id).addEventListener("change", () => renderAssetLibrary()));
+    ["graph_search", "graph_filter_type"].forEach(id => el(id).addEventListener("input", () => renderGraphView()));
+    el("graph_filter_type").addEventListener("change", () => renderGraphView());
+    el("renderGraphBtn").addEventListener("click", () => renderGraphView("network"));
+    el("renderTimelineBtn").addEventListener("click", () => renderGraphView("timeline"));
+    el("renderEntitiesBtn").addEventListener("click", () => renderGraphView("entities"));
     el("assetGalleryBtn").addEventListener("click", () => renderAssetLibrary("gallery"));
     el("assetTableBtn").addEventListener("click", () => renderAssetLibrary("table"));
     el("bulkTagBtn").addEventListener("click", bulkTagFiltered);

@@ -2,7 +2,7 @@
 
 A static, project-agnostic profile database for collecting structured descriptors from real people so they can be adapted into consistent fictional and game characters across K Street projects.
 
-The current schema is `kstreet_person_profile.v3` version `3.0.0`.
+The current person profile schema is `kstreet_person_profile.v3` version `3.0.0`. The app also includes the additive `kstreet_knowledge_graph.v4_foundation` layer for graph-aware people, relationships, organizations, locations, events, assets, projects, factions, story objects, and concepts.
 
 ## What This Is For
 
@@ -29,6 +29,7 @@ It can support:
 - `docs/asset-library-schema.md` - asset library object and asset metadata schema
 - `docs/asset-management-guide.md` - static asset management workflow
 - `docs/visual-reference-workflow.md` - artist/image/sprite reference workflow
+- `docs/knowledge-graph-v4-foundation.md` - v4 entity framework, graph links, timeline, and graph exports
 - `docs/workflow.md` - recommended K Street cloud-drive workflow
 - `examples/example-descriptor-intake.json` - safe example record
 
@@ -45,6 +46,8 @@ Use the buttons at the top of the form to:
 - Submit the descriptor to a configured intake endpoint
 - Generate a character summary, AI context, art prompt, dialogue prompt, NPC summary, and relationship summary
 - Manage a canonical asset library with gallery/table views, uploads-to-metadata, filters, bulk tagging/editing/delete, preview, and visual reference generation
+- Build a static Knowledge Graph with entity rows, relationship entities, graph links, a node browser, relationship browser, entity inspector, search/filter controls, timeline view, and SVG network view
+- Generate graph-aware Character Context, Relationship Summary, Organization Summary, Project Summary, Timeline Summary, Lore Summary, and AI Agent Context
 - Generate AI context
 - Copy JSON or Markdown
 - Share a portable JSON snapshot
@@ -53,6 +56,7 @@ Use the buttons at the top of the form to:
 - Copy a GitHub Pages share link
 - Export ChatGPT-ready Markdown
 - Download a full sharing package containing `character.json`, `character.md`, and `schema.json`
+- Export graph snapshots as `graph.full.json`, `graph.people.json`, `graph.relationships.json`, `graph.organizations.json`, `graph.locations.json`, `graph.events.json`, `graph.assets.json`, and `graph.projects.json`
 - Export the current record as JSON
 - Import an older or current JSON record
 - Reset the form
@@ -123,6 +127,7 @@ The form is organized into collapsible sections:
 - Identity
 - Appearance
 - Asset Library
+- Knowledge Graph
 - Personality
 - Motivation
 - Decision-Making
@@ -140,9 +145,26 @@ The form is organized into collapsible sections:
 - Generated Content
 - Export / Import
 
+## Knowledge Graph v4 Foundation
+
+Every profile now exports a top-level `entity` object and a `knowledge_graph` object. The v3 person profile remains intact; the graph layer wraps that profile as an entity with shared fields:
+
+- `entity_id`
+- `entity_type`
+- `display_name`
+- `created_at`
+- `updated_at`
+- `tags`
+- `notes`
+- `relationships`
+
+Supported entity types are `person`, `relationship`, `organization`, `location`, `event`, `asset`, `story_object`, `project`, `faction`, and `concept`.
+
+Existing v3 exports automatically become `entity_type: "person"` on import. Unknown fields are still preserved under `extensions`.
+
 ## Migration
 
-The app imports `3.0.0` records directly and attempts to migrate `2.0.0`, `friend_descriptor_intake.v2`, and v1-style flat records. Missing new fields default safely. Unknown imported fields are preserved under `extensions`.
+The app imports `3.0.0` records directly and attempts to migrate `2.0.0`, `friend_descriptor_intake.v2`, and v1-style flat records. Missing graph fields default safely. Full graph exports containing `person_profile` can also be imported; the person profile is restored and graph rows are rehydrated where possible. Unknown imported fields are preserved under `extensions`.
 
 ## Sharing With ChatGPT and Other AI Systems
 

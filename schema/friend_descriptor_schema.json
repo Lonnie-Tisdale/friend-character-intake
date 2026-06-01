@@ -38,6 +38,7 @@
     "profile_id": { "type": "string" },
     "created_at": { "type": "string" },
     "updated_at": { "type": "string" },
+    "entity": { "$ref": "#/$defs/graph_entity" },
     "consent": { "$ref": "#/$defs/object" },
     "identity": { "$ref": "#/$defs/object" },
     "appearance": { "$ref": "#/$defs/object" },
@@ -61,6 +62,30 @@
           "type": "array",
           "items": { "$ref": "#/$defs/style_guide" }
         }
+      },
+      "additionalProperties": true
+    },
+    "knowledge_graph": {
+      "type": "object",
+      "description": "K Street Knowledge Graph v4 foundation layer. Existing v3 person profiles become person entities without changing the v3 profile contract.",
+      "required": ["graph_schema_version", "graph_id", "root_entity_id", "entities", "relationship_entities", "organizations", "locations", "events", "assets", "projects", "links", "timeline"],
+      "properties": {
+        "graph_schema_version": { "const": "4.0.0-foundation" },
+        "graph_id": { "type": "string" },
+        "root_entity_id": { "type": "string" },
+        "entities": { "type": "array", "items": { "$ref": "#/$defs/graph_entity" } },
+        "relationship_entities": { "type": "array", "items": { "$ref": "#/$defs/relationship_entity" } },
+        "organizations": { "type": "array", "items": { "$ref": "#/$defs/organization_entity" } },
+        "factions": { "type": "array", "items": { "$ref": "#/$defs/faction_entity" } },
+        "locations": { "type": "array", "items": { "$ref": "#/$defs/location_entity" } },
+        "events": { "type": "array", "items": { "$ref": "#/$defs/event_entity" } },
+        "assets": { "type": "array", "items": { "$ref": "#/$defs/graph_entity" } },
+        "story_objects": { "type": "array", "items": { "$ref": "#/$defs/story_object_entity" } },
+        "projects": { "type": "array", "items": { "$ref": "#/$defs/project_entity" } },
+        "concepts": { "type": "array", "items": { "$ref": "#/$defs/concept_entity" } },
+        "links": { "type": "array", "items": { "$ref": "#/$defs/graph_link" } },
+        "timeline": { "type": "array", "items": { "$ref": "#/$defs/timeline_entry" } },
+        "generated": { "$ref": "#/$defs/object" }
       },
       "additionalProperties": true
     },
@@ -97,6 +122,178 @@
   "$defs": {
     "object": {
       "type": "object",
+      "additionalProperties": true
+    },
+    "graph_link": {
+      "type": "object",
+      "required": ["target_entity_id", "relationship_type"],
+      "properties": {
+        "target_entity_id": { "type": "string" },
+        "relationship_type": { "type": "string" },
+        "strength": { "type": ["string", "number"] },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "graph_entity": {
+      "type": "object",
+      "required": ["entity_id", "entity_type", "display_name", "created_at", "updated_at", "tags", "notes", "relationships"],
+      "properties": {
+        "entity_id": { "type": "string" },
+        "entity_type": {
+          "type": "string",
+          "enum": ["person", "relationship", "organization", "location", "event", "asset", "story_object", "project", "faction", "concept"]
+        },
+        "display_name": { "type": "string" },
+        "created_at": { "type": "string" },
+        "updated_at": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "notes": { "type": "string" },
+        "relationships": { "type": "array", "items": { "$ref": "#/$defs/graph_link" } }
+      },
+      "additionalProperties": true
+    },
+    "relationship_entity": {
+      "type": "object",
+      "properties": {
+        "relationship_id": { "type": "string" },
+        "person_a": { "type": "string" },
+        "person_b": { "type": "string" },
+        "relationship_type": { "type": "string" },
+        "trust_level": { "type": "string" },
+        "conflict_level": { "type": "string" },
+        "history_level": { "type": "string" },
+        "influence_level": { "type": "string" },
+        "communication_frequency": { "type": "string" },
+        "relationship_health": { "type": "string" },
+        "running_dynamic": { "type": "string" },
+        "inside_jokes": { "type": "string" },
+        "shared_history": { "type": "string" },
+        "relationship_notes": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "organization_entity": {
+      "type": "object",
+      "properties": {
+        "entity_id": { "type": "string" },
+        "organization_name": { "type": "string" },
+        "founding_date": { "type": "string" },
+        "description": { "type": "string" },
+        "members": { "type": "array", "items": { "type": "string" } },
+        "roles": { "type": "array", "items": { "type": "string" } },
+        "projects": { "type": "array", "items": { "type": "string" } },
+        "associated_locations": { "type": "array", "items": { "type": "string" } },
+        "assets": { "type": "array", "items": { "type": "string" } },
+        "history": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "faction_entity": {
+      "type": "object",
+      "properties": {
+        "entity_id": { "type": "string" },
+        "faction_name": { "type": "string" },
+        "description": { "type": "string" },
+        "members": { "type": "array", "items": { "type": "string" } },
+        "roles": { "type": "array", "items": { "type": "string" } },
+        "projects": { "type": "array", "items": { "type": "string" } },
+        "associated_locations": { "type": "array", "items": { "type": "string" } },
+        "assets": { "type": "array", "items": { "type": "string" } },
+        "goals": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "location_entity": {
+      "type": "object",
+      "properties": {
+        "entity_id": { "type": "string" },
+        "display_name": { "type": "string" },
+        "location_type": { "type": "string" },
+        "description": { "type": "string" },
+        "associated_people": { "type": "array", "items": { "type": "string" } },
+        "associated_events": { "type": "array", "items": { "type": "string" } },
+        "associated_organizations": { "type": "array", "items": { "type": "string" } },
+        "associated_assets": { "type": "array", "items": { "type": "string" } },
+        "coordinates_optional": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "event_entity": {
+      "type": "object",
+      "properties": {
+        "entity_id": { "type": "string" },
+        "title": { "type": "string" },
+        "event_date": { "type": "string" },
+        "participants": { "type": "array", "items": { "type": "string" } },
+        "organizations": { "type": "array", "items": { "type": "string" } },
+        "locations": { "type": "array", "items": { "type": "string" } },
+        "assets": { "type": "array", "items": { "type": "string" } },
+        "stories": { "type": "array", "items": { "type": "string" } },
+        "outcomes": { "type": "string" },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "story_object_entity": {
+      "type": "object",
+      "properties": {
+        "entity_id": { "type": "string" },
+        "title": { "type": "string" },
+        "summary": { "type": "string" },
+        "participants": { "type": "array", "items": { "type": "string" } },
+        "related_events": { "type": "array", "items": { "type": "string" } },
+        "related_locations": { "type": "array", "items": { "type": "string" } },
+        "related_people": { "type": "array", "items": { "type": "string" } },
+        "related_assets": { "type": "array", "items": { "type": "string" } },
+        "importance": { "type": "string" },
+        "canonical_status": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "project_entity": {
+      "type": "object",
+      "properties": {
+        "entity_id": { "type": "string" },
+        "project_name": { "type": "string" },
+        "description": { "type": "string" },
+        "contributors": { "type": "array", "items": { "type": "string" } },
+        "organizations": { "type": "array", "items": { "type": "string" } },
+        "assets": { "type": "array", "items": { "type": "string" } },
+        "related_people": { "type": "array", "items": { "type": "string" } },
+        "related_events": { "type": "array", "items": { "type": "string" } },
+        "status": { "type": "string" },
+        "repository_links": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "concept_entity": {
+      "type": "object",
+      "properties": {
+        "entity_id": { "type": "string" },
+        "concept_name": { "type": "string" },
+        "definition": { "type": "string" },
+        "summary": { "type": "string" },
+        "related_people": { "type": "array", "items": { "type": "string" } },
+        "related_projects": { "type": "array", "items": { "type": "string" } },
+        "related_stories": { "type": "array", "items": { "type": "string" } },
+        "related_assets": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "timeline_entry": {
+      "type": "object",
+      "properties": {
+        "date": { "type": "string" },
+        "entity_id": { "type": "string" },
+        "type": { "type": "string" },
+        "title": { "type": "string" },
+        "notes": { "type": "string" },
+        "related_entities": { "type": "array", "items": { "type": "string" } }
+      },
       "additionalProperties": true
     },
     "relationship": {

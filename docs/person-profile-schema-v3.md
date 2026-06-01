@@ -20,10 +20,12 @@ Appearance is intentionally a small part of the schema. The durable profile is m
 - `profile_id`
 - `created_at`
 - `updated_at`
+- `entity`
 - `consent`
 - `identity`
 - `appearance`
 - `asset_library`
+- `knowledge_graph`
 - `personality`
 - `motivation`
 - `decision_making`
@@ -42,6 +44,8 @@ Appearance is intentionally a small part of the schema. The durable profile is m
 - `extensions`
 
 Unknown imported fields must be preserved under `extensions`.
+
+`entity` and `knowledge_graph` are the additive v4 foundation layer. They make the v3 person profile usable inside the K Street Knowledge Graph while preserving v3 compatibility. See `docs/knowledge-graph-v4-foundation.md`.
 
 See `docs/asset-library-schema.md` for the asset library object, asset types, canon levels, consent status values, groups, and style guides.
 

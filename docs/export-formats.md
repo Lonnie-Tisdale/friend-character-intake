@@ -14,7 +14,17 @@ The static app can export the v3 profile in several forms:
 - `profile.visual-reference.md` - artist/image-generator reference sheet
 - `profile.art-reference.md` - art prompt and style-guide reference
 - `profile.sprite-reference.md` - sprite/pixel/token reference
+- `graph.full.json` - full v4 foundation graph export with the v3 person profile embedded as `person_profile`
+- `graph.people.json` - person nodes from the graph
+- `graph.relationships.json` - first-class relationship entities
+- `graph.organizations.json` - organization entities
+- `graph.locations.json` - location entities
+- `graph.events.json` - event entities
+- `graph.assets.json` - asset entities derived from the Asset Library
+- `graph.projects.json` - project entities
 
 `Download All` creates a zip containing all export formats plus the current schema.
 
-For submissions, the Formspree payload includes full JSON, compact JSON, Markdown profile, AI context, game design summary, art prompt, and dialogue prompt.
+For submissions, the Formspree payload includes full JSON, compact JSON, graph full JSON, Markdown profile, AI context, game design summary, art prompt, and dialogue prompt.
+
+Graph exports are read-only snapshots by convention. Edit the source form or canonical JSON, then export a new graph snapshot.

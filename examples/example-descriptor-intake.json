@@ -4,6 +4,23 @@
   "profile_id": "example-person",
   "created_at": "2026-06-01T00:00:00.000Z",
   "updated_at": "2026-06-01T00:00:00.000Z",
+  "entity": {
+    "entity_id": "person_example",
+    "entity_type": "person",
+    "display_name": "Example Person",
+    "created_at": "2026-06-01T00:00:00.000Z",
+    "updated_at": "2026-06-01T00:00:00.000Z",
+    "tags": ["example", "person"],
+    "notes": "Example root person entity.",
+    "relationships": [
+      {
+        "target_entity_id": "org_kstreet",
+        "relationship_type": "associated_with",
+        "strength": "7",
+        "notes": "Example graph link."
+      }
+    ]
+  },
   "consent": {
     "permission_to_store": true,
     "permission_to_fictionalize": true,
@@ -102,6 +119,185 @@
         "negative_prompt_notes": "Avoid photorealism."
       }
     ]
+  },
+  "knowledge_graph": {
+    "graph_schema_version": "4.0.0-foundation",
+    "graph_id": "person_example_graph",
+    "root_entity_id": "person_example",
+    "entities": [
+      {
+        "entity_id": "person_example",
+        "entity_type": "person",
+        "display_name": "Example Person",
+        "created_at": "2026-06-01T00:00:00.000Z",
+        "updated_at": "2026-06-01T00:00:00.000Z",
+        "tags": ["example", "person"],
+        "notes": "Example root person entity.",
+        "relationships": [
+          {
+            "target_entity_id": "org_kstreet",
+            "relationship_type": "associated_with",
+            "strength": "7",
+            "notes": "Example graph link."
+          }
+        ],
+        "profile_ref": "current_profile"
+      },
+      {
+        "entity_id": "org_kstreet",
+        "entity_type": "organization",
+        "display_name": "K Street",
+        "created_at": "2026-06-01",
+        "updated_at": "2026-06-01",
+        "tags": ["example", "organization"],
+        "notes": "Example organization node.",
+        "relationships": []
+      },
+      {
+        "entity_id": "asset_example_face_reference",
+        "entity_type": "asset",
+        "display_name": "Current Face Reference",
+        "created_at": "2026-06-01",
+        "updated_at": "2026-06-01",
+        "tags": ["face", "current", "portrait"],
+        "notes": "Example metadata only; no real image included.",
+        "relationships": [
+          {
+            "target_entity_id": "person_example",
+            "relationship_type": "asset_of",
+            "strength": "7",
+            "notes": "portrait_generation, art_generation"
+          }
+        ],
+        "asset_ref": "asset_example_face_reference"
+      }
+    ],
+    "relationship_entities": [
+      {
+        "relationship_id": "rel_example_friend",
+        "person_a": "person_example",
+        "person_b": "person_friend",
+        "relationship_type": "friend",
+        "trust_level": "8",
+        "conflict_level": "2",
+        "history_level": "5",
+        "influence_level": "6",
+        "communication_frequency": "regular",
+        "relationship_health": "healthy",
+        "running_dynamic": "practical support plus dry humor",
+        "inside_jokes": "example-only bit",
+        "shared_history": "worked through several fictional crises",
+        "relationship_notes": "Example relationship entity."
+      }
+    ],
+    "organizations": [
+      {
+        "entity_id": "org_kstreet",
+        "organization_name": "K Street",
+        "founding_date": "2026-01-01",
+        "description": "Example creative system.",
+        "members": ["person_example"],
+        "roles": ["organizer"],
+        "projects": ["project_example"],
+        "associated_locations": ["loc_example"],
+        "assets": ["asset_example_face_reference"],
+        "history": "Example organization history.",
+        "status": "active"
+      }
+    ],
+    "factions": [],
+    "locations": [
+      {
+        "entity_id": "loc_example",
+        "display_name": "Planning Board",
+        "location_type": "fictional",
+        "description": "Example usual setting.",
+        "associated_people": ["person_example"],
+        "associated_events": ["event_example"],
+        "associated_organizations": ["org_kstreet"],
+        "associated_assets": [],
+        "coordinates_optional": "",
+        "tags": ["example"]
+      }
+    ],
+    "events": [
+      {
+        "entity_id": "event_example",
+        "title": "Example Milestone",
+        "event_date": "2026-06-01",
+        "participants": ["person_example"],
+        "organizations": ["org_kstreet"],
+        "locations": ["loc_example"],
+        "assets": [],
+        "stories": ["story_example"],
+        "outcomes": "Graph foundation example created.",
+        "notes": "Safe example event."
+      }
+    ],
+    "assets": [],
+    "story_objects": [
+      {
+        "entity_id": "story_example",
+        "title": "The Example Checklist",
+        "summary": "A reusable example story object.",
+        "participants": ["person_example"],
+        "related_events": ["event_example"],
+        "related_locations": ["loc_example"],
+        "related_people": ["person_example"],
+        "related_assets": [],
+        "importance": "low",
+        "canonical_status": "example_only"
+      }
+    ],
+    "projects": [
+      {
+        "entity_id": "project_example",
+        "project_name": "Example Project",
+        "description": "Safe sample project.",
+        "contributors": ["person_example"],
+        "organizations": ["org_kstreet"],
+        "assets": [],
+        "related_people": ["person_example"],
+        "related_events": ["event_example"],
+        "status": "example",
+        "repository_links": []
+      }
+    ],
+    "concepts": [
+      {
+        "entity_id": "concept_practical_care",
+        "concept_name": "Practical Care",
+        "definition": "Care expressed through useful action.",
+        "summary": "Example concept for graph/lore exports.",
+        "related_people": ["person_example"],
+        "related_projects": ["project_example"],
+        "related_stories": ["story_example"],
+        "related_assets": []
+      }
+    ],
+    "links": [
+      {
+        "target_entity_id": "org_kstreet",
+        "relationship_type": "associated_with",
+        "strength": "7",
+        "notes": "Example graph link."
+      }
+    ],
+    "timeline": [
+      {
+        "date": "2026-06-01",
+        "entity_id": "event_example",
+        "type": "event",
+        "title": "Example Milestone",
+        "notes": "Graph foundation example created.",
+        "related_entities": ["person_example", "org_kstreet"]
+      }
+    ],
+    "generated": {
+      "timeline_summary": "",
+      "lore_summary": "",
+      "ai_agent_context": ""
+    }
   },
   "personality": {
     "primary_social_energy": "Practical Fixer",
