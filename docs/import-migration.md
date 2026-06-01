@@ -11,6 +11,7 @@ The app imports:
 
 - Never destroy unknown fields.
 - Preserve unknown fields under `extensions`.
+- Preserve existing imported `extensions` content and merge newly discovered unknown top-level fields into it.
 - Missing v3 fields default to empty strings, empty arrays, first select option, or unchecked booleans.
 - Consent fields are mapped forward when possible.
 - Older `character_core`, `voice_and_behavior`, `narrative_design`, and `generated` fields are migrated into v3 sections.
@@ -24,4 +25,3 @@ schema/friend_descriptor_schema.json
 ```
 
 Because the app is static and GitHub Pages compatible, validation is intentionally client-side and does not require a backend.
-

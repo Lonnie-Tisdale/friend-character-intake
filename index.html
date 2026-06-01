@@ -73,12 +73,21 @@
     .asset-thumb img { width: 100%; height: 100%; object-fit: cover; }
     .asset-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
     .asset-table th, .asset-table td { border-bottom: 1px solid var(--line); padding: 7px; text-align: left; vertical-align: top; }
+    #assetTableWrap { overflow-x: auto; }
     .asset-preview { border: 1px solid var(--line); border-radius: var(--radius); padding: 10px; background: #fbfbf9; min-height: 90px; }
     aside { position: sticky; top: 70px; padding: 14px; }
     pre { margin: 0; min-height: 460px; max-height: calc(100vh - 190px); overflow: auto; border-radius: 6px; padding: 12px; background: #17201f; color: #e8f5f1; font-size: .8rem; white-space: pre-wrap; word-break: break-word; }
     input[type="file"] { display: none; }
     @media (max-width: 1040px) { main { grid-template-columns: 1fr; } aside { position: static; } pre { max-height: 560px; } }
-    @media (max-width: 660px) { .grid { grid-template-columns: 1fr; } .toolbar { position: static; } button, .file-button { width: 100%; } }
+    @media (max-width: 660px) {
+      main { padding-inline: 10px; }
+      .grid { grid-template-columns: 1fr; }
+      .toolbar { position: static; }
+      button, .file-button { width: 100%; }
+      .asset-gallery { grid-template-columns: 1fr; }
+      .asset-table { min-width: 720px; }
+      pre { min-height: 320px; }
+    }
   </style>
 </head>
 <body>
@@ -638,7 +647,7 @@
           sensitive_topics_to_avoid: values.sensitive_topics_to_avoid,
           consent_notes: values.consent_notes
         },
-        identity: pick(values, ["display_name", "real_name_optional", "in_world_name", "nicknames", "pronouns", "age_range", "current_location", "origin_location", "communities", "roles", "professions", "identity_tags"]),
+        identity: pick(values, ["display_name", "real_name_optional", "optional_contact", "in_world_name", "nicknames", "pronouns", "age_range", "current_location", "origin_location", "communities", "roles", "professions", "identity_tags"]),
         appearance: pick(values, ["height_build", "hair", "eyes", "face_features", "skin_tone", "distinguishing_marks", "silhouette", "everyday_clothing", "iconic_outfit", "accessories", "carried_items", "default_expression", "movement_body_language", "image_prompt_notes", "negative_image_prompt_notes"]),
         asset_library: {
           primary_reference_asset_id: values.primary_reference_asset_id,
@@ -1214,7 +1223,9 @@
         flattenLegacy(source, set);
       }
       const knownTop = new Set(["schema_version", "schema_id", "schema_name", "profile_id", "created_at", "updated_at", "metadata", "consent", "identity", "appearance", "asset_library", "personality", "motivation", "motivation_values", "decision_making", "social_model", "social_relationship_model", "relationship_graph", "knowledge_domains", "humor_and_voice", "humor_communication", "conflict_and_stress", "conflict_stress_response", "signature_behaviors", "narrative_engine", "game_mechanics", "ai_generation", "ai_generation_metadata", "project_usage", "source_notes", "generated_content", "privacy", "exports", "generated", "character_core", "voice_and_behavior", "narrative_design", "extensions"]);
-      importedExtensions.unknown_fields = Object.fromEntries(Object.entries(source).filter(([key]) => !knownTop.has(key)));
+      const existingExtensions = source.extensions && typeof source.extensions === "object" && !Array.isArray(source.extensions) ? source.extensions : {};
+      const unknownTopLevel = Object.fromEntries(Object.entries(source).filter(([key]) => !knownTop.has(key)));
+      importedExtensions.unknown_fields = { ...existingExtensions, ...unknownTopLevel };
       flatFields.forEach(field => {
         setField(field.id, set[field.id] ?? defaultForField(field));
       });
@@ -1244,6 +1255,7 @@
       set.knowledge_domain_entries = Array.isArray(source.knowledge_domains) ? source.knowledge_domains : (source.knowledge_domains?.domains || []);
       set.signature_behavior_entries = Array.isArray(source.signature_behaviors) ? source.signature_behaviors : (source.signature_behaviors?.behaviors || []);
       set.consent_notes = source.consent?.consent_notes || source.consent?.notes || source.consent?.permission_notes || "";
+      set.sensitive_topics_to_avoid = source.consent?.sensitive_topics_to_avoid || [];
       set.permission_to_store = source.consent?.permission_to_store || false;
       set.permission_to_fictionalize = source.consent?.permission_to_fictionalize || source.consent?.permission_to_use_as_fictional_character || false;
       set.permission_for_ai_dialogue = source.consent?.permission_for_ai_dialogue || false;
