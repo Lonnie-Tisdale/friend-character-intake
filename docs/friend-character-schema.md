@@ -1,6 +1,6 @@
-# Legacy Friend Character Schema
+# Legacy Character Intake Schema
 
-The old Friend Character Intake schema and the intermediate 2.0 person profile schema have been superseded by:
+The old friend-facing intake schema and the intermediate 2.0 person profile schema have been superseded by the shared HTF / K Street profile schema:
 
 ```text
 kstreet_person_profile.v3 3.0.0

@@ -1,4 +1,4 @@
-# K Street Knowledge Graph v4 Foundation
+# HTF / K Street Knowledge Graph v4 Foundation
 
 The v4 foundation layer turns the v3 person profile into a graph-aware record without replacing the v3 profile. A current profile still exports as `schema_id: kstreet_person_profile.v3` and `schema_version: 3.0.0`; the graph layer appears in `entity` and `knowledge_graph`.
 
@@ -6,7 +6,7 @@ The v4 foundation layer turns the v3 person profile into a graph-aware record wi
 
 Every graph record uses the same core fields:
 
-- `entity_id` - stable human-editable ID such as `person_example`, `org_kstreet`, or `project_oregon_fail`
+- `entity_id` - stable human-editable ID such as `person_example`, `org_shared_group`, or `project_shared_database`
 - `entity_type` - one of `person`, `relationship`, `organization`, `location`, `event`, `asset`, `story_object`, `project`, `faction`, or `concept`
 - `display_name` - readable name for browsers, exports, and AI summaries
 - `created_at` and `updated_at` - timestamps or known dates

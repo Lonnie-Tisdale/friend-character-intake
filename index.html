@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>K Street Person Profile Database</title>
+  <title>HTF / K Street Character Database</title>
   <style>
     :root {
       color-scheme: light;
@@ -129,8 +129,8 @@
 </head>
 <body data-mode="simple">
   <header>
-    <h1>K Street Person Profile Database</h1>
-    <p>This profile helps generate consistent characters, dialogue, art prompts, NPCs, relationship maps, and project memory across K Street projects. Person schema <strong>3.0.0</strong> with Knowledge Graph v4 foundation.</p>
+    <h1>HTF / K Street Character Database</h1>
+    <p>This shared profile system helps generate consistent characters, dialogue, art prompts, NPCs, relationship maps, and project memory across HTF, K Street, and future group projects. Person schema <strong>3.0.0</strong> with Knowledge Graph v4 foundation.</p>
   </header>
   <nav class="mode-nav" aria-label="Interface modes">
     <strong>MODE</strong>
@@ -149,15 +149,15 @@
     </nav>
     <div>
       <section class="intro-card simple-only">
-        <h2>Simple Friend Intake</h2>
-        <p>Fill in what feels easy. The point is to capture the traits that make you recognizable as a fictional/game character: vibe, voice, decisions, boundaries, visual anchors, and how you connect to the K Street circle, projects, or community.</p>
+        <h2>Simple Member Intake</h2>
+        <p>Fill in what feels easy. The point is to capture the traits that make you recognizable as a fictional/game character: vibe, voice, decisions, boundaries, visual anchors, and how you connect to the group, projects, or community.</p>
         <p><strong>What will this be used for?</strong> Approved answers may help create consistent characters, dialogue, art prompts, NPC behavior, project memory, and relationship maps. Consent fields decide what can be stored, fictionalized, simulated, or reused.</p>
         <p><strong>Easy path:</strong> add your display name, short bio, vibe, visual description, voice style, relationship/project context, and consent choices. Then click <strong>Submit Descriptor</strong>. If you want to share a reference photo, describe where the reviewer can find it or send it privately.</p>
         <p>Public repos should not contain real private images unless explicitly approved.</p>
       </section>
       <section class="intro-card advanced-only">
         <h2>Advanced Canon Editing</h2>
-        <p>Full person schema, asset/reference metadata, canon controls, source notes, timeline entries, and graph-aware entity linking for K Street project maintainers.</p>
+        <p>Full person schema, asset/reference metadata, canon controls, source notes, timeline entries, and graph-aware entity linking for HTF / K Street maintainers and collaborators.</p>
       </section>
       <section class="intro-card agent-only">
         <h2>Agent Export Console</h2>
@@ -207,7 +207,7 @@
               <select id="asset_filter_consent"><option value="">All consent statuses</option></select>
             </label>
             <label>Filter by project
-              <input id="asset_filter_project" placeholder="K Street, Oregon Fail, etc.">
+              <input id="asset_filter_project" placeholder="HTF, K Street, project name, etc.">
             </label>
             <label>Filter by tag
               <input id="asset_filter_tag" placeholder="face, sprite, historical">
@@ -351,7 +351,7 @@
     const SCHEMA_VERSION = "3.0.0";
     const SCHEMA_ID = "kstreet_person_profile.v3";
     const LEGACY_SCHEMA_VERSION = "friend_descriptor_intake.v2";
-    const SOURCE = "K Street Person Profile Database";
+    const SOURCE = "HTF / K Street Character Database";
     const SUBMISSION_ENDPOINT = "https://formspree.io/f/xredwazb";
     const ASSET_TYPES = ["reference_photo", "portrait", "full_body", "sprite", "background", "voice_sample", "document", "model_3d", "logo_symbol", "moodboard", "character_art", "sprite_sheet", "pixel_art", "token", "concept_art", "ui_graphic", "logo", "symbol", "icon", "animation", "video", "voice_reference", "audio_clip", "music_reference", "pdf", "3d_model", "texture", "screenshot", "historical_reference", "other"];
     const ASSET_CANON_LEVELS = ["primary_reference", "secondary_reference", "historical_reference", "current_reference", "legacy_reference", "semi_canon", "canon", "noncanon", "prototype", "deprecated"];
@@ -366,7 +366,7 @@
       "image_prompt_notes", "everyday_clothing", "default_expression", "movement_body_language", "source_images",
       "primary_social_energy", "secondary_social_energy", "personality_traits", "custom_traits", "strengths", "flaws",
       "voice_rhythm", "typical_phrases", "example_quotes", "dialogue_dos", "dialogue_donts",
-      "relationship_to_kstreet_circle", "how_they_show_care", "friendship_style",
+      "relationship_to_group_network", "how_they_show_care", "friendship_style",
       "approved_projects", "project_relevance_notes", "canon_level",
       "character_summary", "ai_context_output"
     ]);
@@ -381,7 +381,7 @@
           b("permission_to_fictionalize", "Permission to fictionalize", "Required before adapting into projects."),
           b("permission_for_ai_dialogue", "Permission for AI dialogue", "Allows voice/dialogue simulation."),
           b("permission_for_art_generation", "Permission for art generation", "Controls whether visual prompt fields can be reused."),
-          b("permission_for_cross_project_reuse", "Permission for cross-project reuse", "Useful for shared K Street profile databases."),
+          b("permission_for_cross_project_reuse", "Permission for cross-project reuse", "Useful for shared HTF / K Street profile databases."),
           b("permission_for_relationship_simulation", "Permission for relationship simulation", "Allows graph and social model simulation."),
           b("contact_for_questions", "Contact for questions", "Allows follow-up questions."),
           l("sensitive_topics_to_avoid", "Sensitive topics to avoid", "Private topics that should not appear in generated content.", "family details\nmedical specifics"),
@@ -403,7 +403,7 @@
           f("age_range", "Age range", "text", "Keeps profiles useful without over-collecting precise personal data.", "30s"),
           f("current_location", "Current location", "text", "Current public-safe location or usual region.", "Portland, Oregon"),
           f("origin_location", "Origin location", "text", "Where they are from, if relevant and approved.", "Pacific Northwest"),
-          l("communities", "Communities", "Groups, scenes, or cultures they belong to.", "K Street\nParkour community"),
+          l("communities", "Communities", "Groups, scenes, or cultures they belong to.", "HTF\nK Street\nParkour community"),
           l("roles", "Roles", "Social or project roles.", "organizer\nmentor"),
           l("professions", "Professions", "Jobs, callings, or work identities.", "coach\nresearcher"),
           l("identity_tags", "Tags", "Searchable identity tags.", "strategist\ncommunity-builder")
@@ -445,7 +445,7 @@
           f("primary_outfit_reference_asset_id", "Primary outfit reference asset ID", "text", "Quick link for outfit reference.", ""),
           f("primary_token_asset_id", "Primary token asset ID", "text", "Quick link for token reference.", ""),
           f("primary_voice_reference_asset_id", "Primary voice reference asset ID", "text", "Quick link for voice reference.", ""),
-          rows("asset_entries", "Assets", "asset_id | asset_type | title | description | person/entity linked | project linked | file_name | file_extension | file_size | url | local_path | thumbnail_url | date_added | last_modified | source | creator | copyright_holder | license_type | consent_status | canon_level | tags comma-list | associated_projects comma-list | use_cases comma-list | do_not_use_for comma-list | notes", "asset_001 | reference_photo | Current face reference | approved current face photo | person_example | K Street | face.jpg | jpg | 2.4 MB | https://... | Source Images/Name/face.jpg | https://... | 2026-06-01 | 2026-06-01 | self-submitted | Example Person | Example Person | private | approved | primary_reference | face,current,portrait | K Street,Generic NPC System | portrait_generation,art_generation | marketing | private source image"),
+          rows("asset_entries", "Assets", "asset_id | asset_type | title | description | person/entity linked | project linked | file_name | file_extension | file_size | url | local_path | thumbnail_url | date_added | last_modified | source | creator | copyright_holder | license_type | consent_status | canon_level | tags comma-list | associated_projects comma-list | use_cases comma-list | do_not_use_for comma-list | notes", "asset_001 | reference_photo | Current face reference | approved current face photo | person_example | Shared Character Database | face.jpg | jpg | 2.4 MB | https://... | Source Images/Name/face.jpg | https://... | 2026-06-01 | 2026-06-01 | self-submitted | Example Person | Example Person | private | approved | primary_reference | face,current,portrait | Shared Character Database,Generic NPC System | portrait_generation,art_generation | marketing | private source image"),
           rows("asset_group_entries", "Asset groups", "group_id | group_name | description | asset_ids comma-list | tags comma-list | notes", "group_face | Face References | approved face references | asset_001,asset_002 | face,current | use for portraits"),
           rows("style_guide_entries", "Style guides", "guide_name | description | asset_ids comma-list | prompt_notes | negative_prompt_notes", "Retro JRPG Style | 32-bit RPG interpretation | asset_003 | bold readable sprite silhouette | avoid modern photo-realism"),
           f("visual_reference_sheet", "Visual reference sheet", "textarea", "Generated artist/image model reference summary.", "")
@@ -458,19 +458,19 @@
         fields: [
           f("entity_id", "Entity ID", "text", "Stable graph ID for this person node.", "person_example"),
           s("entity_type", "Entity type", ENTITY_TYPES, "The current profile should usually remain person."),
-          l("graph_tags", "Graph tags", "Tags used across the knowledge graph.", "person\nk-street\nparkour"),
+          l("graph_tags", "Graph tags", "Tags used across the knowledge graph.", "person\nhtf\nk-street\nparkour"),
           f("graph_notes", "Graph notes", "textarea", "Graph-level notes for this person node.", "Central profile node for project graph queries."),
           rows("graph_link_entries", "Graph links", "target entity id | relationship type | strength 1-10 | notes", "org_sdpk | founder_of | 9 | founded / helped establish community\nproject_tao_of_parkour | author_of | 10 | major concept project"),
           rows("graph_entity_entries", "Linked entities", "entity_id | entity_type | display_name | created_at | updated_at | tags comma-list | notes", "org_sdpk | organization | SDPK | 2003-01-01 | 2026-06-01 | parkour,community | San Diego parkour organization\nloc_san_diego | location | San Diego |  |  | city,parkour | early movement history"),
           rows("relationship_entity_entries", "Relationship entities", "relationship_id | person_a | person_b | relationship_type | trust level | conflict level | history level | influence level | communication frequency | relationship health | running dynamic | inside jokes | shared history | relationship notes | confidence level | canon level | consent status", "rel_example_friend | person_example | person_friend | friend | 8 | 2 | 7 | 6 | frequent | healthy | creative pressure-testing | old bits | shared movement history | example relationship | high | canon | approved"),
-          rows("organization_entity_entries", "Organization entities", "entity_id | organization name | founding date | description | members comma-list | roles comma-list | projects comma-list | associated locations comma-list | assets comma-list | history | status", "org_kstreet | K Street | 2026-01-01 | umbrella creative system | person_example | member | project_oregon_fail | loc_oregon | asset_logo | evolving project network | active"),
-          rows("faction_entity_entries", "Faction entities", "entity_id | faction name | description | members comma-list | roles comma-list | projects comma-list | associated locations comma-list | assets comma-list | goals | status", "faction_rooftop_pragmatists | Rooftop Pragmatists | informal movement crew | person_example,person_friend | scout,planner | project_oregon_fail | loc_san_diego | asset_patch | protect the route | active"),
+          rows("organization_entity_entries", "Organization entities", "entity_id | organization name | founding date | description | members comma-list | roles comma-list | projects comma-list | associated locations comma-list | assets comma-list | history | status", "org_shared_group | HTF / K Street | 2026-01-01 | shared creative circle | person_example | member | project_shared_database | loc_shared_space | asset_logo | evolving project network | active"),
+          rows("faction_entity_entries", "Faction entities", "entity_id | faction name | description | members comma-list | roles comma-list | projects comma-list | associated locations comma-list | assets comma-list | goals | status", "faction_rooftop_pragmatists | Rooftop Pragmatists | informal movement crew | person_example,person_friend | scout,planner | project_shared_database | loc_san_diego | asset_patch | protect the route | active"),
           rows("location_entity_entries", "Location entities", "entity_id | display name | location type | description | associated people comma-list | associated events comma-list | associated organizations comma-list | associated assets comma-list | coordinates optional | tags comma-list", "loc_san_diego | San Diego | real_world | early community location | person_example | event_sdpk_founding | org_sdpk | asset_photo |  | parkour,history"),
           rows("event_entity_entries", "Event entities", "entity_id | title | event date | participants comma-list | organizations comma-list | locations comma-list | assets comma-list | stories comma-list | outcomes | notes", "event_sdpk_founding | SDPK Founding | 2003-01-01 | person_example | org_sdpk | loc_san_diego |  | story_sdpk_origin | community formed | approximate date"),
           rows("story_object_entries", "Story object entities", "entity_id | title | summary | participants comma-list | related events comma-list | related locations comma-list | related people comma-list | related assets comma-list | importance | canonical status", "story_running_joke | Running Joke | recurring community bit | person_example,person_friend |  | loc_san_diego | person_friend |  | medium | semi_canon"),
-          rows("project_entity_entries", "Project entities", "entity_id | project name | description | contributors comma-list | organizations comma-list | assets comma-list | related people comma-list | related events comma-list | status | repository links comma-list", "project_oregon_fail | Oregon Fail | game/story project | person_example | org_kstreet | asset_logo | person_friend | event_game_jam | active | https://github.com/example"),
-          rows("concept_entity_entries", "Concept entities", "entity_id | concept name | definition | summary | related people comma-list | related projects comma-list | related stories comma-list | related assets comma-list", "concept_empirical_neoshamanism | Empirical Neoshamanism | practice concept | reality testing plus symbolic practice | person_example | project_empirical_neoshamanism | story_spiral | asset_symbol"),
-          rows("timeline_entries", "Timeline entries", "date | entity_id | timeline type | title | summary | related entities comma-list", "2026-06-01 | project_oregon_fail | milestone | Public graph foundation | v4 graph exports added | person_example,org_kstreet,project_oregon_fail"),
+          rows("project_entity_entries", "Project entities", "entity_id | project name | description | contributors comma-list | organizations comma-list | assets comma-list | related people comma-list | related events comma-list | status | repository links comma-list", "project_shared_database | Shared Character Database | group memory / character database | person_example | org_shared_group | asset_logo | person_friend | event_game_jam | active | https://github.com/example"),
+          rows("concept_entity_entries", "Concept entities", "entity_id | concept name | definition | summary | related people comma-list | related projects comma-list | related stories comma-list | related assets comma-list", "concept_shared_memory | Shared Memory | group continuity concept | stable character memory across projects | person_example | project_shared_database | story_spiral | asset_symbol"),
+          rows("timeline_entries", "Timeline entries", "date | entity_id | timeline type | title | summary | related entities comma-list", "2026-06-01 | project_shared_database | milestone | Public graph foundation | v4 graph exports added | person_example,org_shared_group,project_shared_database"),
           f("character_context_output", "Character context", "textarea", "Generated graph-aware character context.", ""),
           f("organization_summary_output", "Organization summary", "textarea", "Generated organization and faction summary.", ""),
           f("project_summary_output", "Project summary", "textarea", "Generated project summary.", ""),
@@ -534,7 +534,7 @@
         fields: [
           s("group_role", "Group role", ["Leader", "Glue", "Wildcard", "Strategist", "Mediator", "Scout", "Mentor", "Fixer", "Instigator", "Observer", "Protector", "Entertainer", "Analyst"], "The role they naturally occupy in groups."),
           s("friendship_style", "Friendship style", ["Protector", "Teacher", "Teammate", "Entertainer", "Problem Solver", "Listener", "Challenger", "Nurturer"], "How they show up for friends."),
-          f("relationship_to_kstreet_circle", "Relationship to K Street / projects / community", "textarea", "Plain-language relationship context for intake, review, and graph migration.", "Part of the K Street circle; interested in being used as a light fictional support character."),
+          f("relationship_to_group_network", "Relationship to group / projects / community", "textarea", "Plain-language relationship context for intake, review, and graph migration.", "Part of the HTF / K Street network; interested in being used as a light fictional support character."),
           f("how_they_show_care", "How they show care", "textarea", "Care language for dialogue and relationship simulation.", "Makes the plan easier, remembers needs, checks on basics."),
           f("how_they_receive_care", "How they receive care", "textarea", "How support gets through to them.", "Responds to concrete help and honest presence."),
           f("how_they_ask_for_help", "How they ask for help", "textarea", "Whether and how they request support.", "Frames it as a logistical need before naming feelings."),
@@ -669,8 +669,8 @@
         title: "Project Usage",
         note: "Controls which projects may use the profile and how canonical it is.",
         fields: [
-          l("approved_projects", "Approved projects", "One per line.", "Oregon Fail\nWest Coast Crypto Cruise\nHTF Coder\nK Street\nEmpirical Neoshamanism\nTao Of Parkour\nAI Dialogue Agent\nArt Generation\nGeneric NPC System\nInternal Testing"),
-          f("project_relevance_notes", "Project relevance", "textarea", "Why this person/entity matters to one or more projects.", "Useful for K Street memory, social cameos, and support NPC writing."),
+          l("approved_projects", "Approved projects", "One per line.", "HTF\nK Street\nShared Character Database\nAI Dialogue Agent\nArt Generation\nGeneric NPC System\nInternal Testing\nFuture Project"),
+          f("project_relevance_notes", "Project relevance", "textarea", "Why this person/entity matters to one or more projects.", "Useful for group memory, social cameos, and support NPC writing."),
           f("project_specific_notes", "Project-specific notes", "textarea", "Usage notes per project.", "Use generic NPC form unless explicitly approved for a named project."),
           s("canon_level", "Canon level", ["Raw", "Semi Canon", "Canon", "Parody Only", "Private Reference Only"], "How authoritative the profile is.")
         ]
@@ -684,7 +684,7 @@
           l("source_interviews", "Source interviews", "Interview notes, dates, or links.", "2026-06 intake conversation"),
           f("source_notes", "Source notes", "textarea", "General provenance notes.", "Self-submitted public form plus later review."),
           l("contributors", "Contributors", "People who contributed profile data.", "self-submitted"),
-          l("reviewers", "Reviewers", "People who reviewed the profile.", "K Street reviewer"),
+          l("reviewers", "Reviewers", "People who reviewed the profile.", "HTF / K Street reviewer"),
           f("last_reviewed", "Last reviewed", "text", "Review date.", "2026-06-01"),
           s("accuracy_confidence", "Accuracy confidence", ["Low", "Medium", "High", "Unreviewed"], "Confidence in the profile accuracy."),
           l("unresolved_questions", "Unresolved questions", "Open questions for later review.", "Confirm art prompt permission")
@@ -865,7 +865,7 @@
         personality: pick(values, ["primary_social_energy", "secondary_social_energy", "personality_traits", "custom_traits", "strengths", "flaws", "temperament", "biggest_contradiction"]),
         motivation: pick(values, ["core_motivation", "ranked_values", "what_they_optimize_for", "what_they_refuse_to_compromise", "what_tempts_them", "what_they_are_trying_to_become", "greatest_need", "greatest_fear", "moral_center", "shadow_desire"]),
         decision_making: pick(values, ["decision_style", "risk_tolerance", "planning_horizon", "under_pressure_behavior", "common_blind_spot", "failure_mode", "recovery_pattern", "what_makes_them_act", "what_makes_them_freeze"]),
-        social_model: pick(values, ["group_role", "friendship_style", "relationship_to_kstreet_circle", "how_they_show_care", "how_they_receive_care", "how_they_ask_for_help", "trust_builders", "trust_breakers", "disagreement_style", "apology_style", "boundary_style", "loyalty_triggers", "betrayal_triggers"]),
+        social_model: pick(values, ["group_role", "friendship_style", "relationship_to_group_network", "how_they_show_care", "how_they_receive_care", "how_they_ask_for_help", "trust_builders", "trust_breakers", "disagreement_style", "apology_style", "boundary_style", "loyalty_triggers", "betrayal_triggers"]),
         relationship_graph: values.relationship_entries,
         knowledge_domains: values.knowledge_domain_entries,
         humor_and_voice: pick(values, ["communication_modes", "humor_types", "voice_rhythm", "typical_phrases", "vocabulary", "topics_they_bring_up", "topics_they_avoid", "example_quotes", "dialogue_dos", "dialogue_donts"]),
@@ -1022,7 +1022,7 @@
         values ? `They prioritize ${values}.` : "",
         traits ? `They read as ${traits}.` : "",
         role ? `Their functional role is ${role}.` : "",
-        p.social_model.relationship_to_kstreet_circle ? `K Street relationship: ${p.social_model.relationship_to_kstreet_circle}` : "",
+        p.social_model.relationship_to_group_network ? `Group relationship: ${p.social_model.relationship_to_group_network}` : "",
         p.narrative_engine.growth_arc ? `Their growth arc: ${p.narrative_engine.growth_arc}` : ""
       ].filter(Boolean).join(" ");
       setField("character_summary", line);
@@ -1324,7 +1324,7 @@
 
     function shareableProfile(profile = buildProfile()) {
       return [
-        "# Shareable K Street Profile",
+        "# Shareable Group Character Profile",
         "",
         `Name: ${profile.identity.display_name || "_Not provided._"}`,
         `Pronouns/address preference: ${profile.identity.pronouns || "_Not provided._"}`,
@@ -1341,8 +1341,8 @@
         "## Voice / Dialogue",
         dialoguePrompt(profile) || "_Not provided._",
         "",
-        "## Relationship To K Street / Projects / Community",
-        profile.social_model.relationship_to_kstreet_circle || profile.project_usage.project_relevance_notes || "_Not provided._",
+        "## Relationship To Group / Projects / Community",
+        profile.social_model.relationship_to_group_network || profile.project_usage.project_relevance_notes || "_Not provided._",
         "",
         "## Consent Notes",
         profile.consent.consent_notes || "_Not provided._"
@@ -1351,7 +1351,7 @@
 
     function allAgentContext(profile = buildProfile()) {
       return [
-        "# K Street Agent Context Bundle",
+        "# HTF / K Street Agent Context Bundle",
         "",
         "This bundle is for AI/game/dev workflows. Respect consent, privacy, source notes, canon level, and do-not-misrepresent fields.",
         "",
@@ -1885,7 +1885,7 @@
     }
     function flattenModern(source, set) {
       Object.assign(set, source.identity, source.appearance, source.personality, source.motivation, source.motivation_values, source.decision_making, source.social_model, source.social_relationship_model, source.humor_and_voice, source.humor_communication, source.conflict_and_stress, source.conflict_stress_response, source.narrative_engine, source.game_mechanics, source.ai_generation, source.ai_generation_metadata, source.project_usage, source.source_notes, source.generated_content);
-      set.relationship_to_kstreet_circle = source.social_model?.relationship_to_kstreet_circle || source.social_model?.relationship_to_lonnie_kstreet || set.relationship_to_kstreet_circle || "";
+      set.relationship_to_group_network = source.social_model?.relationship_to_group_network || source.social_model?.relationship_to_kstreet_circle || source.social_model?.relationship_to_lonnie_kstreet || set.relationship_to_group_network || "";
       if (source.asset_library) {
         Object.assign(set, source.asset_library);
         set.asset_entries = source.asset_library.assets || [];

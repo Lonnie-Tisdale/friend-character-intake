@@ -14,7 +14,7 @@
     "notes": "Example root person entity.",
     "relationships": [
       {
-        "target_entity_id": "org_kstreet",
+        "target_entity_id": "org_shared_group",
         "relationship_type": "associated_with",
         "strength": "7",
         "notes": "Example graph link."
@@ -43,7 +43,7 @@
     "age_range": "30s",
     "current_location": "Usually near the planning board",
     "origin_location": "Pacific Northwest",
-    "communities": ["K Street"],
+    "communities": ["HTF", "K Street"],
     "roles": ["organizer", "planner"],
     "professions": ["researcher"],
     "identity_tags": ["strategist", "community-builder"]
@@ -139,7 +139,7 @@
         "notes": "Example root person entity.",
         "relationships": [
           {
-            "target_entity_id": "org_kstreet",
+            "target_entity_id": "org_shared_group",
             "relationship_type": "associated_with",
             "strength": "7",
             "notes": "Example graph link."
@@ -148,9 +148,9 @@
         "profile_ref": "current_profile"
       },
       {
-        "entity_id": "org_kstreet",
+        "entity_id": "org_shared_group",
         "entity_type": "organization",
-        "display_name": "K Street",
+        "display_name": "HTF / K Street",
         "created_at": "2026-06-01",
         "updated_at": "2026-06-01",
         "tags": ["example", "organization"],
@@ -199,8 +199,8 @@
     ],
     "organizations": [
       {
-        "entity_id": "org_kstreet",
-        "organization_name": "K Street",
+        "entity_id": "org_shared_group",
+        "organization_name": "HTF / K Street",
         "founding_date": "2026-01-01",
         "description": "Example creative system.",
         "members": ["person_example"],
@@ -221,7 +221,7 @@
         "description": "Example usual setting.",
         "associated_people": ["person_example"],
         "associated_events": ["event_example"],
-        "associated_organizations": ["org_kstreet"],
+        "associated_organizations": ["org_shared_group"],
         "associated_assets": [],
         "coordinates_optional": "",
         "tags": ["example"]
@@ -233,7 +233,7 @@
         "title": "Example Milestone",
         "event_date": "2026-06-01",
         "participants": ["person_example"],
-        "organizations": ["org_kstreet"],
+        "organizations": ["org_shared_group"],
         "locations": ["loc_example"],
         "assets": [],
         "stories": ["story_example"],
@@ -262,7 +262,7 @@
         "project_name": "Example Project",
         "description": "Safe sample project.",
         "contributors": ["person_example"],
-        "organizations": ["org_kstreet"],
+        "organizations": ["org_shared_group"],
         "assets": [],
         "related_people": ["person_example"],
         "related_events": ["event_example"],
@@ -284,7 +284,7 @@
     ],
     "links": [
       {
-        "target_entity_id": "org_kstreet",
+        "target_entity_id": "org_shared_group",
         "relationship_type": "associated_with",
         "strength": "7",
         "notes": "Example graph link."
@@ -297,7 +297,7 @@
         "type": "event",
         "title": "Example Milestone",
         "notes": "Graph foundation example created.",
-        "related_entities": ["person_example", "org_kstreet"]
+        "related_entities": ["person_example", "org_shared_group"]
       }
     ],
     "generated": {
@@ -342,7 +342,7 @@
   "social_model": {
     "group_role": "Strategist",
     "friendship_style": "Problem Solver",
-    "relationship_to_kstreet_circle": "Example-safe circle/community intake record for K Street testing.",
+    "relationship_to_group_network": "Example-safe circle/community intake record for HTF / K Street testing.",
     "how_they_show_care": "makes the plan easier and remembers needs",
     "how_they_receive_care": "responds to concrete help and honest presence",
     "how_they_ask_for_help": "frames it as a logistical need first",
@@ -454,7 +454,7 @@
     "source_images": [],
     "source_interviews": ["example only"],
     "source_notes": "fictional example",
-    "contributors": ["K Street"],
+    "contributors": ["HTF / K Street"],
     "reviewers": [],
     "last_reviewed": "2026-06-01",
     "accuracy_confidence": "High",

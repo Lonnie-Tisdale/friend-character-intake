@@ -1,6 +1,6 @@
-# K Street Person Profile Database
+# HTF / K Street Character Database
 
-A static, project-agnostic profile database for collecting structured descriptors from real people so they can be adapted into consistent fictional and game characters across K Street projects.
+A static, project-agnostic, group-centric profile database for collecting structured descriptors from real people so they can be adapted into consistent fictional and game characters across HTF, K Street, and future shared projects.
 
 The current person profile schema is `kstreet_person_profile.v3` version `3.0.0`. The app also includes the additive `kstreet_knowledge_graph.v4_foundation` layer for graph-aware people, relationships, organizations, locations, events, assets, projects, factions, story objects, and concepts.
 
@@ -31,12 +31,12 @@ It can support:
 - `docs/asset-management-guide.md` - static asset management workflow
 - `docs/visual-reference-workflow.md` - artist/image/sprite reference workflow
 - `docs/knowledge-graph-v4-foundation.md` - v4 entity framework, graph links, timeline, and graph exports
-- `docs/workflow.md` - recommended K Street cloud-drive workflow
+- `docs/workflow.md` - recommended HTF / K Street cloud-drive workflow
 - `examples/example-descriptor-intake.json` - safe example record
 
 ## Privacy Rule
 
-Public repositories and public form deployments should contain only the tool code, schema, docs, and approved examples. Real submitted descriptors, source images, contact info, and boundaries should remain private in the K Street cloud drive unless explicitly approved.
+Public repositories and public form deployments should contain only the tool code, schema, docs, and approved examples. Real submitted descriptors, source images, contact info, and boundaries should remain private in the HTF / K Street cloud drive unless explicitly approved.
 
 ## Use
 
@@ -72,7 +72,7 @@ Reviewer workflow:
 3. Select each submission and set status to `raw`, `reviewed`, or `approved`.
 4. Add reviewer notes, confidence level, canon level, and consent status.
 5. Download review JSON/Markdown or an approved package.
-6. Store exported packages in the private K Street cloud drive, not the public repo.
+6. Store exported packages in the private HTF / K Street cloud drive, not the public repo.
 
 The JSON preview updates live as fields change. The app warns before closing when there are unsaved changes.
 
@@ -137,7 +137,7 @@ The submission payload includes:
 
 The interface has three modes:
 
-- `Simple Intake` - default friend-facing mode with only essential identity, bio, vibe, visual, voice, relationship, consent, project, and source-image fields.
+- `Simple Intake` - default member-facing mode with only essential identity, bio, vibe, visual, voice, relationship, consent, project, and source-image fields.
 - `Advanced Canon` - full v3 person schema plus asset library and Knowledge Graph editing.
 - `Agent Export` - grouped JSON, Markdown, AI, game, art, asset, and graph export tools.
 
@@ -181,7 +181,7 @@ Supported entity types are `person`, `relationship`, `organization`, `location`,
 
 Existing v3 exports automatically become `entity_type: "person"` on import. Unknown fields are still preserved under `extensions`.
 
-Recent UX/schema additions include `identity.short_bio`, `social_model.relationship_to_kstreet_circle` for K Street/project/community relationship context, `project_usage.project_relevance_notes`, per-asset `linked_entity_id` / `linked_project`, and relationship metadata for confidence, canon, and consent.
+Recent UX/schema additions include `identity.short_bio`, `social_model.relationship_to_group_network` for group/project/community relationship context, `project_usage.project_relevance_notes`, per-asset `linked_entity_id` / `linked_project`, and relationship metadata for confidence, canon, and consent.
 
 ## Migration
 

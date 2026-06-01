@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>K Street Descriptor Review Dashboard</title>
+  <title>HTF / K Street Descriptor Review Dashboard</title>
   <style>
     :root {
       --bg: #f2f0e8;
@@ -68,7 +68,7 @@
 </head>
 <body>
   <header>
-    <h1>K Street Descriptor Review Dashboard</h1>
+    <h1>HTF / K Street Descriptor Review Dashboard</h1>
     <p>Private reviewer workflow for moving submitted profiles from Raw to Reviewed to Approved for Use. Static, local-first, JSON/Markdown portable.</p>
   </header>
   <nav aria-label="Review navigation">
@@ -104,7 +104,7 @@
           <li>Check optional contact and private source image notes stay private.</li>
           <li>Confirm project approval and canon level.</li>
           <li>Add reviewer notes, confidence, and final status.</li>
-          <li>Export Raw, Reviewed, or Approved packages into the private K Street cloud drive.</li>
+          <li>Export Raw, Reviewed, or Approved packages into the private HTF / K Street cloud drive.</li>
         </ul>
         <p id="status" class="status">Ready.</p>
       </section>
@@ -183,7 +183,7 @@
     function reviewMarkdown(record) {
       const profile = record.profile;
       return [
-        "# K Street Descriptor Review",
+        "# HTF / K Street Descriptor Review",
         "",
         `Profile: ${profileName(profile)}`,
         `Status: ${record.status}`,
@@ -277,7 +277,7 @@
           <li>Display name: ${escapeHtml(profile.identity?.display_name || "")}</li>
           <li>Short bio: ${escapeHtml(profile.identity?.short_bio || profile.generated_content?.character_summary || "")}</li>
           <li>Projects: ${escapeHtml((profile.project_usage?.approved_projects || []).join(", "))}</li>
-          <li>Relationship context: ${escapeHtml(profile.social_model?.relationship_to_kstreet_circle || profile.social_model?.relationship_to_lonnie_kstreet || "")}</li>
+          <li>Relationship context: ${escapeHtml(profile.social_model?.relationship_to_group_network || profile.social_model?.relationship_to_kstreet_circle || profile.social_model?.relationship_to_lonnie_kstreet || "")}</li>
         </ul>
         <h3>Profile Preview</h3>
         <pre>${escapeHtml(JSON.stringify(profile, null, 2))}</pre>

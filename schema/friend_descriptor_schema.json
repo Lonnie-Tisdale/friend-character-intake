@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://kstreet.local/schemas/kstreet_person_profile.v3.json",
-  "title": "K Street Person Profile v3",
-  "description": "Canonical source-of-truth profile schema for K Street people/characters across narrative, game, AI, relationship, and memory systems.",
+  "title": "HTF / K Street Person Profile v3",
+  "description": "Canonical source-of-truth profile schema for HTF / K Street people and shared characters across narrative, game, AI, relationship, and memory systems.",
   "type": "object",
   "required": [
     "schema_version",
@@ -67,7 +67,7 @@
     },
     "knowledge_graph": {
       "type": "object",
-      "description": "K Street Knowledge Graph v4 foundation layer. Existing v3 person profiles become person entities without changing the v3 profile contract.",
+      "description": "HTF / K Street Knowledge Graph v4 foundation layer. Existing v3 person profiles become person entities without changing the v3 profile contract.",
       "required": ["graph_schema_version", "graph_id", "root_entity_id", "entities", "relationship_entities", "organizations", "locations", "events", "assets", "projects", "links", "timeline"],
       "properties": {
         "graph_schema_version": { "const": "4.0.0-foundation" },

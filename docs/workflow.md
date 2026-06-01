@@ -1,11 +1,11 @@
-# K Street Descriptor Workflow
+# HTF / K Street Descriptor Workflow
 
 This tool is intentionally separate from any one game, story, or project. Keep the intake process universal first, then copy approved project-specific imports into individual project folders.
 
 ## Recommended Cloud Drive Structure
 
 ```text
-K Street Character Descriptor Tool/
+HTF - K Street Character Descriptor Tool/
   README - Start Here
   Public Form Link.txt
   Blank Form Export Example.json
@@ -17,7 +17,7 @@ K Street Character Descriptor Tool/
   Source Images/
     Person Name/
   Project Imports/
-    West Coast Crypto Cruise/
+    Shared Character Database/
     Future Project Name/
 ```
 

@@ -1,4 +1,4 @@
-# K Street Person Profile v3
+# HTF / K Street Person Profile v3
 
 Canonical schema:
 
@@ -7,7 +7,7 @@ schema_version: 3.0.0
 schema_id: kstreet_person_profile.v3
 ```
 
-This is the source-of-truth profile format for K Street projects, including Oregon Fail, West Coast Crypto Cruise, HTF Coder, Empirical Neoshamanism, Tao Of Parkour, AI dialogue systems, NPC generation, relationship simulations, art prompts, narrative systems, and agent memory systems.
+This is the shared source-of-truth profile format for HTF, K Street, and future group projects, including AI dialogue systems, NPC generation, relationship simulations, art prompts, narrative systems, game design, and agent memory systems.
 
 ## Philosophy
 
@@ -45,12 +45,12 @@ Appearance is intentionally a small part of the schema. The durable profile is m
 
 Unknown imported fields must be preserved under `extensions`.
 
-`entity` and `knowledge_graph` are the additive v4 foundation layer. They make the v3 person profile usable inside the K Street Knowledge Graph while preserving v3 compatibility. See `docs/knowledge-graph-v4-foundation.md`.
+`entity` and `knowledge_graph` are the additive v4 foundation layer. They make the v3 person profile usable inside the shared HTF / K Street Knowledge Graph while preserving v3 compatibility. See `docs/knowledge-graph-v4-foundation.md`.
 
 UX-facing additions that remain JSON-portable:
 
 - `identity.short_bio` - friendly intake bio for nontechnical submitters
-- `social_model.relationship_to_kstreet_circle` - plain-language K Street/project/community relationship context
+- `social_model.relationship_to_group_network` - plain-language group/project/community relationship context
 - `project_usage.project_relevance_notes` - why the profile matters to projects
 - `asset_library.assets[].linked_entity_id`
 - `asset_library.assets[].linked_project`
