@@ -1,10 +1,12 @@
 {
-  "schema_version": "friend_descriptor_intake.v2",
+  "schema_version": "2.0.0",
+  "schema_name": "kstreet.person_profile",
   "metadata": {
     "created_at": "2026-06-01T00:00:00.000Z",
     "updated_at": "2026-06-01T00:00:00.000Z",
-    "source": "K Street Character Descriptor Intake Tool",
-    "record_id": "example-descriptor"
+    "source": "K Street Person Profile Database",
+    "record_id": "example-person",
+    "migrated_from": null
   },
   "consent": {
     "permission_to_store": true,
@@ -12,60 +14,140 @@
     "permission_to_use_for_art_prompts": false,
     "permission_to_reuse_across_projects": true,
     "permission_to_contact_for_clarification": false,
-    "permission_notes": "Example record only. Do not treat as a real submission."
+    "notes": "Example record only. Do not treat as a real submission."
   },
   "identity": {
     "display_name": "Example Person",
     "optional_contact": "",
     "in_world_name_or_nickname": "The Compass",
     "pronouns": "they/them",
-    "current_location_or_usual_setting": "Usually near the planning board, coffee in hand.",
-    "age_range": "30s"
-  },
-  "character_core": {
-    "one_sentence_summary": "A calm strategist who can turn scattered people into a working plan.",
-    "primary_social_energy": "Grounding",
-    "secondary_social_energy": "Dryly funny",
-    "core_motivations": ["protect the group", "make the plan make sense", "avoid needless drama"]
+    "age_range": "30s",
+    "current_location_or_usual_setting": "Usually near the planning board, coffee in hand."
   },
   "appearance": {
     "visual_descriptors": "Relaxed posture, alert eyes, practical haircut, memorable glasses.",
     "clothing_style_props": "Layered jacket, tidy sneakers, notebook, reliable pen.",
     "default_expression": "Listening carefully with one eyebrow slightly raised.",
     "movement_body_language": "Still when thinking, precise hand motions when explaining.",
-    "source_image_notes": "Keep references private unless separately approved."
-  },
-  "voice_and_behavior": {
-    "voice_speech_rhythm": "Measured, concise, with a soft punchline after the serious point.",
-    "signature_behaviors": ["summarizes chaos into three steps", "checks whether everyone has eaten"],
-    "communication_style": "Direct, warm, practical, low-drama.",
-    "behavior_under_pressure": "Gets quieter, prioritizes essentials, delegates cleanly.",
-    "how_they_help_friends_allies": "Finds the missing piece and gives people jobs they can actually do.",
-    "recurring_habits": ["keeps lists", "notices exits", "remembers tiny preferences"]
+    "source_image_notes": "Keep references private unless separately approved.",
+    "art_prompt_summary": "Grounded modern strategist with warm analytical presence and practical props."
   },
   "personality": {
     "personality_traits": ["observant", "loyal", "pragmatic"],
     "custom_traits": ["quietly theatrical when comfortable"],
     "strengths": ["pattern recognition", "group coordination", "emotional steadiness"],
     "flaws": ["over-functions", "hides their own needs", "can become impatient with vagueness"],
-    "temptations": ["taking control too quickly", "solving instead of asking"],
+    "recurring_habits": ["keeps lists", "notices exits", "remembers tiny preferences"],
+    "temptations": ["taking control too quickly", "solving instead of asking"]
+  },
+  "motivation_values": {
+    "ranked_core_values": ["Friendship", "Truth", "Curiosity", "Service"],
+    "custom_values": "craft, stewardship",
+    "core_motivation": "Make confusing situations survivable for the people they love.",
+    "optimizes_for": "Clarity, group safety, and practical next steps.",
+    "refuses_to_compromise": "They will not betray a vulnerable ally for convenience.",
+    "what_tempts_them": "Being needed, being right, having the answer first.",
+    "trying_to_become": "Someone who trusts others enough to share the load."
+  },
+  "decision_making": {
+    "decision_style": "research-first",
+    "under_pressure_behavior": "Gets quieter, prioritizes essentials, delegates cleanly.",
+    "common_blind_spot": "Assumes everyone wants a solved problem more than emotional processing.",
+    "failure_mode": "Takes over and becomes terse.",
+    "recovery_pattern": "Apologizes with a concrete repair plan and revised boundaries.",
+    "risk_tolerance": "variable",
+    "planning_horizon": "long-term"
+  },
+  "social_relationship_model": {
+    "group_role": "strategist",
+    "friendship_style": "problem solver",
+    "trust_building_factors": ["follow-through", "honest constraints", "shared effort"],
+    "trust_breaking_factors": ["performative loyalty", "needless secrecy"],
+    "how_they_show_care": "Finds the missing piece and gives people jobs they can actually do.",
+    "how_they_handle_disagreement": "Starts with reasons, then asks what outcome matters most.",
+    "relationship_notes": "Warm with competent people; guarded around chaos without accountability.",
+    "relationship_graph": []
+  },
+  "knowledge_domains": {
+    "domains": [
+      {
+        "domain_name": "Planning",
+        "expertise_level": "advanced",
+        "confidence": "high",
+        "notes": "Strong at turning scattered inputs into ordered next steps."
+      }
+    ]
+  },
+  "humor_communication": {
+    "humor_types": ["dry", "deadpan", "intellectual"],
+    "communication_mode": "analyst",
+    "typical_phrases": ["Okay, three things.", "Let's separate facts from vibes."],
+    "vocabulary": ["constraints", "pattern", "signal", "clean"],
+    "topics_they_bring_up": ["systems", "food", "risk", "why plans fail"],
+    "topics_they_avoid": ["private family details", "medical specifics"],
+    "voice_speech_rhythm": "Measured, concise, with a soft punchline after the serious point.",
+    "dialogue_prompt_summary": "Write concise, practical dialogue with dry humor and careful emotional reads.",
+    "example_quotes": ["We can panic after we know what the problem is."]
+  },
+  "conflict_stress_response": {
+    "when_challenged_tends_to": ["research", "debate", "take control"],
+    "stress_signals": ["shorter sentences", "less eye contact", "more lists"],
+    "escalation_triggers": ["bad-faith arguments", "avoidable risk to friends"],
+    "de_escalation_methods": ["clear facts", "food", "a concrete next step"],
+    "apology_style": "Direct apology plus changed process.",
+    "boundary_style": "Calm, firm, specific, with little appetite for debate.",
     "boundaries": ["Do not portray as cruel", "Avoid jokes about private family details"]
   },
-  "narrative_design": {
-    "character_tags": ["strategist", "anchor", "dry wit"],
-    "suggested_class_role": "Planner / Support Lead",
-    "mechanics_hooks": ["turn confusion into a bonus action", "spot weak points in a plan"],
-    "potential_party_roles": ["support", "tactician", "social stabilizer"],
-    "comedic_exaggeration_level": "heightened",
-    "growth_arc": "Learns to let other people carry weight instead of quietly carrying all of it."
+  "signature_behaviors": {
+    "behaviors": [
+      {
+        "behavior": "Summarizes chaos into three steps",
+        "context": "when a group starts spiraling",
+        "comedic_exaggeration_potential": "medium",
+        "game_use_notes": "Can trigger a Clarity bonus."
+      }
+    ]
   },
-  "generated": {
-    "character_summary": "The Compass is a grounded, dryly funny planner whose calm presence turns confusion into action."
+  "narrative_engine": {
+    "personal_quest": "Prove care can be practical without becoming control.",
+    "greatest_fear": "Being useless when people are counting on them.",
+    "recurring_internal_conflict": "Wants trust but keeps preparing for everyone to drop the ball.",
+    "growth_arc": "Learns to let other people carry weight instead of quietly carrying all of it.",
+    "shadow_version": "Controlling strategist who treats people like fragile systems.",
+    "best_self_version": "A calm anchor who helps others become more capable.",
+    "running_joke": "Always has exactly the oddly specific tool needed.",
+    "symbolic_motifs": ["compass", "checklist", "warm light in a messy room"],
+    "character_themes": ["care as logistics", "trust as shared labor"]
+  },
+  "game_mechanics": {
+    "suggested_class_role": "Planner / Support Lead",
+    "party_roles": ["support", "tactician", "social stabilizer"],
+    "passive_abilities": ["reads the room", "detects weak plans"],
+    "active_abilities": ["turn confusion into three actionable steps"],
+    "weaknesses": ["overload from ambiguity", "control spiral"],
+    "status_effects": ["Focused", "Overextended", "Research Spiral"],
+    "special_dialogue_triggers": ["someone skips a meal", "a plan has no owner"],
+    "traversal_abilities": ["finds efficient routes through crowded systems"],
+    "support_abilities": ["grant clarity bonus", "reduce panic"],
+    "failure_comedy_mechanics": ["too many tabs obscure the obvious answer"]
+  },
+  "ai_generation_metadata": {
+    "canonical_short_description": "A grounded strategist with dry humor who turns chaos into practical steps.",
+    "canonical_long_description": "A calm, observant support character driven by friendship, clarity, and practical care.",
+    "behavioral_prompt_summary": "Prioritize clarity, protect allies, ask useful questions, avoid needless drama.",
+    "do_not_misrepresent": ["Do not make them cruel", "Do not reveal private contact information"],
+    "tags": ["strategist", "anchor", "dry wit"],
+    "project_usage_flags": ["Generic NPC system"],
+    "generated_summary": "The Compass is a grounded planner whose calm presence turns confusion into action."
+  },
+  "exports": {
+    "supported": ["full_json", "compact_json", "markdown_profile", "ai_context_markdown", "game_design_summary", "art_prompt", "dialogue_prompt"]
   },
   "privacy": {
     "contains_private_contact_info": false,
     "contains_boundaries": true,
     "public_repo_safe": true,
     "review_status": "raw"
-  }
+  },
+  "extensions": {}
 }

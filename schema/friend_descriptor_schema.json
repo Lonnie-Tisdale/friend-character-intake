@@ -1,181 +1,132 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://kstreet.local/schemas/friend_descriptor_intake.v2.json",
-  "title": "K Street Friend Descriptor Intake",
-  "description": "Project-agnostic descriptor record for turning a real person into a consistent fictional or game character.",
+  "$id": "https://kstreet.local/schemas/kstreet.person_profile.2.0.0.json",
+  "title": "K Street Person Profile",
+  "description": "Durable project-agnostic profile schema for real-person-inspired fictional/game characters, AI generation, narrative systems, and mechanics.",
   "type": "object",
   "required": [
     "schema_version",
+    "schema_name",
     "metadata",
     "consent",
     "identity",
-    "character_core",
     "appearance",
-    "voice_and_behavior",
     "personality",
-    "narrative_design",
-    "privacy"
+    "motivation_values",
+    "decision_making",
+    "social_relationship_model",
+    "knowledge_domains",
+    "humor_communication",
+    "conflict_stress_response",
+    "signature_behaviors",
+    "narrative_engine",
+    "game_mechanics",
+    "ai_generation_metadata",
+    "privacy",
+    "extensions"
   ],
   "additionalProperties": true,
   "properties": {
-    "schema_version": {
-      "const": "friend_descriptor_intake.v2"
-    },
+    "schema_version": { "const": "2.0.0" },
+    "schema_name": { "const": "kstreet.person_profile" },
     "metadata": {
       "type": "object",
-      "required": ["created_at", "updated_at", "source"],
-      "additionalProperties": true,
+      "required": ["created_at", "updated_at", "source", "record_id"],
       "properties": {
-        "created_at": { "type": "string", "format": "date-time" },
-        "updated_at": { "type": "string", "format": "date-time" },
+        "created_at": { "type": "string" },
+        "updated_at": { "type": "string" },
         "source": { "type": "string" },
         "record_id": { "type": "string" },
-        "imported_from_schema_version": { "type": "string" }
-      }
+        "migrated_from": { "type": ["string", "null"] }
+      },
+      "additionalProperties": true
     },
     "consent": {
       "type": "object",
-      "required": ["permission_to_store", "permission_to_use_as_fictional_character", "permission_notes"],
-      "additionalProperties": true,
       "properties": {
         "permission_to_store": { "type": "boolean" },
         "permission_to_use_as_fictional_character": { "type": "boolean" },
         "permission_to_use_for_art_prompts": { "type": "boolean" },
         "permission_to_reuse_across_projects": { "type": "boolean" },
         "permission_to_contact_for_clarification": { "type": "boolean" },
-        "permission_notes": { "type": "string" }
-      }
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": true
     },
-    "identity": {
+    "identity": { "$ref": "#/$defs/stringMap" },
+    "appearance": { "$ref": "#/$defs/stringMap" },
+    "personality": { "$ref": "#/$defs/mixedMap" },
+    "motivation_values": { "$ref": "#/$defs/mixedMap" },
+    "decision_making": { "$ref": "#/$defs/stringMap" },
+    "social_relationship_model": { "$ref": "#/$defs/mixedMap" },
+    "knowledge_domains": {
       "type": "object",
-      "required": ["display_name", "in_world_name_or_nickname", "pronouns"],
-      "additionalProperties": true,
       "properties": {
-        "display_name": { "type": "string" },
-        "optional_contact": { "type": "string" },
-        "in_world_name_or_nickname": { "type": "string" },
-        "pronouns": { "type": "string" },
-        "current_location_or_usual_setting": { "type": "string" },
-        "age_range": { "type": "string" }
-      }
-    },
-    "character_core": {
-      "type": "object",
-      "required": ["one_sentence_summary", "primary_social_energy", "secondary_social_energy", "core_motivations"],
-      "additionalProperties": true,
-      "properties": {
-        "one_sentence_summary": { "type": "string" },
-        "primary_social_energy": { "type": "string" },
-        "secondary_social_energy": { "type": "string" },
-        "core_motivations": {
+        "domains": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "object",
+            "properties": {
+              "domain_name": { "type": "string" },
+              "expertise_level": { "type": "string", "enum": ["", "novice", "beginner", "intermediate", "advanced", "expert"] },
+              "confidence": { "type": "string" },
+              "notes": { "type": "string" }
+            },
+            "additionalProperties": true
+          }
         }
-      }
+      },
+      "additionalProperties": true
     },
-    "appearance": {
+    "humor_communication": { "$ref": "#/$defs/mixedMap" },
+    "conflict_stress_response": { "$ref": "#/$defs/mixedMap" },
+    "signature_behaviors": {
       "type": "object",
-      "additionalProperties": true,
       "properties": {
-        "visual_descriptors": { "type": "string" },
-        "clothing_style_props": { "type": "string" },
-        "default_expression": { "type": "string" },
-        "movement_body_language": { "type": "string" },
-        "source_image_notes": { "type": "string" }
-      }
-    },
-    "voice_and_behavior": {
-      "type": "object",
-      "additionalProperties": true,
-      "properties": {
-        "voice_speech_rhythm": { "type": "string" },
-        "signature_behaviors": {
+        "behaviors": {
           "type": "array",
-          "items": { "type": "string" }
-        },
-        "communication_style": { "type": "string" },
-        "behavior_under_pressure": { "type": "string" },
-        "how_they_help_friends_allies": { "type": "string" },
-        "recurring_habits": {
-          "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "object",
+            "properties": {
+              "behavior": { "type": "string" },
+              "context": { "type": "string" },
+              "comedic_exaggeration_potential": { "type": "string" },
+              "game_use_notes": { "type": "string" }
+            },
+            "additionalProperties": true
+          }
         }
-      }
+      },
+      "additionalProperties": true
     },
-    "personality": {
-      "type": "object",
-      "additionalProperties": true,
-      "properties": {
-        "personality_traits": {
-          "type": "array",
-          "items": { "type": "string" }
-        },
-        "custom_traits": {
-          "type": "array",
-          "items": { "type": "string" }
-        },
-        "strengths": {
-          "type": "array",
-          "items": { "type": "string" }
-        },
-        "flaws": {
-          "type": "array",
-          "items": { "type": "string" }
-        },
-        "temptations": {
-          "type": "array",
-          "items": { "type": "string" }
-        },
-        "boundaries": {
-          "type": "array",
-          "items": { "type": "string" }
-        }
-      }
-    },
-    "narrative_design": {
-      "type": "object",
-      "additionalProperties": true,
-      "properties": {
-        "character_tags": {
-          "type": "array",
-          "items": { "type": "string" }
-        },
-        "suggested_class_role": { "type": "string" },
-        "mechanics_hooks": {
-          "type": "array",
-          "items": { "type": "string" }
-        },
-        "potential_party_roles": {
-          "type": "array",
-          "items": { "type": "string" }
-        },
-        "comedic_exaggeration_level": {
-          "type": "string",
-          "enum": ["none", "grounded", "heightened", "cartoonish", "mythic"]
-        },
-        "growth_arc": { "type": "string" }
-      }
-    },
-    "generated": {
-      "type": "object",
-      "additionalProperties": true,
-      "properties": {
-        "character_summary": { "type": "string" }
-      }
-    },
+    "narrative_engine": { "$ref": "#/$defs/mixedMap" },
+    "game_mechanics": { "$ref": "#/$defs/mixedMap" },
+    "ai_generation_metadata": { "$ref": "#/$defs/mixedMap" },
+    "exports": { "$ref": "#/$defs/mixedMap" },
     "privacy": {
       "type": "object",
-      "required": ["contains_private_contact_info", "contains_boundaries", "public_repo_safe"],
-      "additionalProperties": true,
       "properties": {
         "contains_private_contact_info": { "type": "boolean" },
         "contains_boundaries": { "type": "boolean" },
         "public_repo_safe": { "type": "boolean" },
-        "review_status": {
-          "type": "string",
-          "enum": ["raw", "reviewed", "approved_for_use"]
-        }
-      }
+        "review_status": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "extensions": {
+      "type": "object",
+      "description": "Unknown imported fields preserved during migration.",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "stringMap": {
+      "type": "object",
+      "additionalProperties": { "type": ["string", "number", "boolean", "array", "object", "null"] }
+    },
+    "mixedMap": {
+      "type": "object",
+      "additionalProperties": true
     }
   }
 }

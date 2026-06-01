@@ -1,8 +1,8 @@
-# K Street Character Descriptor Intake Tool
+# K Street Person Profile Database
 
-A static, project-agnostic intake tool for collecting structured descriptors from real people so they can be adapted into consistent fictional and game characters across K Street projects.
+A static, project-agnostic profile database for collecting structured descriptors from real people so they can be adapted into consistent fictional and game characters across K Street projects.
 
-The current schema version is `friend_descriptor_intake.v2`.
+The current schema is `kstreet.person_profile` version `2.0.0`.
 
 ## What This Is For
 
@@ -20,9 +20,10 @@ It can support:
 
 ## Files
 
-- `index.html` - static intake form, live JSON preview, import/export, sharing, compatibility check, and generated summary
+- `index.html` - static profile form, live JSON preview, import/export, sharing, compatibility checks, generated summaries, and Formspree submission
 - `schema/friend_descriptor_schema.json` - versioned JSON Schema
 - `docs/friend-character-schema.md` - schema field guide
+- `docs/person-profile-schema.md` - `2.0.0` person profile schema guide, migration notes, and export instructions
 - `docs/workflow.md` - recommended K Street cloud-drive workflow
 - `examples/example-descriptor-intake.json` - safe example record
 
@@ -37,7 +38,9 @@ Open `index.html` in a browser. No server or backend is required.
 Use the buttons at the top of the form to:
 
 - Submit the descriptor to a configured intake endpoint
-- Generate a character summary
+- Generate a summary from fields
+- Generate AI context
+- Copy JSON or Markdown
 - Share a portable JSON snapshot
 - Copy AI context for ChatGPT, Claude, Gemini, or similar systems
 - Publish JSON and Markdown snapshots
@@ -48,7 +51,7 @@ Use the buttons at the top of the form to:
 - Import an older or current JSON record
 - Reset the form
 
-The JSON preview updates live as fields change.
+The JSON preview updates live as fields change. The app warns before closing when there are unsaved changes.
 
 ## Easiest Public Submission Setup
 
@@ -99,9 +102,36 @@ The submission payload includes:
 - `submitted_at`
 - display name and in-world name
 - optional contact
-- consent summary
-- full read-only JSON snapshot
+- full JSON
+- compact JSON
 - ChatGPT-ready Markdown profile
+- AI context Markdown
+- game design summary
+- art prompt
+- dialogue prompt
+
+## Schema 2.0.0 Sections
+
+The form is organized into collapsible sections:
+
+- Identity
+- Appearance
+- Personality
+- Motivation & Values
+- Decision-Making
+- Social & Relationship Model
+- Knowledge Domains
+- Humor & Communication
+- Conflict & Stress Response
+- Signature Behaviors
+- Narrative Engine
+- Game Mechanics
+- AI Generation Metadata
+- Export / Import
+
+## Migration
+
+The app imports `2.0.0` records directly and attempts to migrate older `friend_descriptor_intake.v2` and v1-style flat records. Missing new fields default safely. Unknown imported fields are preserved under `extensions`.
 
 ## Sharing With ChatGPT and Other AI Systems
 
