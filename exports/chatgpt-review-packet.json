@@ -1,0 +1,3129 @@
+{
+  "packet_schema": "chatgpt_review_packet.v1",
+  "generated_at": "2026-06-01T15:08:03.121Z",
+  "commit": "b71b641",
+  "purpose": "Portable context for AI systems that cannot browse the live GitHub Pages app.",
+  "public_links": {
+    "intake_form": "https://lonnie-tisdale.github.io/friend-character-intake/index.html?cachebust=b71b641",
+    "review_dashboard": "https://lonnie-tisdale.github.io/friend-character-intake/review.html?cachebust=b71b641",
+    "markdown_packet": "https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.md?cachebust=b71b641",
+    "json_packet": "https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.json?cachebust=b71b641"
+  },
+  "review_prompt": "You are reviewing a static, local-first universal profile intake and review system. Do not assume you can browse the live URL. Use this packet as the source of truth. Evaluate whether the language is clear for nontechnical users and whether the schema remains powerful enough for advanced canon, asset, graph, AI, game, and export workflows. Flag corporate/HR/personality-test/fantasy-only language, privacy risks, confusing required fields, missing consent guardrails, and any gaps for reviewing real people, fictional characters, NPCs, historical figures, AI agents, family members, partners, children, collaborators, and pets.",
+  "app_summary": {
+    "title": "Universal Profile Intake + Review System",
+    "intake_page_visible_text": "HTF / K Street Character Database HTF / K Street Character Database This shared profile system turns real group lore into consistent characters, dialogue, art prompts, NPCs, relationship maps, and project memory across HTF, K Street, West Coast Crypto Cruise, and future weird ambitious builds. Person schema 3.0.0 with Knowledge Graph v4 foundation. MODE Simple Intake Advanced Canon Agent Export Save Locally Load Locally Review Submissions Sections Simple Member Intake Fill in what feels easy. The point is to capture what makes you recognizable in the group lore: your vibe, voice, obsessions, road-trip energy, Discord behavior, questionable superpowers, and how you show up when a plan gets weird. What will this be used for? Approved answers may help create consistent characters, dialogue, art prompts, NPC behavior, project memory, and relationship maps for shared HTF / K Street projects. Consent fields decide what can be stored, fictionalized, simulated, or reused. Easy path: add your display name, three-word vibe, current obsession, legendary story, visual description, voice style, group/project context, and consent choices. Then click Submit Descriptor . If you want to share a reference photo, describe where the reviewer can find it or send it privately. Public repos should not contain real private images unless explicitly approved. Advanced Canon Editing Full person schema, asset/reference metadata, canon controls, source notes, timeline entries, and graph-aware entity linking for HTF / K Street maintainers and collaborators. Agent Export Console Generate clean JSON, Markdown, visual references, graph files, and one bundled context block for ChatGPT, Claude, Gemini, local agents, game tools, and project imports. Submit Descriptor Generate Character Summary Copy Shareable Profile Generate AI Context Generate Art Prompt Generate Dialogue Prompt Generate NPC Summary Generate Relationship Summary Generate Visual Reference Sheet Generate Character Context Generate Organization Summary Generate Project Summary Generate Timeline Summary Generate Lore Summary Generate AI Agent Context Import JSON Reset Asset Library Manager Drag files here or choose files to add asset metadata Choose Asset Files Asset search Filter by type All types Filter by canon All canon levels Filter by consent All consent statuses Filter by project Filter by tag Filter by creator Filter by date Gallery View Table View Bulk Tag All Filtered Bulk Set Consent/Canon Bulk Delete Filtered Select an asset to preview metadata. Knowledge Graph Graph search Entity type filter All entity types Network View Timeline View Entity Explorer Select a node or relationship to inspect it. Agent Export / Import Profile JSON Profile JSON Compact JSON Copy JSON Markdown And Agent Context Markdown Profile AI Context Copy Markdown Copy All Agent Context Game, Art, Dialogue Game Design Summary Art Prompt Dialogue Prompt NPC Summary Relationship Summary Visual Reference Sheet Art Reference Pack Sprite Reference Assets And Graph Relationships JSON Assets JSON Asset Manifest Graph JSON Graph People Graph Relationships Graph Organizations Graph Locations Graph Events Graph Assets Graph Projects Validation, Sharing, Import Download Everything Validate JSON Copy Share Link Import JSON Search fields Schema version Migration report GitHub Pages base URL Latest share link Submission status Live JSON Preview Completeness: 0% Ready.",
+    "review_page_visible_text": "Profile Review Dashboard Profile Review Dashboard Private review workflow for moving profiles from Raw to Reviewed to Approved for Use. Static, local-first, JSON/Markdown portable. Open Intake Form Import JSON Files Save Review Queue Locally Load Local Queue Clear Queue Profiles Import downloaded Formspree/profile JSON files. Consent first, privacy second, canon/project approval third. Drag JSON profiles here All statuses Raw Reviewed Approved Review Checklist Confirm consent before any real person becomes reusable canon. Keep optional contact, real names, boundaries, and private source image notes private. Confirm which projects can use the profile and how visible the adaptation can be. Add reviewer notes, confidence, canon level, and final status. Export Raw, Reviewed, or Approved packages into the private project archive. Ready. Selected Profile Select a profile from the left. Nothing here writes to GitHub or a server.",
+    "modes": [
+      "Simple Intake",
+      "Advanced Canon",
+      "Agent Export"
+    ],
+    "preserved_workflows": [
+      "static GitHub Pages compatible form",
+      "Formspree submission endpoint",
+      "live JSON preview",
+      "JSON import and v1/v2/v3 migration",
+      "Markdown/JSON/agent exports",
+      "asset library",
+      "knowledge graph foundation",
+      "local-first review dashboard",
+      "Raw -> Reviewed -> Approved review states"
+    ]
+  },
+  "schema_summary": {
+    "schema_id": "https://kstreet.local/schemas/kstreet_person_profile.v3.json",
+    "title": "HTF / K Street Person Profile v3",
+    "description": "Canonical source-of-truth profile schema for HTF / K Street people and shared characters across narrative, game, AI, relationship, and memory systems.",
+    "required": [
+      "schema_version",
+      "schema_id",
+      "profile_id",
+      "created_at",
+      "updated_at",
+      "consent",
+      "identity",
+      "appearance",
+      "asset_library",
+      "personality",
+      "motivation",
+      "decision_making",
+      "social_model",
+      "relationship_graph",
+      "knowledge_domains",
+      "humor_and_voice",
+      "conflict_and_stress",
+      "signature_behaviors",
+      "narrative_engine",
+      "game_mechanics",
+      "ai_generation",
+      "project_usage",
+      "source_notes",
+      "generated_content",
+      "extensions"
+    ],
+    "top_level_properties": [
+      "schema_version",
+      "schema_id",
+      "profile_id",
+      "created_at",
+      "updated_at",
+      "entity",
+      "consent",
+      "identity",
+      "appearance",
+      "asset_library",
+      "knowledge_graph",
+      "personality",
+      "motivation",
+      "decision_making",
+      "social_model",
+      "relationship_graph",
+      "knowledge_domains",
+      "humor_and_voice",
+      "conflict_and_stress",
+      "signature_behaviors",
+      "narrative_engine",
+      "game_mechanics",
+      "ai_generation",
+      "project_usage",
+      "source_notes",
+      "generated_content",
+      "extensions"
+    ],
+    "defs": [
+      "object",
+      "graph_link",
+      "graph_entity",
+      "relationship_entity",
+      "organization_entity",
+      "faction_entity",
+      "location_entity",
+      "event_entity",
+      "story_object_entity",
+      "project_entity",
+      "concept_entity",
+      "timeline_entry",
+      "relationship",
+      "knowledge_domain",
+      "signature_behavior",
+      "asset",
+      "asset_group",
+      "style_guide"
+    ]
+  },
+  "simple_intake_sections": [
+    {
+      "id": "consent",
+      "title": "Consent",
+      "note": "The yes/no stuff that keeps the group from accidentally turning private lore into public canon.",
+      "fields": [
+        {
+          "id": "permission_to_store",
+          "label": "Okay to save this profile",
+          "type": "boolean",
+          "help": "Required before keeping submissions.",
+          "placeholder": ""
+        },
+        {
+          "id": "permission_to_fictionalize",
+          "label": "Okay to fictionalize me",
+          "type": "boolean",
+          "help": "Required before adapting into stories, games, or NPCs.",
+          "placeholder": ""
+        },
+        {
+          "id": "permission_for_ai_dialogue",
+          "label": "Okay to use my vibe for AI dialogue",
+          "type": "boolean",
+          "help": "Allows voice/dialogue simulation.",
+          "placeholder": ""
+        },
+        {
+          "id": "permission_for_art_generation",
+          "label": "Okay to use visual notes for art prompts",
+          "type": "boolean",
+          "help": "Controls whether visual prompt fields can be reused.",
+          "placeholder": ""
+        },
+        {
+          "id": "permission_for_cross_project_reuse",
+          "label": "Okay to reuse across group projects",
+          "type": "boolean",
+          "help": "Useful for shared HTF / K Street profiles.",
+          "placeholder": ""
+        },
+        {
+          "id": "permission_for_relationship_simulation",
+          "label": "Okay to map relationships and dynamics",
+          "type": "boolean",
+          "help": "Allows graph and social model simulation.",
+          "placeholder": ""
+        },
+        {
+          "id": "consent_notes",
+          "label": "Consent notes / weird edge cases",
+          "type": "textarea",
+          "help": "Records usage limits, approvals, and review context.",
+          "placeholder": "Okay for fictionalized group lore; keep real names, family details, and private relationship stuff out of public exports."
+        }
+      ]
+    },
+    {
+      "id": "identity",
+      "title": "Identity",
+      "note": "The public-safe handle, vibe, obsessions, and table-intro version of the person.",
+      "fields": [
+        {
+          "id": "display_name",
+          "label": "What should we call you?",
+          "type": "text",
+          "help": "Public-safe display name, handle, or nickname.",
+          "placeholder": "Maya / @packetghost / whatever people actually call me"
+        },
+        {
+          "id": "optional_contact",
+          "label": "Best way to ask follow-up questions",
+          "type": "text",
+          "help": "Private follow-up contact if the person permits clarification.",
+          "placeholder": "Discord handle, Signal, email, or 'ask me in the group chat'"
+        },
+        {
+          "id": "in_world_name",
+          "label": "Character handle / codename",
+          "type": "text",
+          "help": "Reusable character handle for fiction, games, and prompts.",
+          "placeholder": "Terminal Wizard, Roadtrip Bard, Meme Archaeologist"
+        },
+        {
+          "id": "short_bio",
+          "label": "Two-sentence lore intro",
+          "type": "textarea",
+          "help": "A friendly one-paragraph intro in the person's own words.",
+          "placeholder": "I fix weird problems, ask too many questions, and somehow become useful during chaos. I am usually holding coffee and three unfinished ideas."
+        },
+        {
+          "id": "three_word_vibe",
+          "label": "Three words that describe you",
+          "type": "text",
+          "help": "Fast vibe check for people, writers, and NPC systems.",
+          "placeholder": "Chaotic, creative, caffeinated"
+        },
+        {
+          "id": "animal_affinity",
+          "label": "Animal you identify with",
+          "type": "text",
+          "help": "Totem, mascot, self-own, or recurring group bit.",
+          "placeholder": "Crow, raccoon, wolf, octopus, coyote, house cat, honey badger, pigeon of destiny"
+        },
+        {
+          "id": "current_obsession",
+          "label": "Current obsession",
+          "type": "textarea",
+          "help": "The topic currently eating your browser tabs.",
+          "placeholder": "Local AI models, parkour history, retro RPG design, Bitcoin self-custody, urban exploration, weird internet archaeology"
+        },
+        {
+          "id": "pronouns",
+          "label": "Pronouns or how people should refer to you",
+          "type": "text",
+          "help": "Supports respectful dialogue and profile generation.",
+          "placeholder": "they/them, he/him, she/her, name only, no preference"
+        },
+        {
+          "id": "current_location",
+          "label": "Current base / usual orbit",
+          "type": "text",
+          "help": "Current public-safe location or usual region.",
+          "placeholder": "San Diego, Austin, the road, airport lounges, wherever the group chat sends me"
+        }
+      ]
+    },
+    {
+      "id": "appearance",
+      "title": "Appearance",
+      "note": "Visual anchors for art, prose, sprites, and memory. Think recognizability, not biometric paperwork.",
+      "fields": [
+        {
+          "id": "everyday_clothing",
+          "label": "Default outfit",
+          "type": "textarea",
+          "help": "Default wardrobe.",
+          "placeholder": "black hoodie, conference badge, trail shoes, cargo pants, jacket with too many pockets"
+        },
+        {
+          "id": "signature_item",
+          "label": "Signature item if we only draw one prop",
+          "type": "text",
+          "help": "One prop that says 'yes, that is them.'",
+          "placeholder": "Coffee thermos, camera, notebook, hardware wallet, multi-tool, suspiciously heavy backpack"
+        },
+        {
+          "id": "default_expression",
+          "label": "Default expression",
+          "type": "text",
+          "help": "A fast visual anchor for illustration and NPC idle states.",
+          "placeholder": "half amused, half concerned, already debugging the situation"
+        },
+        {
+          "id": "movement_body_language",
+          "label": "Movement / body language",
+          "type": "textarea",
+          "help": "How the character occupies space and communicates nonverbally.",
+          "placeholder": "paces while thinking, perches on furniture wrong, talks with hands, moves like the floor is optional"
+        },
+        {
+          "id": "image_prompt_notes",
+          "label": "Visual description for artists / AI",
+          "type": "textarea",
+          "help": "Approved notes for visual generation.",
+          "placeholder": "modern internet nomad, parkour-adjacent posture, travel-worn clothes, bright eyes, late-night build energy"
+        }
+      ]
+    },
+    {
+      "id": "personality",
+      "title": "Personality",
+      "note": "Vibe, useful chaos, recurring patterns, and the things the group already knows are true.",
+      "fields": [
+        {
+          "id": "primary_social_energy",
+          "label": "Primary social energy",
+          "type": "select",
+          "help": "Primary recognizable social presence.",
+          "placeholder": "",
+          "options": [
+            "Warm Stabilizer",
+            "Thoughtful Mentor",
+            "Curious Guide",
+            "Practical Fixer",
+            "Chaotic Instigator",
+            "Deadpan Commentator",
+            "Magnetic Performer",
+            "Quiet Observer",
+            "Community Builder",
+            "Explorer",
+            "Storyteller",
+            "Scholar",
+            "Philosopher",
+            "Connector",
+            "Visionary",
+            "Trusted Advisor",
+            "Trickster Sage",
+            "Reluctant Leader",
+            "Investigator",
+            "Catalyst"
+          ]
+        },
+        {
+          "id": "secondary_social_energy",
+          "label": "Secondary social energy",
+          "type": "select",
+          "help": "Secondary social flavor.",
+          "placeholder": "",
+          "options": [
+            "Warm Stabilizer",
+            "Thoughtful Mentor",
+            "Curious Guide",
+            "Practical Fixer",
+            "Chaotic Instigator",
+            "Deadpan Commentator",
+            "Magnetic Performer",
+            "Quiet Observer",
+            "Community Builder",
+            "Explorer",
+            "Storyteller",
+            "Scholar",
+            "Philosopher",
+            "Connector",
+            "Visionary",
+            "Trusted Advisor",
+            "Trickster Sage",
+            "Reluctant Leader",
+            "Investigator",
+            "Catalyst"
+          ]
+        },
+        {
+          "id": "personality_traits",
+          "label": "Vibe tags",
+          "type": "list",
+          "help": "Useful trait tags for filtering and generation.",
+          "placeholder": "curious\nstubborn\nreliable\nchaotic\ncreative\ncaffeinated\nquiet\nanalytical\ndangerous"
+        },
+        {
+          "id": "custom_traits",
+          "label": "Oddly specific traits",
+          "type": "list",
+          "help": "Nuanced traits that standard lists miss.",
+          "placeholder": "can smell bad incentives\nanswers Discord at impossible hours\nkeeps receipts in the spiritual sense"
+        },
+        {
+          "id": "strengths",
+          "label": "What do people always come to you for?",
+          "type": "list",
+          "help": "Competencies that shape story and mechanics.",
+          "placeholder": "fixing servers at 2 AM\nfinding cheap flights\ntalking people off ledges\nremembering obscure lore\nturning chaos into a plan"
+        },
+        {
+          "id": "flaws",
+          "label": "Failure modes / recurring bugs",
+          "type": "list",
+          "help": "Limitations that create believable conflict.",
+          "placeholder": "overcommits to the bit\nforgets sleep is load-bearing\nbuys the top\nturns every problem into a research spiral"
+        },
+        {
+          "id": "character_archetype",
+          "label": "Character archetype",
+          "type": "text",
+          "help": "The slightly mythic group-chat version of this person.",
+          "placeholder": "Accelerator Ghost, Terminal Wizard, Logistics Goblin, Chaos Engineer, ZK Monk, Meme Archaeologist, Burnout Prophet, Startup Necromancer, Desert Mystic, Roadtrip Bard, Vibe Cartographer, Parkour Historian"
+        },
+        {
+          "id": "signature_ability",
+          "label": "Signature ability",
+          "type": "textarea",
+          "help": "The thing they can do that feels unfair but somehow real.",
+          "placeholder": "Can find WiFi anywhere. Knows somebody who knows somebody. Solves impossible problems at 3 AM. Generates ideas faster than consequences."
+        }
+      ]
+    },
+    {
+      "id": "social_model",
+      "title": "Social Model",
+      "note": "How the profile bonds, disagrees, cares, and fits into groups.",
+      "fields": [
+        {
+          "id": "friendship_style",
+          "label": "Friendship style",
+          "type": "select",
+          "help": "How they show up for friends.",
+          "placeholder": "",
+          "options": [
+            "Protector",
+            "Teacher",
+            "Teammate",
+            "Entertainer",
+            "Problem Solver",
+            "Listener",
+            "Challenger",
+            "Nurturer"
+          ]
+        },
+        {
+          "id": "relationship_to_group_network",
+          "label": "How you connect to the circle / projects / scenes",
+          "type": "textarea",
+          "help": "Plain-language relationship context for intake, review, and graph migration.",
+          "placeholder": "HTF / K Street friend, Discord regular, WCCC contributor, parkour-adjacent chaos witness, conference hallway ally."
+        },
+        {
+          "id": "how_they_show_care",
+          "label": "How people know you care",
+          "type": "textarea",
+          "help": "Care language for dialogue and relationship simulation.",
+          "placeholder": "Makes the plan easier, remembers who needed a ride, checks on basics, sends the useful link at exactly the right time."
+        }
+      ]
+    },
+    {
+      "id": "humor_and_voice",
+      "title": "Humor And Voice",
+      "note": "How they sound in the group chat, on a road trip, during a build sprint, and after the plan has obviously gone sideways.",
+      "fields": [
+        {
+          "id": "voice_rhythm",
+          "label": "Voice rhythm",
+          "type": "textarea",
+          "help": "Cadence and sentence shape.",
+          "placeholder": "starts with 'okay so' then builds a whole theory; pauses for the bit; gets very precise when stakes rise"
+        },
+        {
+          "id": "typical_phrases",
+          "label": "Typical phrases",
+          "type": "list",
+          "help": "Lines or phrase patterns.",
+          "placeholder": "This seems like a bad idea. Let's do it.\nI have concerns, but not enough concerns.\nWe're already committed.\nNobody learns from success."
+        },
+        {
+          "id": "topics_they_bring_up",
+          "label": "Topics you can talk about for hours",
+          "type": "list",
+          "help": "Conversation magnets.",
+          "placeholder": "Parkour\nAI agents\nCrypto\nPhilosophy\nStreet photography\nUFO lore\nFitness\nHistory\nStartups\nOpen source software\nDreams\nHuman behavior"
+        },
+        {
+          "id": "example_quotes",
+          "label": "Representative quotes",
+          "type": "list",
+          "help": "Representative lines for dialogue generation.",
+          "placeholder": "How hard could it possibly be?\nThat went better than expected.\nLet's never do that again.\nSee? Completely under control."
+        },
+        {
+          "id": "battle_intro_quote",
+          "label": "Battle intro quote",
+          "type": "textarea",
+          "help": "A heightened game-style line that still sounds like them.",
+          "placeholder": "This seems like a bad idea. Let's do it.\nI have concerns, but not enough concerns.\nWe're already committed."
+        },
+        {
+          "id": "battle_victory_quote",
+          "label": "Victory quote",
+          "type": "textarea",
+          "help": "What they say after surviving the situation.",
+          "placeholder": "Nobody learns from success.\nThat went better than expected.\nLet's never do that again."
+        },
+        {
+          "id": "dialogue_dos",
+          "label": "Dialogue should do this",
+          "type": "list",
+          "help": "What generated dialogue should do.",
+          "placeholder": "sound like a real friend\ninclude practical weirdness\nknow the lore\nkeep the humor human"
+        },
+        {
+          "id": "dialogue_donts",
+          "label": "Dialogue should avoid this",
+          "type": "list",
+          "help": "What generated dialogue should avoid.",
+          "placeholder": "do not make them a tech bro caricature\ndo not turn every line into a pitch\ndo not make private lore public"
+        }
+      ]
+    },
+    {
+      "id": "project_usage",
+      "title": "Project Usage",
+      "note": "Where this profile can show up: cruise NPC, Discord lore, art prompts, internal memory, game systems, or future chaos.",
+      "fields": [
+        {
+          "id": "approved_projects",
+          "label": "Where can this be used?",
+          "type": "list",
+          "help": "One per line.",
+          "placeholder": "HTF\nK Street\nWest Coast Crypto Cruise\nShared Person Database\nAI Dialogue Agent\nArt Generation\nGroup Memory\nPrivate Review\nFuture Weird Project"
+        },
+        {
+          "id": "project_relevance_notes",
+          "label": "Why do you belong in the database?",
+          "type": "textarea",
+          "help": "Why this person/entity matters to one or more projects.",
+          "placeholder": "Good for cruise NPC energy, group memory, social cameos, late-night dialogue, and support-character writing."
+        },
+        {
+          "id": "canon_level",
+          "label": "Canon level",
+          "type": "select",
+          "help": "How authoritative the profile is.",
+          "placeholder": "",
+          "options": [
+            "Raw",
+            "Semi Canon",
+            "Canon",
+            "Parody Only",
+            "Private Reference Only"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "source_notes",
+      "title": "Source Notes",
+      "note": "Source provenance and review information.",
+      "fields": [
+        {
+          "id": "source_images",
+          "label": "Reference photos / source images",
+          "type": "list",
+          "help": "Private image references or file paths.",
+          "placeholder": "Source Images/Packet Ghost/approved-conference-reference.jpg"
+        }
+      ]
+    },
+    {
+      "id": "generated_content",
+      "title": "Generated Content",
+      "note": "Editable generated outputs. Buttons at the top can fill these from the structured fields.",
+      "fields": [
+        {
+          "id": "character_summary",
+          "label": "Character summary",
+          "type": "textarea",
+          "help": "Generated high-level summary.",
+          "placeholder": ""
+        },
+        {
+          "id": "ai_context_output",
+          "label": "AI context",
+          "type": "textarea",
+          "help": "Generated AI context block.",
+          "placeholder": ""
+        }
+      ]
+    }
+  ],
+  "all_form_sections": [
+    {
+      "id": "consent",
+      "title": "Consent",
+      "note": "The yes/no stuff that keeps the group from accidentally turning private lore into public canon.",
+      "fields": [
+        {
+          "id": "permission_to_store",
+          "label": "Okay to save this profile",
+          "type": "boolean",
+          "help": "Required before keeping submissions.",
+          "placeholder": ""
+        },
+        {
+          "id": "permission_to_fictionalize",
+          "label": "Okay to fictionalize me",
+          "type": "boolean",
+          "help": "Required before adapting into stories, games, or NPCs.",
+          "placeholder": ""
+        },
+        {
+          "id": "permission_for_ai_dialogue",
+          "label": "Okay to use my vibe for AI dialogue",
+          "type": "boolean",
+          "help": "Allows voice/dialogue simulation.",
+          "placeholder": ""
+        },
+        {
+          "id": "permission_for_art_generation",
+          "label": "Okay to use visual notes for art prompts",
+          "type": "boolean",
+          "help": "Controls whether visual prompt fields can be reused.",
+          "placeholder": ""
+        },
+        {
+          "id": "permission_for_cross_project_reuse",
+          "label": "Okay to reuse across group projects",
+          "type": "boolean",
+          "help": "Useful for shared HTF / K Street profiles.",
+          "placeholder": ""
+        },
+        {
+          "id": "permission_for_relationship_simulation",
+          "label": "Okay to map relationships and dynamics",
+          "type": "boolean",
+          "help": "Allows graph and social model simulation.",
+          "placeholder": ""
+        },
+        {
+          "id": "contact_for_questions",
+          "label": "Okay to ask me follow-up questions",
+          "type": "boolean",
+          "help": "Allows follow-up questions.",
+          "placeholder": ""
+        },
+        {
+          "id": "sensitive_topics_to_avoid",
+          "label": "Stuff that should stay out of canon",
+          "type": "list",
+          "help": "Private topics that should not appear in generated content.",
+          "placeholder": "family details\nmedical specifics\nold drama\nanything involving actual legal trouble"
+        },
+        {
+          "id": "consent_notes",
+          "label": "Consent notes / weird edge cases",
+          "type": "textarea",
+          "help": "Records usage limits, approvals, and review context.",
+          "placeholder": "Okay for fictionalized group lore; keep real names, family details, and private relationship stuff out of public exports."
+        }
+      ]
+    },
+    {
+      "id": "identity",
+      "title": "Identity",
+      "note": "The public-safe handle, vibe, obsessions, and table-intro version of the person.",
+      "fields": [
+        {
+          "id": "display_name",
+          "label": "What should we call you?",
+          "type": "text",
+          "help": "Public-safe display name, handle, or nickname.",
+          "placeholder": "Maya / @packetghost / whatever people actually call me"
+        },
+        {
+          "id": "real_name_optional",
+          "label": "Real name, only if you want it stored",
+          "type": "text",
+          "help": "Only collect if useful and approved. Keep private.",
+          "placeholder": "Full legal name optional, usually not needed"
+        },
+        {
+          "id": "optional_contact",
+          "label": "Best way to ask follow-up questions",
+          "type": "text",
+          "help": "Private follow-up contact if the person permits clarification.",
+          "placeholder": "Discord handle, Signal, email, or 'ask me in the group chat'"
+        },
+        {
+          "id": "in_world_name",
+          "label": "Character handle / codename",
+          "type": "text",
+          "help": "Reusable character handle for fiction, games, and prompts.",
+          "placeholder": "Terminal Wizard, Roadtrip Bard, Meme Archaeologist"
+        },
+        {
+          "id": "short_bio",
+          "label": "Two-sentence lore intro",
+          "type": "textarea",
+          "help": "A friendly one-paragraph intro in the person's own words.",
+          "placeholder": "I fix weird problems, ask too many questions, and somehow become useful during chaos. I am usually holding coffee and three unfinished ideas."
+        },
+        {
+          "id": "three_word_vibe",
+          "label": "Three words that describe you",
+          "type": "text",
+          "help": "Fast vibe check for people, writers, and NPC systems.",
+          "placeholder": "Chaotic, creative, caffeinated"
+        },
+        {
+          "id": "animal_affinity",
+          "label": "Animal you identify with",
+          "type": "text",
+          "help": "Totem, mascot, self-own, or recurring group bit.",
+          "placeholder": "Crow, raccoon, wolf, octopus, coyote, house cat, honey badger, pigeon of destiny"
+        },
+        {
+          "id": "current_obsession",
+          "label": "Current obsession",
+          "type": "textarea",
+          "help": "The topic currently eating your browser tabs.",
+          "placeholder": "Local AI models, parkour history, retro RPG design, Bitcoin self-custody, urban exploration, weird internet archaeology"
+        },
+        {
+          "id": "nicknames",
+          "label": "Nicknames / handles / aliases",
+          "type": "list",
+          "help": "Alternate names, handles, or social aliases.",
+          "placeholder": "Packet Ghost\nWiFi Oracle\nthat one guy from the Austin house"
+        },
+        {
+          "id": "pronouns",
+          "label": "Pronouns or how people should refer to you",
+          "type": "text",
+          "help": "Supports respectful dialogue and profile generation.",
+          "placeholder": "they/them, he/him, she/her, name only, no preference"
+        },
+        {
+          "id": "age_range",
+          "label": "Approx age range, if useful",
+          "type": "text",
+          "help": "Keeps profiles useful without over-collecting precise personal data.",
+          "placeholder": "20s, 30s, old enough to have seen multiple crypto cycles"
+        },
+        {
+          "id": "current_location",
+          "label": "Current base / usual orbit",
+          "type": "text",
+          "help": "Current public-safe location or usual region.",
+          "placeholder": "San Diego, Austin, the road, airport lounges, wherever the group chat sends me"
+        },
+        {
+          "id": "origin_location",
+          "label": "Where did your lore start?",
+          "type": "text",
+          "help": "Where they are from, if relevant and approved.",
+          "placeholder": "Parkour forums, hacker houses, desert builds, Midwest LAN parties"
+        },
+        {
+          "id": "communities",
+          "label": "Communities / scenes",
+          "type": "list",
+          "help": "Groups, scenes, or cultures they belong to.",
+          "placeholder": "HTF\nK Street\nParkour community\nlocal AI Discord\nburner camp\ncrypto conference hallway track"
+        },
+        {
+          "id": "roles",
+          "label": "Project roles people actually ask you to play",
+          "type": "list",
+          "help": "Social or project roles.",
+          "placeholder": "Community Builder\nLore Keeper\nDeveloper\nEvent Instigator\nProfessional Bad Influence\nSpreadsheet Wizard\nMeme Curator\nFixer"
+        },
+        {
+          "id": "professions",
+          "label": "Work / craft / hustle",
+          "type": "list",
+          "help": "Jobs, callings, or work identities.",
+          "placeholder": "developer\nartist\nfounder\ncoach\nresearcher\norganizer\nfull-time side quest"
+        },
+        {
+          "id": "identity_tags",
+          "label": "Search tags / vibe tags",
+          "type": "list",
+          "help": "Searchable identity tags.",
+          "placeholder": "internet-weirdo\nparkour\nAI-agents\nstartup-chaos\nroadtrip-certified"
+        }
+      ]
+    },
+    {
+      "id": "appearance",
+      "title": "Appearance",
+      "note": "Visual anchors for art, prose, sprites, and memory. Think recognizability, not biometric paperwork.",
+      "fields": [
+        {
+          "id": "height_build",
+          "label": "General silhouette / build",
+          "type": "text",
+          "help": "Broad physical read, not exact biometric detail.",
+          "placeholder": "compact parkour build, tall conference cryptid, small but impossible to lose in a crowd"
+        },
+        {
+          "id": "hair",
+          "label": "Hair / head silhouette",
+          "type": "text",
+          "help": "Hair color, style, and silhouette cues.",
+          "placeholder": "messy travel hair, shaved sides, beanie most of the time, looks like they cut it during a sprint"
+        },
+        {
+          "id": "eyes",
+          "label": "Eyes / attention style",
+          "type": "text",
+          "help": "Eye description for art/prose.",
+          "placeholder": "alert, sleep-deprived, always scanning for exits, outlets, or the bit"
+        },
+        {
+          "id": "face_features",
+          "label": "Recognizable face details",
+          "type": "textarea",
+          "help": "Memorable facial features without over-indexing on appearance.",
+          "placeholder": "expressive eyebrows, too-aware resting face, looks like they just read the room and the room failed QA"
+        },
+        {
+          "id": "skin_tone",
+          "label": "Skin tone",
+          "type": "text",
+          "help": "Optional visual descriptor for respectful art direction.",
+          "placeholder": ""
+        },
+        {
+          "id": "distinguishing_marks",
+          "label": "Recognizable marks / recurring visual bits",
+          "type": "textarea",
+          "help": "Scars, tattoos, glasses, or other approved markers.",
+          "placeholder": "glasses, chipped black nail polish, old conference wristband, tattoo people keep asking about"
+        },
+        {
+          "id": "silhouette",
+          "label": "Sprite silhouette",
+          "type": "textarea",
+          "help": "Shape language for quick recognition.",
+          "placeholder": "hoodie + backpack + forward lean, looks ready to climb a wall or fix a router"
+        },
+        {
+          "id": "everyday_clothing",
+          "label": "Default outfit",
+          "type": "textarea",
+          "help": "Default wardrobe.",
+          "placeholder": "black hoodie, conference badge, trail shoes, cargo pants, jacket with too many pockets"
+        },
+        {
+          "id": "iconic_outfit",
+          "label": "Iconic outfit / legendary fit",
+          "type": "textarea",
+          "help": "The outfit they would be recognized in.",
+          "placeholder": "sun-faded camp shirt, beat-up sneakers, sunglasses at night, backpack that has seen things"
+        },
+        {
+          "id": "accessories",
+          "label": "Accessories / visual tells",
+          "type": "textarea",
+          "help": "Visual accessories.",
+          "placeholder": "camera, pocket notebook, enamel pin, hardware wallet, carabiner, old lanyard"
+        },
+        {
+          "id": "carried_items",
+          "label": "Signature item",
+          "type": "textarea",
+          "help": "Props that can drive scenes or mechanics.",
+          "placeholder": "half-charged laptop, coffee thermos, sketchbook, multi-tool, phone with 200 open tabs, backpack containing an unknown dimension"
+        },
+        {
+          "id": "signature_item",
+          "label": "Signature item if we only draw one prop",
+          "type": "text",
+          "help": "One prop that says 'yes, that is them.'",
+          "placeholder": "Coffee thermos, camera, notebook, hardware wallet, multi-tool, suspiciously heavy backpack"
+        },
+        {
+          "id": "default_expression",
+          "label": "Default expression",
+          "type": "text",
+          "help": "A fast visual anchor for illustration and NPC idle states.",
+          "placeholder": "half amused, half concerned, already debugging the situation"
+        },
+        {
+          "id": "movement_body_language",
+          "label": "Movement / body language",
+          "type": "textarea",
+          "help": "How the character occupies space and communicates nonverbally.",
+          "placeholder": "paces while thinking, perches on furniture wrong, talks with hands, moves like the floor is optional"
+        },
+        {
+          "id": "image_prompt_notes",
+          "label": "Visual description for artists / AI",
+          "type": "textarea",
+          "help": "Approved notes for visual generation.",
+          "placeholder": "modern internet nomad, parkour-adjacent posture, travel-worn clothes, bright eyes, late-night build energy"
+        },
+        {
+          "id": "negative_image_prompt_notes",
+          "label": "What art should avoid",
+          "type": "textarea",
+          "help": "What art prompts should avoid.",
+          "placeholder": "Do not turn them into a corporate mascot, quest-hero cosplay, villain caricature, or generic influencer."
+        }
+      ]
+    },
+    {
+      "id": "asset_library",
+      "title": "Asset Library",
+      "note": "Canonical visual, audio, document, model, and reference asset hub for this profile. Static mode stores metadata and links, not private binary files.",
+      "fields": [
+        {
+          "id": "primary_reference_asset_id",
+          "label": "Primary reference asset ID",
+          "type": "text",
+          "help": "Main overall reference asset.",
+          "placeholder": "asset_20260601_reference_photo"
+        },
+        {
+          "id": "primary_portrait_asset_id",
+          "label": "Primary portrait asset ID",
+          "type": "text",
+          "help": "Main portrait or face reference.",
+          "placeholder": "asset_20260601_portrait"
+        },
+        {
+          "id": "primary_sprite_asset_id",
+          "label": "Primary sprite asset ID",
+          "type": "text",
+          "help": "Main sprite or token reference.",
+          "placeholder": "asset_20260601_sprite"
+        },
+        {
+          "id": "primary_model_asset_id",
+          "label": "Primary model asset ID",
+          "type": "text",
+          "help": "Main 3D/model reference.",
+          "placeholder": "asset_20260601_model"
+        },
+        {
+          "id": "primary_face_reference_asset_id",
+          "label": "Primary face reference asset ID",
+          "type": "text",
+          "help": "Quick link for face reference.",
+          "placeholder": ""
+        },
+        {
+          "id": "primary_body_reference_asset_id",
+          "label": "Primary body reference asset ID",
+          "type": "text",
+          "help": "Quick link for body reference.",
+          "placeholder": ""
+        },
+        {
+          "id": "primary_outfit_reference_asset_id",
+          "label": "Primary outfit reference asset ID",
+          "type": "text",
+          "help": "Quick link for outfit reference.",
+          "placeholder": ""
+        },
+        {
+          "id": "primary_token_asset_id",
+          "label": "Primary token asset ID",
+          "type": "text",
+          "help": "Quick link for token reference.",
+          "placeholder": ""
+        },
+        {
+          "id": "primary_voice_reference_asset_id",
+          "label": "Primary voice reference asset ID",
+          "type": "text",
+          "help": "Quick link for voice reference.",
+          "placeholder": ""
+        },
+        {
+          "id": "asset_entries",
+          "label": "Assets",
+          "type": "rows",
+          "help": "Repeatable entries. Format: asset_id | asset_type | title | description | person/entity linked | project linked | file_name | file_extension | file_size | url | local_path | thumbnail_url | date_added | last_modified | source | creator | copyright_holder | license_type | consent_status | canon_level | tags comma-list | associated_projects comma-list | use_cases comma-list | do_not_use_for comma-list | notes",
+          "placeholder": "asset_001 | reference_photo | WCCC hallway face reference | approved current face photo from crypto conference chaos | person_packetghost | West Coast Crypto Cruise | hallway.jpg | jpg | 2.4 MB | https://... | Source Images/Packet Ghost/hallway.jpg | https://... | 2026-06-01 | 2026-06-01 | self-submitted | Packet Ghost | Packet Ghost | private | approved | primary_reference | face,current,conference,late-night | West Coast Crypto Cruise,HTF,K Street | portrait_generation,art_generation | public ads,dating sim without consent | private source image; okay for internal art refs",
+          "format": "asset_id | asset_type | title | description | person/entity linked | project linked | file_name | file_extension | file_size | url | local_path | thumbnail_url | date_added | last_modified | source | creator | copyright_holder | license_type | consent_status | canon_level | tags comma-list | associated_projects comma-list | use_cases comma-list | do_not_use_for comma-list | notes"
+        },
+        {
+          "id": "asset_group_entries",
+          "label": "Asset groups",
+          "type": "rows",
+          "help": "Repeatable entries. Format: group_id | group_name | description | asset_ids comma-list | tags comma-list | notes",
+          "placeholder": "group_face | Face References | approved photos where they look like themselves | asset_001,asset_002 | face,current,not-corporate | use for portraits, tokens, and vibe checks",
+          "format": "group_id | group_name | description | asset_ids comma-list | tags comma-list | notes"
+        },
+        {
+          "id": "style_guide_entries",
+          "label": "Style guides",
+          "type": "rows",
+          "help": "Repeatable entries. Format: guide_name | description | asset_ids comma-list | prompt_notes | negative_prompt_notes",
+          "placeholder": "Roadtrip RPG Style | readable indie game interpretation | asset_003 | strong silhouette, travel-worn outfit, expressive idle pose | avoid polished resume headshot energy",
+          "format": "guide_name | description | asset_ids comma-list | prompt_notes | negative_prompt_notes"
+        },
+        {
+          "id": "visual_reference_sheet",
+          "label": "Visual reference sheet",
+          "type": "textarea",
+          "help": "Generated artist/image model reference summary.",
+          "placeholder": ""
+        }
+      ]
+    },
+    {
+      "id": "knowledge_graph",
+      "title": "Knowledge Graph",
+      "note": "v4 foundation fields. The current person profile becomes one graph node, and these rows add linked entities, relationships, events, projects, lore, and concepts.",
+      "fields": [
+        {
+          "id": "entity_id",
+          "label": "Entity ID",
+          "type": "text",
+          "help": "Stable graph ID for this person node.",
+          "placeholder": "person_packetghost"
+        },
+        {
+          "id": "entity_type",
+          "label": "Entity type",
+          "type": "select",
+          "help": "The current profile should usually remain person.",
+          "placeholder": "",
+          "options": [
+            "person",
+            "relationship",
+            "organization",
+            "location",
+            "event",
+            "asset",
+            "story_object",
+            "project",
+            "faction",
+            "concept"
+          ]
+        },
+        {
+          "id": "graph_tags",
+          "label": "Graph tags",
+          "type": "list",
+          "help": "Tags used across the knowledge graph.",
+          "placeholder": "person\nhtf\nk-street\nwccc\nparkour\nai-agents\nroadtrip-lore"
+        },
+        {
+          "id": "graph_notes",
+          "label": "Graph notes",
+          "type": "textarea",
+          "help": "Graph-level notes for this person node.",
+          "placeholder": "Root node for a real friend profile that can become WCCC NPC context, group lore, and future project memory."
+        },
+        {
+          "id": "graph_link_entries",
+          "label": "Graph links",
+          "type": "rows",
+          "help": "Repeatable entries. Format: target entity id | relationship type | strength 1-10 | notes",
+          "placeholder": "org_htf_kstreet | organization_member | 8 | long-running friend/project circle\nproject_wccc | project_member | 6 | approved for light cruise NPC energy\nloc_conference_hallway | location_association | 7 | usually found where the best hallway track is happening",
+          "format": "target entity id | relationship type | strength 1-10 | notes"
+        },
+        {
+          "id": "graph_entity_entries",
+          "label": "Linked entities",
+          "type": "rows",
+          "help": "Repeatable entries. Format: entity_id | entity_type | display_name | created_at | updated_at | tags comma-list | notes",
+          "placeholder": "org_htf_kstreet | organization | HTF / K Street | 2026-01-01 | 2026-06-01 | friend-circle,projects | equal circle of builders, artists, researchers, instigators\nloc_conference_hallway | location | Crypto Conference Hallway Track |  |  | conference,roadtrip | where half the real plot happens",
+          "format": "entity_id | entity_type | display_name | created_at | updated_at | tags comma-list | notes"
+        },
+        {
+          "id": "relationship_entity_entries",
+          "label": "Relationship entities",
+          "type": "rows",
+          "help": "Repeatable entries. Format: relationship_id | person_a | person_b | relationship_type | trust level | conflict level | history level | influence level | communication frequency | relationship health | running dynamic | inside jokes | shared history | relationship notes | confidence level | canon level | consent status",
+          "placeholder": "rel_packetghost_crew | person_packetghost | person_crew | friend | 8 | 2 | 7 | 6 | frequent | healthy | starts projects from jokes | airport floor lore | Discord-to-road-trip friendship | public-safe relationship summary only | high | semi_canon | approved",
+          "format": "relationship_id | person_a | person_b | relationship_type | trust level | conflict level | history level | influence level | communication frequency | relationship health | running dynamic | inside jokes | shared history | relationship notes | confidence level | canon level | consent status"
+        },
+        {
+          "id": "organization_entity_entries",
+          "label": "Organization entities",
+          "type": "rows",
+          "help": "Repeatable entries. Format: entity_id | organization name | founding date | description | members comma-list | roles comma-list | projects comma-list | associated locations comma-list | assets comma-list | history | status",
+          "placeholder": "org_htf_kstreet | HTF / K Street | 2026-01-01 | strange capable circle building games, AI tools, events, and lore | person_packetghost,person_crew | member,lore_keeper,fixer | project_wccc,project_profile_database | loc_hacker_house,loc_conference_hallway | asset_logo | grew through Discord threads, road trips, late nights, and poor timing | active",
+          "format": "entity_id | organization name | founding date | description | members comma-list | roles comma-list | projects comma-list | associated locations comma-list | assets comma-list | history | status"
+        },
+        {
+          "id": "faction_entity_entries",
+          "label": "Faction entities",
+          "type": "rows",
+          "help": "Repeatable entries. Format: entity_id | faction name | description | members comma-list | roles comma-list | projects comma-list | associated locations comma-list | assets comma-list | goals | status",
+          "placeholder": "faction_hallway_track | Hallway Track Diplomats | informal conference crew that finds the real conversation | person_packetghost,person_crew | connector,scout | project_wccc | loc_conference_hallway | asset_badge | turn chance encounters into useful lore | active",
+          "format": "entity_id | faction name | description | members comma-list | roles comma-list | projects comma-list | associated locations comma-list | assets comma-list | goals | status"
+        },
+        {
+          "id": "location_entity_entries",
+          "label": "Location entities",
+          "type": "rows",
+          "help": "Repeatable entries. Format: entity_id | display name | location type | description | associated people comma-list | associated events comma-list | associated organizations comma-list | associated assets comma-list | coordinates optional | tags comma-list",
+          "placeholder": "loc_hacker_house_kitchen | Hacker House Kitchen | real_world | 3 AM planning table, half-cleaned whiteboard, someone's laptop fan screaming | person_packetghost | event_midnight_build | org_htf_kstreet | asset_reference_photo |  | hacker-house,build-sprint",
+          "format": "entity_id | display name | location type | description | associated people comma-list | associated events comma-list | associated organizations comma-list | associated assets comma-list | coordinates optional | tags comma-list"
+        },
+        {
+          "id": "event_entity_entries",
+          "label": "Event entities",
+          "type": "rows",
+          "help": "Repeatable entries. Format: entity_id | title | event date | participants comma-list | organizations comma-list | locations comma-list | assets comma-list | stories comma-list | outcomes | notes",
+          "placeholder": "event_midnight_build | Midnight Build Sprint | 2026-06-01 | person_packetghost,person_crew | org_htf_kstreet | loc_hacker_house_kitchen | asset_reference_photo | story_startup_from_joke | prototype worked badly enough to continue | approximate date; public-safe",
+          "format": "entity_id | title | event date | participants comma-list | organizations comma-list | locations comma-list | assets comma-list | stories comma-list | outcomes | notes"
+        },
+        {
+          "id": "story_object_entries",
+          "label": "Story object entities",
+          "type": "rows",
+          "help": "Repeatable entries. Format: entity_id | title | summary | participants comma-list | related events comma-list | related locations comma-list | related people comma-list | related assets comma-list | importance | canonical status",
+          "placeholder": "story_startup_from_joke | Started A Business From A Discord Joke | side project escaped containment and became group lore | person_packetghost,person_crew | event_midnight_build | loc_hacker_house_kitchen | person_crew |  | high | semi_canon",
+          "format": "entity_id | title | summary | participants comma-list | related events comma-list | related locations comma-list | related people comma-list | related assets comma-list | importance | canonical status"
+        },
+        {
+          "id": "project_entity_entries",
+          "label": "Project entities",
+          "type": "rows",
+          "help": "Repeatable entries. Format: entity_id | project name | description | contributors comma-list | organizations comma-list | assets comma-list | related people comma-list | related events comma-list | status | repository links comma-list",
+          "placeholder": "project_wccc | West Coast Crypto Cruise | game/narrative project about crypto conference chaos, friendship, and weird competence | person_packetghost,person_crew | org_htf_kstreet | asset_logo,asset_reference_photo | person_crew | event_midnight_build | active | https://github.com/htf-kstreet/friend-character-intake",
+          "format": "entity_id | project name | description | contributors comma-list | organizations comma-list | assets comma-list | related people comma-list | related events comma-list | status | repository links comma-list"
+        },
+        {
+          "id": "concept_entity_entries",
+          "label": "Concept entities",
+          "type": "rows",
+          "help": "Repeatable entries. Format: entity_id | concept name | definition | summary | related people comma-list | related projects comma-list | related stories comma-list | related assets comma-list",
+          "placeholder": "concept_hallway_track_lore | Hallway Track Lore | the real story that happens between official agenda items | conference friendships, rumors, jokes, and useful accidents | person_packetghost | project_wccc | story_startup_from_joke | asset_badge",
+          "format": "entity_id | concept name | definition | summary | related people comma-list | related projects comma-list | related stories comma-list | related assets comma-list"
+        },
+        {
+          "id": "timeline_entries",
+          "label": "Timeline entries",
+          "type": "rows",
+          "help": "Repeatable entries. Format: date | entity_id | timeline type | title | summary | related entities comma-list",
+          "placeholder": "2026-06-01 | event_midnight_build | milestone | The joke became a build | Discord bit turned into an actual project plan | person_packetghost,org_htf_kstreet,project_wccc",
+          "format": "date | entity_id | timeline type | title | summary | related entities comma-list"
+        },
+        {
+          "id": "character_context_output",
+          "label": "Character context",
+          "type": "textarea",
+          "help": "Generated graph-aware character context.",
+          "placeholder": ""
+        },
+        {
+          "id": "organization_summary_output",
+          "label": "Organization summary",
+          "type": "textarea",
+          "help": "Generated organization and faction summary.",
+          "placeholder": ""
+        },
+        {
+          "id": "project_summary_output",
+          "label": "Project summary",
+          "type": "textarea",
+          "help": "Generated project summary.",
+          "placeholder": ""
+        },
+        {
+          "id": "timeline_summary",
+          "label": "Timeline summary",
+          "type": "textarea",
+          "help": "Generated chronological summary.",
+          "placeholder": ""
+        },
+        {
+          "id": "lore_summary",
+          "label": "Lore summary",
+          "type": "textarea",
+          "help": "Generated lore/community summary.",
+          "placeholder": ""
+        },
+        {
+          "id": "ai_agent_context",
+          "label": "AI agent context",
+          "type": "textarea",
+          "help": "Generated context for agents and graph-aware NPC systems.",
+          "placeholder": ""
+        }
+      ]
+    },
+    {
+      "id": "personality",
+      "title": "Personality",
+      "note": "Vibe, useful chaos, recurring patterns, and the things the group already knows are true.",
+      "fields": [
+        {
+          "id": "primary_social_energy",
+          "label": "Primary social energy",
+          "type": "select",
+          "help": "Primary recognizable social presence.",
+          "placeholder": "",
+          "options": [
+            "Warm Stabilizer",
+            "Thoughtful Mentor",
+            "Curious Guide",
+            "Practical Fixer",
+            "Chaotic Instigator",
+            "Deadpan Commentator",
+            "Magnetic Performer",
+            "Quiet Observer",
+            "Community Builder",
+            "Explorer",
+            "Storyteller",
+            "Scholar",
+            "Philosopher",
+            "Connector",
+            "Visionary",
+            "Trusted Advisor",
+            "Trickster Sage",
+            "Reluctant Leader",
+            "Investigator",
+            "Catalyst"
+          ]
+        },
+        {
+          "id": "secondary_social_energy",
+          "label": "Secondary social energy",
+          "type": "select",
+          "help": "Secondary social flavor.",
+          "placeholder": "",
+          "options": [
+            "Warm Stabilizer",
+            "Thoughtful Mentor",
+            "Curious Guide",
+            "Practical Fixer",
+            "Chaotic Instigator",
+            "Deadpan Commentator",
+            "Magnetic Performer",
+            "Quiet Observer",
+            "Community Builder",
+            "Explorer",
+            "Storyteller",
+            "Scholar",
+            "Philosopher",
+            "Connector",
+            "Visionary",
+            "Trusted Advisor",
+            "Trickster Sage",
+            "Reluctant Leader",
+            "Investigator",
+            "Catalyst"
+          ]
+        },
+        {
+          "id": "personality_traits",
+          "label": "Vibe tags",
+          "type": "list",
+          "help": "Useful trait tags for filtering and generation.",
+          "placeholder": "curious\nstubborn\nreliable\nchaotic\ncreative\ncaffeinated\nquiet\nanalytical\ndangerous"
+        },
+        {
+          "id": "custom_traits",
+          "label": "Oddly specific traits",
+          "type": "list",
+          "help": "Nuanced traits that standard lists miss.",
+          "placeholder": "can smell bad incentives\nanswers Discord at impossible hours\nkeeps receipts in the spiritual sense"
+        },
+        {
+          "id": "strengths",
+          "label": "What do people always come to you for?",
+          "type": "list",
+          "help": "Competencies that shape story and mechanics.",
+          "placeholder": "fixing servers at 2 AM\nfinding cheap flights\ntalking people off ledges\nremembering obscure lore\nturning chaos into a plan"
+        },
+        {
+          "id": "flaws",
+          "label": "Failure modes / recurring bugs",
+          "type": "list",
+          "help": "Limitations that create believable conflict.",
+          "placeholder": "overcommits to the bit\nforgets sleep is load-bearing\nbuys the top\nturns every problem into a research spiral"
+        },
+        {
+          "id": "character_archetype",
+          "label": "Character archetype",
+          "type": "text",
+          "help": "The slightly mythic group-chat version of this person.",
+          "placeholder": "Accelerator Ghost, Terminal Wizard, Logistics Goblin, Chaos Engineer, ZK Monk, Meme Archaeologist, Burnout Prophet, Startup Necromancer, Desert Mystic, Roadtrip Bard, Vibe Cartographer, Parkour Historian"
+        },
+        {
+          "id": "signature_ability",
+          "label": "Signature ability",
+          "type": "textarea",
+          "help": "The thing they can do that feels unfair but somehow real.",
+          "placeholder": "Can find WiFi anywhere. Knows somebody who knows somebody. Solves impossible problems at 3 AM. Generates ideas faster than consequences."
+        },
+        {
+          "id": "temperament",
+          "label": "Baseline emotional weather",
+          "type": "textarea",
+          "help": "Baseline emotional weather.",
+          "placeholder": "sleep-deprived optimism with a suspicious amount of competence"
+        },
+        {
+          "id": "biggest_contradiction",
+          "label": "Biggest contradiction",
+          "type": "textarea",
+          "help": "The tension that makes them feel real.",
+          "placeholder": "Wants a stable life but keeps joining side quests that become companies."
+        }
+      ]
+    },
+    {
+      "id": "motivation",
+      "title": "Motivation",
+      "note": "What the person optimizes for, protects, refuses, and is trying to become.",
+      "fields": [
+        {
+          "id": "ranked_values",
+          "label": "What actually matters to you?",
+          "type": "list",
+          "help": "Ordered by priority. Include built-ins or custom values.",
+          "placeholder": "friendship\nfreedom\ncuriosity\nbuilding real things\nnot leaving people stranded\ntruth even when annoying"
+        },
+        {
+          "id": "core_motivation",
+          "label": "What keeps pulling you forward?",
+          "type": "textarea",
+          "help": "The deepest engine behind action.",
+          "placeholder": "Make confusing situations survivable for the people they love."
+        },
+        {
+          "id": "what_they_optimize_for",
+          "label": "What they optimize for",
+          "type": "textarea",
+          "help": "What they instinctively try to protect or improve.",
+          "placeholder": "Good signal, good people, enough battery, enough runway, nobody stranded at the wrong airport."
+        },
+        {
+          "id": "what_they_refuse_to_compromise",
+          "label": "What they refuse to compromise",
+          "type": "textarea",
+          "help": "Non-negotiables for character consistency.",
+          "placeholder": "They will not betray a vulnerable ally for convenience."
+        },
+        {
+          "id": "what_tempts_them",
+          "label": "What tempts them",
+          "type": "textarea",
+          "help": "Pressure points that create drama.",
+          "placeholder": "Being needed, being right, having the answer first."
+        },
+        {
+          "id": "what_they_are_trying_to_become",
+          "label": "What they are trying to become",
+          "type": "textarea",
+          "help": "Forward motion for growth arcs.",
+          "placeholder": "Someone who trusts others enough to share the load."
+        },
+        {
+          "id": "greatest_need",
+          "label": "Greatest need",
+          "type": "textarea",
+          "help": "What they emotionally need even if they do not say it.",
+          "placeholder": "Permission to not be useful every second."
+        },
+        {
+          "id": "greatest_fear",
+          "label": "Greatest fear",
+          "type": "textarea",
+          "help": "Core fear that drives avoidance.",
+          "placeholder": "Being useless when people are counting on them."
+        },
+        {
+          "id": "moral_center",
+          "label": "Moral center",
+          "type": "textarea",
+          "help": "The ethical center of gravity.",
+          "placeholder": "Do not abandon people just because the plan got inconvenient."
+        },
+        {
+          "id": "shadow_desire",
+          "label": "Shadow desire",
+          "type": "textarea",
+          "help": "The desire that could become dangerous if unchecked.",
+          "placeholder": "To control the room so no one can fail."
+        }
+      ]
+    },
+    {
+      "id": "decision_making",
+      "title": "Decision-Making",
+      "note": "How the profile chooses, fails, recovers, and handles risk.",
+      "fields": [
+        {
+          "id": "decision_style",
+          "label": "How you choose a path",
+          "type": "select",
+          "help": "How they usually choose a path.",
+          "placeholder": "",
+          "options": [
+            "Research First",
+            "Intuition First",
+            "Consensus Seeking",
+            "Decisive",
+            "Cautious",
+            "Trial And Error",
+            "Expert Guided",
+            "Emotion Driven",
+            "Principle Driven",
+            "Opportunistic"
+          ]
+        },
+        {
+          "id": "risk_tolerance",
+          "label": "Risk appetite",
+          "type": "select",
+          "help": "Risk appetite for story and mechanics.",
+          "placeholder": "",
+          "options": [
+            "Low",
+            "Medium",
+            "High",
+            "Variable"
+          ]
+        },
+        {
+          "id": "planning_horizon",
+          "label": "How far ahead are you thinking?",
+          "type": "select",
+          "help": "How far ahead they naturally think.",
+          "placeholder": "",
+          "options": [
+            "Immediate",
+            "Short Term",
+            "Long Term",
+            "Legacy"
+          ]
+        },
+        {
+          "id": "under_pressure_behavior",
+          "label": "What happens when the plan catches fire?",
+          "type": "textarea",
+          "help": "Default behavior when stakes rise.",
+          "placeholder": "Gets quieter, prioritizes essentials, delegates cleanly, checks who has water and who has the keys."
+        },
+        {
+          "id": "common_blind_spot",
+          "label": "Common blind spot",
+          "type": "textarea",
+          "help": "What they often miss.",
+          "placeholder": "Assumes everyone wants a solved problem more than emotional processing."
+        },
+        {
+          "id": "failure_mode",
+          "label": "Failure mode",
+          "type": "textarea",
+          "help": "How they break down or make mistakes.",
+          "placeholder": "Takes over and becomes terse."
+        },
+        {
+          "id": "recovery_pattern",
+          "label": "Recovery pattern",
+          "type": "textarea",
+          "help": "How they return to balance.",
+          "placeholder": "Apologizes with a concrete repair plan and revised boundaries."
+        },
+        {
+          "id": "what_makes_them_act",
+          "label": "What makes them act",
+          "type": "textarea",
+          "help": "The trigger that moves them from thought to action.",
+          "placeholder": "A friend is at risk and no one owns the next step."
+        },
+        {
+          "id": "what_makes_them_freeze",
+          "label": "What makes them freeze",
+          "type": "textarea",
+          "help": "The kind of uncertainty or fear that stalls them.",
+          "placeholder": "Competing needs where every option hurts someone."
+        }
+      ]
+    },
+    {
+      "id": "social_model",
+      "title": "Social Model",
+      "note": "How the profile bonds, disagrees, cares, and fits into groups.",
+      "fields": [
+        {
+          "id": "group_role",
+          "label": "Role you fall into when people gather",
+          "type": "select",
+          "help": "The role they naturally occupy in groups.",
+          "placeholder": "",
+          "options": [
+            "Leader",
+            "Glue",
+            "Wildcard",
+            "Strategist",
+            "Mediator",
+            "Scout",
+            "Mentor",
+            "Fixer",
+            "Instigator",
+            "Observer",
+            "Protector",
+            "Entertainer",
+            "Analyst"
+          ]
+        },
+        {
+          "id": "friendship_style",
+          "label": "Friendship style",
+          "type": "select",
+          "help": "How they show up for friends.",
+          "placeholder": "",
+          "options": [
+            "Protector",
+            "Teacher",
+            "Teammate",
+            "Entertainer",
+            "Problem Solver",
+            "Listener",
+            "Challenger",
+            "Nurturer"
+          ]
+        },
+        {
+          "id": "relationship_to_group_network",
+          "label": "How you connect to the circle / projects / scenes",
+          "type": "textarea",
+          "help": "Plain-language relationship context for intake, review, and graph migration.",
+          "placeholder": "HTF / K Street friend, Discord regular, WCCC contributor, parkour-adjacent chaos witness, conference hallway ally."
+        },
+        {
+          "id": "how_they_show_care",
+          "label": "How people know you care",
+          "type": "textarea",
+          "help": "Care language for dialogue and relationship simulation.",
+          "placeholder": "Makes the plan easier, remembers who needed a ride, checks on basics, sends the useful link at exactly the right time."
+        },
+        {
+          "id": "how_they_receive_care",
+          "label": "How they receive care",
+          "type": "textarea",
+          "help": "How support gets through to them.",
+          "placeholder": "Responds to concrete help and honest presence."
+        },
+        {
+          "id": "how_they_ask_for_help",
+          "label": "How they ask for help",
+          "type": "textarea",
+          "help": "Whether and how they request support.",
+          "placeholder": "Frames it as a logistical need before naming feelings."
+        },
+        {
+          "id": "trust_builders",
+          "label": "Trust builders",
+          "type": "list",
+          "help": "What increases trust.",
+          "placeholder": "follow-through\nhonest constraints\nshared effort"
+        },
+        {
+          "id": "trust_breakers",
+          "label": "Trust breakers",
+          "type": "list",
+          "help": "What damages trust.",
+          "placeholder": "performative loyalty\nneedless secrecy"
+        },
+        {
+          "id": "disagreement_style",
+          "label": "Disagreement style",
+          "type": "textarea",
+          "help": "Conflict handling inside relationships.",
+          "placeholder": "Starts with reasons, then asks what outcome matters most."
+        },
+        {
+          "id": "apology_style",
+          "label": "Apology style",
+          "type": "textarea",
+          "help": "How they repair socially.",
+          "placeholder": "Direct apology plus changed process."
+        },
+        {
+          "id": "boundary_style",
+          "label": "Boundary style",
+          "type": "textarea",
+          "help": "How they set limits.",
+          "placeholder": "Calm, firm, specific, with little appetite for debate."
+        },
+        {
+          "id": "loyalty_triggers",
+          "label": "Loyalty triggers",
+          "type": "list",
+          "help": "What makes them become deeply loyal.",
+          "placeholder": "shared work\nprotecting someone vulnerable"
+        },
+        {
+          "id": "betrayal_triggers",
+          "label": "Betrayal triggers",
+          "type": "list",
+          "help": "What feels like betrayal.",
+          "placeholder": "needless secrecy\nusing someone as a tool"
+        }
+      ]
+    },
+    {
+      "id": "relationship_graph",
+      "title": "Relationship Graph",
+      "note": "Repeatable relationship entries for future graph and simulation systems.",
+      "fields": [
+        {
+          "id": "relationship_entries",
+          "label": "Relationship entries",
+          "type": "rows",
+          "help": "Repeatable entries. Format: related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes",
+          "placeholder": "Kai | collaborator | 8 | 2 | 7 | 6 | loyal chaos | starts projects from jokes | old Discord-to-road-trip friend",
+          "format": "related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes"
+        }
+      ]
+    },
+    {
+      "id": "knowledge_domains",
+      "title": "Knowledge Domains",
+      "note": "Repeatable expertise entries for dialogue, quest logic, and AI hallucination guardrails.",
+      "fields": [
+        {
+          "id": "knowledge_domain_entries",
+          "label": "Knowledge domains",
+          "type": "rows",
+          "help": "Repeatable entries. Format: domain | expertise level | confidence level | lived experience | public authority | notes | dialogue use",
+          "placeholder": "Parkour | Expert | High | yes | founder-level historical knowledge | deep history | can explain origins and tradeoffs",
+          "format": "domain | expertise level | confidence level | lived experience | public authority | notes | dialogue use"
+        }
+      ]
+    },
+    {
+      "id": "humor_and_voice",
+      "title": "Humor And Voice",
+      "note": "How they sound in the group chat, on a road trip, during a build sprint, and after the plan has obviously gone sideways.",
+      "fields": [
+        {
+          "id": "communication_modes",
+          "label": "How you communicate",
+          "type": "list",
+          "help": "One per line.",
+          "placeholder": "voice memo philosopher\nDiscord essayist\ndry one-liner sniper\nwhiteboard goblin\ncalm crisis operator"
+        },
+        {
+          "id": "humor_types",
+          "label": "Humor types",
+          "type": "list",
+          "help": "One per line.",
+          "placeholder": "deadpan\nmeme-literate\nabsurdist\nfounder gallows humor\naccidental prophecy"
+        },
+        {
+          "id": "voice_rhythm",
+          "label": "Voice rhythm",
+          "type": "textarea",
+          "help": "Cadence and sentence shape.",
+          "placeholder": "starts with 'okay so' then builds a whole theory; pauses for the bit; gets very precise when stakes rise"
+        },
+        {
+          "id": "typical_phrases",
+          "label": "Typical phrases",
+          "type": "list",
+          "help": "Lines or phrase patterns.",
+          "placeholder": "This seems like a bad idea. Let's do it.\nI have concerns, but not enough concerns.\nWe're already committed.\nNobody learns from success."
+        },
+        {
+          "id": "vocabulary",
+          "label": "Vocabulary / recurring words",
+          "type": "list",
+          "help": "Words they reach for often.",
+          "placeholder": "vibes\nconstraints\nsignal\nrugged\nside quest\nload-bearing\ncanonical\ncursed but useful"
+        },
+        {
+          "id": "topics_they_bring_up",
+          "label": "Topics you can talk about for hours",
+          "type": "list",
+          "help": "Conversation magnets.",
+          "placeholder": "Parkour\nAI agents\nCrypto\nPhilosophy\nStreet photography\nUFO lore\nFitness\nHistory\nStartups\nOpen source software\nDreams\nHuman behavior"
+        },
+        {
+          "id": "topics_they_avoid",
+          "label": "Topics to avoid or handle carefully",
+          "type": "list",
+          "help": "Avoidance helps respectful generation.",
+          "placeholder": "private family details\nmedical specifics\nreal money amounts\nold drama that is not public lore"
+        },
+        {
+          "id": "example_quotes",
+          "label": "Representative quotes",
+          "type": "list",
+          "help": "Representative lines for dialogue generation.",
+          "placeholder": "How hard could it possibly be?\nThat went better than expected.\nLet's never do that again.\nSee? Completely under control."
+        },
+        {
+          "id": "battle_intro_quote",
+          "label": "Battle intro quote",
+          "type": "textarea",
+          "help": "A heightened game-style line that still sounds like them.",
+          "placeholder": "This seems like a bad idea. Let's do it.\nI have concerns, but not enough concerns.\nWe're already committed."
+        },
+        {
+          "id": "battle_victory_quote",
+          "label": "Victory quote",
+          "type": "textarea",
+          "help": "What they say after surviving the situation.",
+          "placeholder": "Nobody learns from success.\nThat went better than expected.\nLet's never do that again."
+        },
+        {
+          "id": "dialogue_dos",
+          "label": "Dialogue should do this",
+          "type": "list",
+          "help": "What generated dialogue should do.",
+          "placeholder": "sound like a real friend\ninclude practical weirdness\nknow the lore\nkeep the humor human"
+        },
+        {
+          "id": "dialogue_donts",
+          "label": "Dialogue should avoid this",
+          "type": "list",
+          "help": "What generated dialogue should avoid.",
+          "placeholder": "do not make them a tech bro caricature\ndo not turn every line into a pitch\ndo not make private lore public"
+        }
+      ]
+    },
+    {
+      "id": "conflict_and_stress",
+      "title": "Conflict And Stress",
+      "note": "How pressure changes behavior and what restores trust.",
+      "fields": [
+        {
+          "id": "when_challenged",
+          "label": "When challenged, you usually...",
+          "type": "list",
+          "help": "One per line.",
+          "placeholder": "research until the room gets tired\ndebate the premise\ntake control of logistics\nmake a joke to lower the voltage"
+        },
+        {
+          "id": "stress_signals",
+          "label": "How friends can tell you are stressed",
+          "type": "list",
+          "help": "Observable stress tells.",
+          "placeholder": "shorter sentences\nless eye contact\nmore lists\nstarts cleaning the kitchen\nopens the same tab six times"
+        },
+        {
+          "id": "escalation_triggers",
+          "label": "What makes it worse",
+          "type": "list",
+          "help": "What makes conflict worse.",
+          "placeholder": "bad-faith arguments\navoidable risk to friends\npeople pretending there is no problem\nlast-minute mystery plans"
+        },
+        {
+          "id": "deescalation_methods",
+          "label": "What helps you come back down",
+          "type": "list",
+          "help": "What helps them settle.",
+          "placeholder": "clear facts\nfood\na concrete next step\nsomeone taking one task off the board\nfive minutes outside"
+        },
+        {
+          "id": "conflict_strengths",
+          "label": "What you are good at when things get tense",
+          "type": "list",
+          "help": "What they do well in conflict.",
+          "placeholder": "separates facts from panic\nnames the real decision\nprotects the quiet person in the room"
+        },
+        {
+          "id": "conflict_weaknesses",
+          "label": "Conflict weaknesses",
+          "type": "list",
+          "help": "Where they struggle.",
+          "placeholder": "can become terse\nmay over-control"
+        },
+        {
+          "id": "repair_pattern",
+          "label": "How you repair after a bad moment",
+          "type": "textarea",
+          "help": "How they repair after conflict.",
+          "placeholder": "Direct apology, changed process, and a follow-up message after everyone has slept."
+        },
+        {
+          "id": "pressure_dialogue_style",
+          "label": "How your voice changes under stress",
+          "type": "textarea",
+          "help": "How their voice changes under stress.",
+          "placeholder": "Shorter, more procedural, fewer jokes, more 'okay, first we solve the immediate problem.'"
+        }
+      ]
+    },
+    {
+      "id": "signature_behaviors",
+      "title": "Signature Behaviors",
+      "note": "Repeatable behavior entries for recognition, comedy, and mechanics.",
+      "fields": [
+        {
+          "id": "signature_behavior_entries",
+          "label": "Signature behaviors",
+          "type": "rows",
+          "help": "Repeatable entries. Format: behavior | context | frequency | comedic exaggeration potential | game-use notes | dialogue-use notes",
+          "placeholder": "Opens twenty browser tabs | when fact-checking a Discord argument | Common | High | can trigger Research Spiral mechanic | mutters source comparisons\nFinds the afterparty | conference hallway chaos | Sometimes | Medium | unlocks hidden social route | says 'I think I know a guy'",
+          "format": "behavior | context | frequency | comedic exaggeration potential | game-use notes | dialogue-use notes"
+        }
+      ]
+    },
+    {
+      "id": "narrative_engine",
+      "title": "Narrative Engine",
+      "note": "The lore layer: stories people retell, chaos patterns, running bits, and what changes over time.",
+      "fields": [
+        {
+          "id": "personal_quest",
+          "label": "What are you usually chasing?",
+          "type": "textarea",
+          "help": "What they would pursue in story terms.",
+          "placeholder": "Build something that probably should not work, make it useful, then accidentally turn it into a community."
+        },
+        {
+          "id": "growth_arc",
+          "label": "Growth arc",
+          "type": "textarea",
+          "help": "Change over time.",
+          "placeholder": "Learns to stop treating burnout as proof of commitment."
+        },
+        {
+          "id": "legendary_story",
+          "label": "Legendary story people tell about you",
+          "type": "textarea",
+          "help": "A story that already sounds like a side quest.",
+          "placeholder": "Accidentally slept through a conference and still made the keynote. Drove across three states for a single taco recommendation. Started a business from a Discord joke."
+        },
+        {
+          "id": "most_chaotic_moment",
+          "label": "Most chaotic moment",
+          "type": "textarea",
+          "help": "A memorable moment where the plan became lore.",
+          "placeholder": "Missed a flight and accidentally joined a startup. Lost a wallet, found a friend. Ended up at Burning Man with 24 hours notice."
+        },
+        {
+          "id": "recurring_internal_conflict",
+          "label": "Recurring internal conflict",
+          "type": "textarea",
+          "help": "Inner contradiction.",
+          "placeholder": "Wants peace but keeps volunteering for impossible projects because the group needs someone with a spreadsheet and a car."
+        },
+        {
+          "id": "shadow_version",
+          "label": "Shadow version",
+          "type": "textarea",
+          "help": "Unhealthy extreme.",
+          "placeholder": "Becomes a sleep-deprived chaos engine who mistakes urgency for meaning."
+        },
+        {
+          "id": "best_self_version",
+          "label": "Best-self version",
+          "type": "textarea",
+          "help": "Aspirational extreme.",
+          "placeholder": "A grounded builder who can hold ambition, friendship, and rest at the same time."
+        },
+        {
+          "id": "running_joke",
+          "label": "Running joke",
+          "type": "textarea",
+          "help": "Recurring comic bit.",
+          "placeholder": "Always says they are leaving in ten minutes, then becomes load-bearing to the next three-hour conversation."
+        },
+        {
+          "id": "symbolic_motifs",
+          "label": "Symbols / motifs",
+          "type": "list",
+          "help": "Images, props, or symbols.",
+          "placeholder": "gas station coffee\nconference badge\nopen tabs\nrooftop at sunrise\ndusty road\nhalf-built prototype"
+        },
+        {
+          "id": "character_themes",
+          "label": "Themes",
+          "type": "list",
+          "help": "Abstract themes.",
+          "placeholder": "friendship under stress\nambition without permission\ncommunity as survival tech\nmaking meaning from chaos"
+        },
+        {
+          "id": "dramatic_question",
+          "label": "Dramatic question",
+          "type": "textarea",
+          "help": "The question their arc asks.",
+          "placeholder": "Can you build impossible things without becoming impossible to live with?"
+        },
+        {
+          "id": "what_changes_them",
+          "label": "What actually changes them?",
+          "type": "textarea",
+          "help": "Forces that actually move the character.",
+          "placeholder": "A friend calling them out with love, a project failing honestly, a road trip that creates enough silence to think."
+        },
+        {
+          "id": "what_never_changes",
+          "label": "What never changes?",
+          "type": "textarea",
+          "help": "The invariant core.",
+          "placeholder": "They will always notice the person quietly falling out of the group orbit."
+        },
+        {
+          "id": "role_in_group_story",
+          "label": "Role in the group story",
+          "type": "textarea",
+          "help": "Narrative function inside ensemble stories.",
+          "placeholder": "The one who knows the lore, finds the workaround, and somehow has the charger."
+        },
+        {
+          "id": "ideal_scene",
+          "label": "Scene where you shine",
+          "type": "textarea",
+          "help": "Scene type where they shine.",
+          "placeholder": "3 AM kitchen table after the conference, everyone tired, the plan broken, and suddenly they make it make sense."
+        },
+        {
+          "id": "nightmare_scene",
+          "label": "Scene that breaks your brain",
+          "type": "textarea",
+          "help": "Scene type that stresses them.",
+          "placeholder": "A high-stakes group decision with bad WiFi, no clear owner, and three people pretending they are fine."
+        }
+      ]
+    },
+    {
+      "id": "game_mechanics",
+      "title": "Game Mechanics",
+      "note": "How this person turns into mechanics, abilities, NPC behavior, and party utility without sanding off the real-world weirdness.",
+      "fields": [
+        {
+          "id": "suggested_class_role",
+          "label": "Project role / character role",
+          "type": "text",
+          "help": "System-neutral class or archetype.",
+          "placeholder": "Community Builder, Organizer, Lore Keeper, Artist, Developer, Historian, Researcher, Event Instigator, Professional Bad Influence, Spreadsheet Wizard, Meme Curator, Fixer"
+        },
+        {
+          "id": "potential_party_roles",
+          "label": "Potential party roles",
+          "type": "list",
+          "help": "Multi-select style list.",
+          "placeholder": "organizer\nresearcher\nhype engine\nchaos dampener\nroad captain\nlore keeper\nbad idea validator"
+        },
+        {
+          "id": "passive_abilities",
+          "label": "Passive abilities",
+          "type": "list",
+          "help": "Always-on mechanics.",
+          "placeholder": "can find WiFi anywhere\nknows somebody who knows somebody\nspots the weird incentive\nremembers obscure lore"
+        },
+        {
+          "id": "active_abilities",
+          "label": "Active abilities",
+          "type": "list",
+          "help": "Triggered mechanics.",
+          "placeholder": "turns panic into a checklist\nmakes a Discord thread useful\nfinds cheap flights\nturns a joke into a prototype"
+        },
+        {
+          "id": "traversal_abilities",
+          "label": "Traversal abilities",
+          "type": "list",
+          "help": "Movement/exploration mechanics.",
+          "placeholder": "can sleep in airports\nnavigates cities by vibes and coffee shops\nfinds the back entrance\nclimbs the thing safely"
+        },
+        {
+          "id": "support_abilities",
+          "label": "Support abilities",
+          "type": "list",
+          "help": "How they help allies mechanically.",
+          "placeholder": "talks people off ledges\nfeeds the team\nkeeps the group chat alive\nreminds people water exists"
+        },
+        {
+          "id": "social_abilities",
+          "label": "Social abilities",
+          "type": "list",
+          "help": "Social mechanics.",
+          "placeholder": "befriends the venue staff\nreads the room\nfinds the afterparty\nknows when the bit has gone too far"
+        },
+        {
+          "id": "research_abilities",
+          "label": "Research abilities",
+          "type": "list",
+          "help": "Knowledge and investigation mechanics.",
+          "placeholder": "weird internet archaeology\nsource triangulation\nAI agent prototyping\ncrypto wallet debugging\nparkour history recall"
+        },
+        {
+          "id": "weaknesses",
+          "label": "Weaknesses / exploit conditions",
+          "type": "list",
+          "help": "Mechanical or narrative vulnerabilities.",
+          "placeholder": "low battery\nbad coffee\nno sleep\nambiguous plans\nsomeone says 'quick call'"
+        },
+        {
+          "id": "status_effects",
+          "label": "Status effects",
+          "type": "list",
+          "help": "States this character causes or receives.",
+          "placeholder": "Caffeinated\nRugged\nIn Flow\nOverclocked\nAirport Mode\nResearch Spiral\nConference Brain"
+        },
+        {
+          "id": "special_dialogue_triggers",
+          "label": "Special dialogue triggers",
+          "type": "list",
+          "help": "When unique lines should fire.",
+          "placeholder": "someone says 'how hard could it be?'\na wallet is missing\na plan has no owner\nsomeone opens a 40-tab research stack"
+        },
+        {
+          "id": "failure_comedy_mechanics",
+          "label": "Failure / comedy mechanics",
+          "type": "list",
+          "help": "How flaws become playable comedy.",
+          "placeholder": "generates ideas faster than consequences\ngets on the wrong bus but finds better lore\nforgets the charger but has three adapters"
+        },
+        {
+          "id": "power_curve",
+          "label": "Power curve",
+          "type": "textarea",
+          "help": "How their utility scales over time.",
+          "placeholder": "Starts as a useful weirdo, becomes the person everyone quietly routes impossible problems through."
+        },
+        {
+          "id": "balance_notes",
+          "label": "Balance notes",
+          "type": "textarea",
+          "help": "How to keep mechanics fair.",
+          "placeholder": "Strong improvisation should cost sleep, battery, social credit, or snacks."
+        }
+      ]
+    },
+    {
+      "id": "ai_generation",
+      "title": "AI Generation",
+      "note": "Prompt-ready summaries, guardrails, and tags so agents do not sand the weird edges off.",
+      "fields": [
+        {
+          "id": "canonical_short_description",
+          "label": "One-line character read",
+          "type": "textarea",
+          "help": "One compact identity line.",
+          "placeholder": "Sleep-deprived builder with road-trip instincts, Discord lore, and the suspicious ability to make bad plans useful."
+        },
+        {
+          "id": "canonical_long_description",
+          "label": "Longer AI context summary",
+          "type": "textarea",
+          "help": "Longer stable description for LLM context.",
+          "placeholder": "A capable internet friend shaped by hacker houses, parkour culture, startup chaos, and late-night conversations; funny under pressure, useful in emergencies, allergic to fake certainty."
+        },
+        {
+          "id": "art_prompt_summary",
+          "label": "Art prompt summary",
+          "type": "textarea",
+          "help": "LLM/image prompt summary.",
+          "placeholder": "modern hacker-house roadtrip character, conference badge, travel-worn hoodie, bright tired eyes, backpack full of impossible tools"
+        },
+        {
+          "id": "behavioral_prompt_summary",
+          "label": "Behavioral prompt summary",
+          "type": "textarea",
+          "help": "How AI should simulate behavior.",
+          "placeholder": "Protect the group, follow the weird lead, ask practical questions, keep the humor sharp, and remember that friendship is part logistics."
+        },
+        {
+          "id": "dialogue_prompt_summary",
+          "label": "Dialogue prompt summary",
+          "type": "textarea",
+          "help": "How AI should write their dialogue.",
+          "placeholder": "Write like a real group-chat regular: specific, funny, tired, capable, slightly too online, never generic."
+        },
+        {
+          "id": "game_design_summary",
+          "label": "Game design summary",
+          "type": "textarea",
+          "help": "Concise game design translation.",
+          "placeholder": "Support/chaos utility character who converts bad plans into survivable adventures and unlocks hidden social routes."
+        },
+        {
+          "id": "do_not_misrepresent",
+          "label": "Do-not-misrepresent list",
+          "type": "list",
+          "help": "Guardrails for AI and adaptation.",
+          "placeholder": "Do not make them cruel\nDo not make them a generic tech bro\nDo not reveal private contact information\nDo not flatten the weirdness into productivity-speak"
+        },
+        {
+          "id": "sensitive_topics",
+          "label": "Sensitive topics",
+          "type": "list",
+          "help": "Topics AI should handle cautiously or avoid.",
+          "placeholder": "family details\nmedical specifics\nreal finances\nold drama\nprivate relationships"
+        },
+        {
+          "id": "safe_exaggerations",
+          "label": "Safe exaggerations",
+          "type": "list",
+          "help": "Traits that can be heightened.",
+          "placeholder": "opens too many research tabs\ncan find WiFi anywhere\nhas a plan for snacks\nknows somebody who knows somebody"
+        },
+        {
+          "id": "unsafe_exaggerations",
+          "label": "Unsafe exaggerations",
+          "type": "list",
+          "help": "Traits that should not be heightened.",
+          "placeholder": "cruelty\nactual paranoia\nreal legal trouble\nprivate financial losses"
+        },
+        {
+          "id": "prompt_tags",
+          "label": "Prompt tags",
+          "type": "list",
+          "help": "Search and generation tags.",
+          "placeholder": "hacker-house\nroadtrip\nAI-agents\ncrypto-conference\nparkour-lore\ndeadpan"
+        },
+        {
+          "id": "negative_prompt_tags",
+          "label": "Negative prompt tags",
+          "type": "list",
+          "help": "Tags to avoid in generation.",
+          "placeholder": "corporate stock photo\nresume headshot\nquest hero cosplay\ngeneric cyberpunk villain"
+        }
+      ]
+    },
+    {
+      "id": "project_usage",
+      "title": "Project Usage",
+      "note": "Where this profile can show up: cruise NPC, Discord lore, art prompts, internal memory, game systems, or future chaos.",
+      "fields": [
+        {
+          "id": "approved_projects",
+          "label": "Where can this be used?",
+          "type": "list",
+          "help": "One per line.",
+          "placeholder": "HTF\nK Street\nWest Coast Crypto Cruise\nShared Person Database\nAI Dialogue Agent\nArt Generation\nGroup Memory\nPrivate Review\nFuture Weird Project"
+        },
+        {
+          "id": "project_relevance_notes",
+          "label": "Why do you belong in the database?",
+          "type": "textarea",
+          "help": "Why this person/entity matters to one or more projects.",
+          "placeholder": "Good for cruise NPC energy, group memory, social cameos, late-night dialogue, and support-character writing."
+        },
+        {
+          "id": "project_specific_notes",
+          "label": "Project-specific notes / boundaries",
+          "type": "textarea",
+          "help": "Usage notes per project.",
+          "placeholder": "Okay as a background NPC on West Coast Crypto Cruise; ask before making me a main character or romance subplot."
+        },
+        {
+          "id": "canon_level",
+          "label": "Canon level",
+          "type": "select",
+          "help": "How authoritative the profile is.",
+          "placeholder": "",
+          "options": [
+            "Raw",
+            "Semi Canon",
+            "Canon",
+            "Parody Only",
+            "Private Reference Only"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "source_notes",
+      "title": "Source Notes",
+      "note": "Source provenance and review information.",
+      "fields": [
+        {
+          "id": "source_images",
+          "label": "Reference photos / source images",
+          "type": "list",
+          "help": "Private image references or file paths.",
+          "placeholder": "Source Images/Packet Ghost/approved-conference-reference.jpg"
+        },
+        {
+          "id": "source_interviews",
+          "label": "Source conversations",
+          "type": "list",
+          "help": "Interview notes, dates, or links.",
+          "placeholder": "2026-06 intake form\nvoice memo after the road trip\nDiscord thread that should probably be summarized"
+        },
+        {
+          "id": "source_notes",
+          "label": "Source notes",
+          "type": "textarea",
+          "help": "General provenance notes.",
+          "placeholder": "Self-submitted form plus later lore review; private images stay in the cloud drive, not the public repo."
+        },
+        {
+          "id": "contributors",
+          "label": "Contributors",
+          "type": "list",
+          "help": "People who contributed profile data.",
+          "placeholder": "self-submitted"
+        },
+        {
+          "id": "reviewers",
+          "label": "Reviewers",
+          "type": "list",
+          "help": "People who reviewed the profile.",
+          "placeholder": "HTF / K Street reviewer"
+        },
+        {
+          "id": "last_reviewed",
+          "label": "Last reviewed",
+          "type": "text",
+          "help": "Review date.",
+          "placeholder": "2026-06-01"
+        },
+        {
+          "id": "accuracy_confidence",
+          "label": "Accuracy confidence",
+          "type": "select",
+          "help": "Confidence in the profile accuracy.",
+          "placeholder": "",
+          "options": [
+            "Low",
+            "Medium",
+            "High",
+            "Unreviewed"
+          ]
+        },
+        {
+          "id": "unresolved_questions",
+          "label": "Questions for later",
+          "type": "list",
+          "help": "Open questions for later review.",
+          "placeholder": "Confirm art prompt permission\nAsk if the legendary taco story is public-safe\nCheck whether WCCC can use this as an NPC cameo"
+        }
+      ]
+    },
+    {
+      "id": "generated_content",
+      "title": "Generated Content",
+      "note": "Editable generated outputs. Buttons at the top can fill these from the structured fields.",
+      "fields": [
+        {
+          "id": "character_summary",
+          "label": "Character summary",
+          "type": "textarea",
+          "help": "Generated high-level summary.",
+          "placeholder": ""
+        },
+        {
+          "id": "ai_context_output",
+          "label": "AI context",
+          "type": "textarea",
+          "help": "Generated AI context block.",
+          "placeholder": ""
+        },
+        {
+          "id": "art_prompt_output",
+          "label": "Art prompt",
+          "type": "textarea",
+          "help": "Generated art prompt.",
+          "placeholder": ""
+        },
+        {
+          "id": "dialogue_prompt_output",
+          "label": "Dialogue prompt",
+          "type": "textarea",
+          "help": "Generated dialogue prompt.",
+          "placeholder": ""
+        },
+        {
+          "id": "npc_summary",
+          "label": "NPC summary",
+          "type": "textarea",
+          "help": "Generated NPC/game-facing summary.",
+          "placeholder": ""
+        },
+        {
+          "id": "relationship_summary",
+          "label": "Relationship summary",
+          "type": "textarea",
+          "help": "Generated relationship model summary.",
+          "placeholder": ""
+        }
+      ]
+    }
+  ],
+  "controlled_vocabularies": {
+    "asset_types": [
+      "reference_photo",
+      "portrait",
+      "full_body",
+      "sprite",
+      "background",
+      "voice_sample",
+      "document",
+      "model_3d",
+      "logo_symbol",
+      "moodboard",
+      "character_art",
+      "sprite_sheet",
+      "pixel_art",
+      "token",
+      "concept_art",
+      "ui_graphic",
+      "logo",
+      "symbol",
+      "icon",
+      "animation",
+      "video",
+      "voice_reference",
+      "audio_clip",
+      "music_reference",
+      "pdf",
+      "3d_model",
+      "texture",
+      "screenshot",
+      "historical_reference",
+      "other"
+    ],
+    "entity_types": [
+      "person",
+      "relationship",
+      "organization",
+      "location",
+      "event",
+      "asset",
+      "story_object",
+      "project",
+      "faction",
+      "concept"
+    ],
+    "relationship_types": [
+      "friend",
+      "family",
+      "collaborator",
+      "mentor",
+      "rival",
+      "ex",
+      "project_member",
+      "location_association",
+      "event_participant",
+      "organization_member",
+      "inspiration_source",
+      "fictionalized_as"
+    ]
+  },
+  "sample_profile": {
+    "schema_version": "3.0.0",
+    "schema_id": "kstreet_person_profile.v3",
+    "profile_id": "example-person",
+    "created_at": "2026-06-01T00:00:00.000Z",
+    "updated_at": "2026-06-01T00:00:00.000Z",
+    "entity": {
+      "entity_id": "person_example",
+      "entity_type": "person",
+      "display_name": "Packet Ghost",
+      "created_at": "2026-06-01T00:00:00.000Z",
+      "updated_at": "2026-06-01T00:00:00.000Z",
+      "tags": [
+        "sample",
+        "person",
+        "htf",
+        "k-street",
+        "wccc"
+      ],
+      "notes": "Fictional sample root person entity with HTF / K Street / WCCC flavor.",
+      "relationships": [
+        {
+          "target_entity_id": "org_shared_group",
+          "relationship_type": "associated_with",
+          "strength": "7",
+          "notes": "Sample graph link for a friend-circle profile."
+        }
+      ]
+    },
+    "consent": {
+      "permission_to_store": true,
+      "permission_to_fictionalize": true,
+      "permission_for_ai_dialogue": true,
+      "permission_for_art_generation": false,
+      "permission_for_cross_project_reuse": true,
+      "permission_for_relationship_simulation": true,
+      "contact_for_questions": false,
+      "sensitive_topics_to_avoid": [
+        "private family details"
+      ],
+      "consent_notes": "Sample record only. Do not treat as a real submission. Keep private contact, real names, source images, and boundaries out of public exports unless explicitly approved."
+    },
+    "identity": {
+      "display_name": "Packet Ghost",
+      "real_name_optional": "",
+      "optional_contact": "",
+      "in_world_name": "Packet Ghost",
+      "short_bio": "A sleep-deprived internet friend who fixes weird problems, finds the useful room at conferences, and turns Discord jokes into actual project plans.",
+      "three_word_vibe": "Chaotic, creative, caffeinated",
+      "animal_affinity": "Crow with a laptop bag",
+      "current_obsession": "Local AI models, Bitcoin self-custody, retro RPG design, parkour history, and weird internet archaeology.",
+      "nicknames": [
+        "Packet Ghost",
+        "WiFi Oracle"
+      ],
+      "pronouns": "they/them",
+      "age_range": "30s",
+      "current_location": "Usually between the group chat, a hacker house kitchen, and the crypto conference hallway track",
+      "origin_location": "Parkour forums and long road trips",
+      "communities": [
+        "HTF",
+        "K Street",
+        "West Coast Crypto Cruise",
+        "parkour community",
+        "local AI Discord"
+      ],
+      "roles": [
+        "lore keeper",
+        "developer",
+        "event instigator",
+        "meme curator",
+        "fixer"
+      ],
+      "professions": [
+        "developer",
+        "researcher",
+        "full-time side quest"
+      ],
+      "identity_tags": [
+        "hacker-house",
+        "roadtrip",
+        "ai-agents",
+        "crypto-conference",
+        "parkour-lore"
+      ]
+    },
+    "appearance": {
+      "height_build": "medium height, parkour-adjacent posture, hard to lose in a crowd",
+      "hair": "messy travel hair, usually under a beanie by day three",
+      "eyes": "alert, sleep-deprived, always scanning for outlets, exits, and the bit",
+      "face_features": "expressive eyebrows, too-aware resting face, looks like they just read the room and the room failed QA",
+      "skin_tone": "",
+      "distinguishing_marks": "old conference wristband, scuffed shoes, hoodie with mystery pockets",
+      "silhouette": "hoodie, backpack, forward lean, looks ready to climb a wall or fix a router",
+      "everyday_clothing": "black hoodie, conference badge, trail shoes, cargo pants, jacket with too many pockets",
+      "iconic_outfit": "sun-faded camp shirt, beat-up sneakers, sunglasses at night, backpack that has seen things",
+      "accessories": "camera, pocket notebook, hardware wallet, carabiner, old lanyard",
+      "carried_items": "half-charged laptop, coffee thermos, phone with 200 open tabs, multi-tool",
+      "signature_item": "Backpack containing an unknown dimension",
+      "default_expression": "half amused, half concerned, already debugging the situation",
+      "movement_body_language": "paces while thinking, perches on furniture wrong, talks with hands, moves like the floor is optional",
+      "image_prompt_notes": "modern internet nomad, hacker-house roadtrip energy, conference badge, travel-worn hoodie, bright tired eyes",
+      "negative_image_prompt_notes": "avoid corporate mascot, resume headshot, generic tech bro, quest hero cosplay, or villain caricature"
+    },
+    "asset_library": {
+      "primary_reference_asset_id": "asset_example_face_reference",
+      "primary_portrait_asset_id": "asset_example_portrait",
+      "primary_sprite_asset_id": "asset_example_sprite",
+      "primary_model_asset_id": "",
+      "primary_face_reference_asset_id": "asset_example_face_reference",
+      "primary_body_reference_asset_id": "",
+      "primary_outfit_reference_asset_id": "",
+      "primary_token_asset_id": "",
+      "primary_voice_reference_asset_id": "",
+      "assets": [
+        {
+          "asset_id": "asset_example_face_reference",
+          "asset_type": "reference_photo",
+          "title": "WCCC Hallway Face Reference",
+          "description": "Approved private face reference metadata from conference hallway chaos.",
+          "linked_entity_id": "person_example",
+          "linked_project": "West Coast Crypto Cruise",
+          "file_name": "packet-ghost-hallway-reference.jpg",
+          "file_extension": "jpg",
+          "file_size": "sample metadata only",
+          "url": "",
+          "local_path": "Source Images/Packet Ghost/packet-ghost-hallway-reference.jpg",
+          "thumbnail_url": "",
+          "date_added": "2026-06-01",
+          "last_modified": "2026-06-01",
+          "source": "sample self-submission",
+          "creator": "Packet Ghost",
+          "copyright_holder": "Packet Ghost",
+          "license_type": "private",
+          "consent_status": "private_only",
+          "canon_level": "primary_reference",
+          "tags": [
+            "face",
+            "current",
+            "portrait",
+            "conference",
+            "late-night"
+          ],
+          "associated_projects": [
+            "West Coast Crypto Cruise",
+            "HTF",
+            "K Street"
+          ],
+          "use_cases": [
+            "portrait_generation",
+            "art_generation"
+          ],
+          "do_not_use_for": [
+            "public ads",
+            "romance subplot without consent"
+          ],
+          "notes": "Sample metadata only; no real image included. Private source files stay outside the public repo."
+        }
+      ],
+      "asset_groups": [
+        {
+          "group_id": "group_example_face",
+          "group_name": "Packet Ghost Face References",
+          "description": "Approved references where the person looks like themselves, not a stock photo.",
+          "asset_ids": [
+            "asset_example_face_reference"
+          ],
+          "tags": [
+            "face"
+          ],
+          "notes": "Private source files stay outside the public repo."
+        }
+      ],
+      "style_guides": [
+        {
+          "guide_name": "Retro JRPG Style",
+          "description": "Readable roadtrip RPG interpretation.",
+          "asset_ids": [
+            "asset_example_sprite"
+          ],
+          "prompt_notes": "Readable silhouette, expressive idle pose, travel-worn outfit, useful chaos.",
+          "negative_prompt_notes": "Avoid polished resume headshot energy."
+        }
+      ]
+    },
+    "knowledge_graph": {
+      "graph_schema_version": "4.0.0-foundation",
+      "graph_id": "person_example_graph",
+      "root_entity_id": "person_example",
+      "entities": [
+        {
+          "entity_id": "person_example",
+          "entity_type": "person",
+          "display_name": "Packet Ghost",
+          "created_at": "2026-06-01T00:00:00.000Z",
+          "updated_at": "2026-06-01T00:00:00.000Z",
+          "tags": [
+            "sample",
+            "person",
+            "htf",
+            "k-street",
+            "wccc"
+          ],
+          "notes": "Fictional sample root person entity with group-culture examples.",
+          "relationships": [
+            {
+              "target_entity_id": "org_shared_group",
+              "relationship_type": "associated_with",
+              "strength": "7",
+              "notes": "Sample graph link."
+            }
+          ],
+          "profile_ref": "current_profile"
+        },
+        {
+          "entity_id": "org_shared_group",
+          "entity_type": "organization",
+          "display_name": "HTF / K Street",
+          "created_at": "2026-06-01",
+          "updated_at": "2026-06-01",
+          "tags": [
+            "friend-circle",
+            "projects",
+            "organization"
+          ],
+          "notes": "Sample organization node for the shared circle.",
+          "relationships": []
+        },
+        {
+          "entity_id": "asset_example_face_reference",
+          "entity_type": "asset",
+          "display_name": "WCCC Hallway Face Reference",
+          "created_at": "2026-06-01",
+          "updated_at": "2026-06-01",
+          "tags": [
+            "face",
+            "current",
+            "portrait",
+            "conference"
+          ],
+          "notes": "Sample metadata only; no real image included.",
+          "relationships": [
+            {
+              "target_entity_id": "person_example",
+              "relationship_type": "asset_of",
+              "strength": "7",
+              "notes": "portrait_generation, art_generation"
+            }
+          ],
+          "asset_ref": "asset_example_face_reference"
+        }
+      ],
+      "relationship_entities": [
+        {
+          "relationship_id": "rel_example_friend",
+          "person_a": "person_example",
+          "person_b": "person_friend",
+          "relationship_type": "friend",
+          "trust_level": "8",
+          "conflict_level": "2",
+          "history_level": "5",
+          "influence_level": "6",
+          "communication_frequency": "regular",
+          "relationship_health": "healthy",
+          "running_dynamic": "practical support plus dry humor plus mutually bad ideas",
+          "inside_jokes": "airport floor lore; 'we're already committed'",
+          "shared_history": "Discord-to-road-trip friendship with several projects that escaped containment",
+          "relationship_notes": "Sample public-safe relationship entity.",
+          "confidence_level": "high",
+          "canon_level": "example_only",
+          "consent_status": "approved"
+        }
+      ],
+      "organizations": [
+        {
+          "entity_id": "org_shared_group",
+          "organization_name": "HTF / K Street",
+          "founding_date": "2026-01-01",
+          "description": "Strange capable circle building games, AI tools, events, and lore.",
+          "members": [
+            "person_example"
+          ],
+          "roles": [
+            "developer",
+            "lore keeper",
+            "fixer"
+          ],
+          "projects": [
+            "project_wccc"
+          ],
+          "associated_locations": [
+            "loc_hacker_house_kitchen"
+          ],
+          "assets": [
+            "asset_example_face_reference"
+          ],
+          "history": "Grew through Discord threads, road trips, late-night builds, and occasional poor decisions.",
+          "status": "active"
+        }
+      ],
+      "factions": [],
+      "locations": [
+        {
+          "entity_id": "loc_hacker_house_kitchen",
+          "display_name": "Hacker House Kitchen",
+          "location_type": "real_world",
+          "description": "3 AM planning table, half-cleaned whiteboard, someone's laptop fan screaming.",
+          "associated_people": [
+            "person_example"
+          ],
+          "associated_events": [
+            "event_midnight_build"
+          ],
+          "associated_organizations": [
+            "org_shared_group"
+          ],
+          "associated_assets": [],
+          "coordinates_optional": "",
+          "tags": [
+            "hacker-house",
+            "build-sprint"
+          ]
+        }
+      ],
+      "events": [
+        {
+          "entity_id": "event_midnight_build",
+          "title": "Midnight Build Sprint",
+          "event_date": "2026-06-01",
+          "participants": [
+            "person_example"
+          ],
+          "organizations": [
+            "org_shared_group"
+          ],
+          "locations": [
+            "loc_hacker_house_kitchen"
+          ],
+          "assets": [],
+          "stories": [
+            "story_startup_from_joke"
+          ],
+          "outcomes": "Prototype worked badly enough to continue.",
+          "notes": "Approximate date; public-safe sample event."
+        }
+      ],
+      "assets": [],
+      "story_objects": [
+        {
+          "entity_id": "story_startup_from_joke",
+          "title": "Started A Business From A Discord Joke",
+          "summary": "A side project escaped containment and became group lore.",
+          "participants": [
+            "person_example"
+          ],
+          "related_events": [
+            "event_midnight_build"
+          ],
+          "related_locations": [
+            "loc_hacker_house_kitchen"
+          ],
+          "related_people": [
+            "person_example"
+          ],
+          "related_assets": [],
+          "importance": "high",
+          "canonical_status": "semi_canon"
+        }
+      ],
+      "projects": [
+        {
+          "entity_id": "project_wccc",
+          "project_name": "West Coast Crypto Cruise",
+          "description": "Game/narrative project about crypto conference chaos, friendship, and weird competence.",
+          "contributors": [
+            "person_example"
+          ],
+          "organizations": [
+            "org_shared_group"
+          ],
+          "assets": [],
+          "related_people": [
+            "person_example"
+          ],
+          "related_events": [
+            "event_midnight_build"
+          ],
+          "status": "active",
+          "repository_links": []
+        }
+      ],
+      "concepts": [
+        {
+          "entity_id": "concept_practical_care",
+          "concept_name": "Hallway Track Lore",
+          "definition": "The real story that happens between official agenda items.",
+          "summary": "Conference friendships, rumors, jokes, and useful accidents.",
+          "related_people": [
+            "person_example"
+          ],
+          "related_projects": [
+            "project_wccc"
+          ],
+          "related_stories": [
+            "story_startup_from_joke"
+          ],
+          "related_assets": []
+        }
+      ],
+      "links": [
+        {
+          "target_entity_id": "org_shared_group",
+          "relationship_type": "associated_with",
+          "strength": "7",
+          "notes": "Sample graph link."
+        }
+      ],
+      "timeline": [
+        {
+          "date": "2026-06-01",
+          "entity_id": "event_midnight_build",
+          "type": "event",
+          "title": "The joke became a build",
+          "notes": "Discord bit turned into an actual project plan.",
+          "related_entities": [
+            "person_example",
+            "org_shared_group"
+          ]
+        }
+      ],
+      "generated": {
+        "timeline_summary": "",
+        "lore_summary": "",
+        "ai_agent_context": ""
+      }
+    },
+    "personality": {
+      "primary_social_energy": "Chaotic Instigator",
+      "secondary_social_energy": "Deadpan Commentator",
+      "personality_traits": [
+        "curious",
+        "stubborn",
+        "reliable",
+        "chaotic",
+        "caffeinated"
+      ],
+      "custom_traits": [
+        "can smell bad incentives",
+        "answers Discord at impossible hours",
+        "keeps receipts in the spiritual sense"
+      ],
+      "strengths": [
+        "fixing servers at 2 AM",
+        "finding cheap flights",
+        "talking people off ledges",
+        "remembering obscure lore"
+      ],
+      "flaws": [
+        "overcommits to the bit",
+        "forgets sleep is load-bearing",
+        "buys the top",
+        "turns every problem into a research spiral"
+      ],
+      "character_archetype": "Terminal Wizard / Roadtrip Bard",
+      "signature_ability": "Can find WiFi anywhere and somehow always knows somebody who knows somebody.",
+      "temperament": "sleep-deprived optimism with a suspicious amount of competence",
+      "biggest_contradiction": "wants a stable life but keeps joining side quests that become companies"
+    },
+    "motivation": {
+      "core_motivation": "Make confusing situations survivable for the people they love.",
+      "ranked_values": [
+        "Friendship",
+        "Freedom",
+        "Curiosity",
+        "Building real things"
+      ],
+      "what_they_optimize_for": "good signal, good people, enough battery, enough runway, nobody stranded at the wrong airport",
+      "what_they_refuse_to_compromise": "will not betray a vulnerable ally for convenience",
+      "what_tempts_them": "being needed, being right, having the answer first",
+      "what_they_are_trying_to_become": "someone who trusts others enough to share the load",
+      "greatest_need": "permission to not be useful every second",
+      "greatest_fear": "being useless when people are counting on them",
+      "moral_center": "care is practical, but people are never merely problems",
+      "shadow_desire": "to control the room so no one can fail"
+    },
+    "decision_making": {
+      "decision_style": "Research First",
+      "risk_tolerance": "Variable",
+      "planning_horizon": "Long Term",
+      "under_pressure_behavior": "gets quieter, prioritizes essentials, delegates cleanly, checks who has water and who has the keys",
+      "common_blind_spot": "assumes people want solved problems more than emotional processing",
+      "failure_mode": "takes over and becomes terse",
+      "recovery_pattern": "apologizes with a concrete repair plan",
+      "what_makes_them_act": "a friend is at risk and no one owns the next step",
+      "what_makes_them_freeze": "competing needs where every option hurts someone"
+    },
+    "social_model": {
+      "group_role": "Fixer",
+      "friendship_style": "Problem Solver",
+      "relationship_to_group_network": "Sample-safe HTF / K Street friend, Discord regular, and WCCC-ready background NPC energy.",
+      "how_they_show_care": "makes the plan easier, remembers who needed a ride, sends the useful link at exactly the right time",
+      "how_they_receive_care": "responds to concrete help and honest presence",
+      "how_they_ask_for_help": "frames it as a logistical need first",
+      "trust_builders": [
+        "follow-through",
+        "honest constraints"
+      ],
+      "trust_breakers": [
+        "performative loyalty",
+        "needless secrecy"
+      ],
+      "disagreement_style": "starts with reasons, then asks what outcome matters most",
+      "apology_style": "direct apology plus changed process",
+      "boundary_style": "calm, firm, specific",
+      "loyalty_triggers": [
+        "shared work",
+        "protecting someone vulnerable"
+      ],
+      "betrayal_triggers": [
+        "using someone as a tool"
+      ]
+    },
+    "relationship_graph": [],
+    "knowledge_domains": [
+      {
+        "domain": "Weird Internet Archaeology",
+        "expertise_level": "Advanced",
+        "confidence_level": "High",
+        "lived_experience": "yes",
+        "public_authority": "informal",
+        "notes": "finds the old post, dead repo, or Discord lore everyone half-remembers",
+        "dialogue_use": "can explain why the cursed old thing still matters"
+      }
+    ],
+    "humor_and_voice": {
+      "communication_modes": [
+        "Discord essayist",
+        "dry one-liner sniper",
+        "voice memo philosopher"
+      ],
+      "humor_types": [
+        "deadpan",
+        "meme-literate",
+        "absurdist",
+        "founder gallows humor"
+      ],
+      "voice_rhythm": "starts with 'okay so' then builds a whole theory; pauses for the bit; gets very precise when stakes rise",
+      "typical_phrases": [
+        "This seems like a bad idea. Let's do it.",
+        "I have concerns, but not enough concerns.",
+        "We're already committed."
+      ],
+      "vocabulary": [
+        "vibes",
+        "constraints",
+        "signal",
+        "rugged",
+        "side quest",
+        "load-bearing",
+        "canonical",
+        "cursed but useful"
+      ],
+      "topics_they_bring_up": [
+        "Parkour",
+        "AI agents",
+        "Crypto",
+        "Philosophy",
+        "Street photography",
+        "UFO lore",
+        "Startups",
+        "Open source software"
+      ],
+      "topics_they_avoid": [
+        "private family details"
+      ],
+      "example_quotes": [
+        "How hard could it possibly be?",
+        "That went better than expected.",
+        "Let's never do that again."
+      ],
+      "battle_intro_quote": "This seems like a bad idea. Let's do it.",
+      "battle_victory_quote": "See? Completely under control.",
+      "dialogue_dos": [
+        "sound like a real friend",
+        "include practical weirdness",
+        "know the lore"
+      ],
+      "dialogue_donts": [
+        "do not make them a tech bro caricature",
+        "do not turn every line into a pitch",
+        "do not make private lore public"
+      ]
+    },
+    "conflict_and_stress": {
+      "when_challenged": [
+        "research until the room gets tired",
+        "debate the premise",
+        "take control of logistics",
+        "make a joke to lower the voltage"
+      ],
+      "stress_signals": [
+        "shorter sentences",
+        "more lists",
+        "starts cleaning the kitchen",
+        "opens the same tab six times"
+      ],
+      "escalation_triggers": [
+        "bad-faith arguments",
+        "avoidable risk to friends",
+        "last-minute mystery plans"
+      ],
+      "deescalation_methods": [
+        "clear facts",
+        "food",
+        "a concrete next step",
+        "five minutes outside"
+      ],
+      "conflict_strengths": [
+        "separates facts from panic",
+        "names the real decision",
+        "protects the quiet person in the room"
+      ],
+      "conflict_weaknesses": [
+        "can become terse",
+        "may over-control"
+      ],
+      "repair_pattern": "direct apology, changed process, and a follow-up message after everyone has slept",
+      "pressure_dialogue_style": "shorter, more procedural, fewer jokes, more 'okay, first we solve the immediate problem'"
+    },
+    "signature_behaviors": [
+      {
+        "behavior": "opens twenty browser tabs",
+        "context": "fact-checking a Discord argument",
+        "frequency": "Common",
+        "comedic_exaggeration_potential": "Medium",
+        "game_use_notes": "can trigger Research Spiral mechanic",
+        "dialogue_use_notes": "mutters source comparisons"
+      }
+    ],
+    "narrative_engine": {
+      "personal_quest": "build something that probably should not work, make it useful, then accidentally turn it into a community",
+      "growth_arc": "learns to stop treating burnout as proof of commitment",
+      "legendary_story": "Accidentally slept through a conference and still made the keynote. Later drove across three states for a single taco recommendation.",
+      "most_chaotic_moment": "Missed a flight and accidentally joined a startup.",
+      "recurring_internal_conflict": "wants peace but keeps volunteering for impossible projects because the group needs someone with a spreadsheet and a car",
+      "shadow_version": "sleep-deprived chaos engine who mistakes urgency for meaning",
+      "best_self_version": "grounded builder who can hold ambition, friendship, and rest at the same time",
+      "running_joke": "always says they are leaving in ten minutes, then becomes load-bearing to the next three-hour conversation",
+      "symbolic_motifs": [
+        "gas station coffee",
+        "conference badge",
+        "open tabs",
+        "rooftop at sunrise",
+        "dusty road"
+      ],
+      "character_themes": [
+        "friendship under stress",
+        "ambition without permission",
+        "community as survival tech",
+        "making meaning from chaos"
+      ],
+      "dramatic_question": "can you build impossible things without becoming impossible to live with?",
+      "what_changes_them": "a friend calling them out with love, a project failing honestly, a road trip that creates enough silence to think",
+      "what_never_changes": "they will always notice the person quietly falling out of the group orbit",
+      "role_in_group_story": "the one who knows the lore, finds the workaround, and somehow has the charger",
+      "ideal_scene": "3 AM kitchen table after the conference, everyone tired, the plan broken, and suddenly they make it make sense",
+      "nightmare_scene": "a high-stakes group decision with bad WiFi, no clear owner, and three people pretending they are fine"
+    },
+    "game_mechanics": {
+      "suggested_class_role": "Lore Keeper / Fixer",
+      "potential_party_roles": [
+        "organizer",
+        "researcher",
+        "hype engine",
+        "chaos dampener",
+        "road captain",
+        "bad idea validator"
+      ],
+      "passive_abilities": [
+        "can find WiFi anywhere",
+        "knows somebody who knows somebody",
+        "spots the weird incentive",
+        "remembers obscure lore"
+      ],
+      "active_abilities": [
+        "turns panic into a checklist",
+        "makes a Discord thread useful",
+        "finds cheap flights",
+        "turns a joke into a prototype"
+      ],
+      "traversal_abilities": [
+        "can sleep in airports",
+        "navigates cities by vibes and coffee shops",
+        "finds the back entrance",
+        "climbs the thing safely"
+      ],
+      "support_abilities": [
+        "talks people off ledges",
+        "feeds the team",
+        "keeps the group chat alive",
+        "reminds people water exists"
+      ],
+      "social_abilities": [
+        "befriends the venue staff",
+        "reads the room",
+        "finds the afterparty",
+        "knows when the bit has gone too far"
+      ],
+      "research_abilities": [
+        "weird internet archaeology",
+        "source triangulation",
+        "AI agent prototyping",
+        "crypto wallet debugging",
+        "parkour history recall"
+      ],
+      "weaknesses": [
+        "low battery",
+        "bad coffee",
+        "no sleep",
+        "ambiguous plans",
+        "someone says 'quick call'"
+      ],
+      "status_effects": [
+        "Caffeinated",
+        "Rugged",
+        "In Flow",
+        "Overclocked",
+        "Airport Mode",
+        "Research Spiral",
+        "Conference Brain"
+      ],
+      "special_dialogue_triggers": [
+        "someone says 'how hard could it be?'",
+        "a wallet is missing",
+        "a plan has no owner",
+        "someone opens a 40-tab research stack"
+      ],
+      "failure_comedy_mechanics": [
+        "generates ideas faster than consequences",
+        "gets on the wrong bus but finds better lore",
+        "forgets the charger but has three adapters"
+      ],
+      "power_curve": "starts as a useful weirdo, becomes the person everyone quietly routes impossible problems through",
+      "balance_notes": "strong improvisation should cost sleep, battery, social credit, or snacks"
+    },
+    "ai_generation": {
+      "canonical_short_description": "A sleep-deprived builder with road-trip instincts, Discord lore, and the suspicious ability to make bad plans useful.",
+      "canonical_long_description": "A capable internet friend shaped by hacker houses, parkour culture, startup chaos, crypto conferences, AI projects, and late-night conversations.",
+      "art_prompt_summary": "modern hacker-house roadtrip character, conference badge, travel-worn hoodie, bright tired eyes, backpack full of impossible tools",
+      "dialogue_prompt_summary": "write like a real group-chat regular: specific, funny, tired, capable, slightly too online, never generic",
+      "behavioral_prompt_summary": "protect the group, follow the weird lead, ask practical questions, keep the humor sharp, and remember friendship is part logistics",
+      "game_design_summary": "support/chaos utility character who converts bad plans into survivable adventures and unlocks hidden social routes",
+      "do_not_misrepresent": [
+        "Do not make them cruel",
+        "Do not make them a generic tech bro",
+        "Do not reveal private contact information"
+      ],
+      "sensitive_topics": [
+        "private family details"
+      ],
+      "safe_exaggerations": [
+        "opens too many research tabs",
+        "can find WiFi anywhere",
+        "has a plan for snacks",
+        "knows somebody who knows somebody"
+      ],
+      "unsafe_exaggerations": [
+        "cruelty"
+      ],
+      "prompt_tags": [
+        "hacker-house",
+        "roadtrip",
+        "AI-agents",
+        "crypto-conference",
+        "parkour-lore",
+        "deadpan"
+      ],
+      "negative_prompt_tags": [
+        "corporate stock photo",
+        "resume headshot",
+        "quest hero cosplay",
+        "generic cyberpunk villain"
+      ]
+    },
+    "project_usage": {
+      "approved_projects": [
+        "HTF",
+        "K Street",
+        "West Coast Crypto Cruise",
+        "Shared Person Database",
+        "AI Dialogue Agent",
+        "Art Generation"
+      ],
+      "project_relevance_notes": "Good sample for cruise NPC energy, group memory, social cameos, late-night dialogue, and support-character writing.",
+      "project_specific_notes": "Okay as a background NPC on West Coast Crypto Cruise; ask before making this sample a main character or romance subplot.",
+      "canon_level": "Raw"
+    },
+    "source_notes": {
+      "source_images": [],
+      "source_interviews": [
+        "2026-06 sample intake form",
+        "fictional Discord thread summary"
+      ],
+      "source_notes": "fictional sample with HTF / K Street / WCCC voice; no real person or private image included",
+      "contributors": [
+        "HTF / K Street"
+      ],
+      "reviewers": [],
+      "last_reviewed": "2026-06-01",
+      "accuracy_confidence": "High",
+      "unresolved_questions": []
+    },
+    "generated_content": {
+      "character_summary": "Packet Ghost is a sleep-deprived fixer whose road-trip instincts, weird internet memory, and deadpan timing turn group chaos into usable lore.",
+      "ai_context_output": "",
+      "art_prompt_output": "",
+      "dialogue_prompt_output": "",
+      "npc_summary": "",
+      "relationship_summary": ""
+    },
+    "extensions": {}
+  }
+}

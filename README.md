@@ -193,6 +193,17 @@ The app imports `3.0.0` records directly and attempts to migrate `2.0.0`, `frien
 
 Do not try to expose `localhost` or `127.0.0.1` externally. External AI systems cannot access your local browser server.
 
+Some AI chats also cannot browse or inspect a GitHub Pages URL, even when the URL is public. For those cases, use the generated review packet:
+
+- `exports/chatgpt-review-packet.md` - upload this file to ChatGPT/Claude/Gemini or paste sections directly into the chat
+- `exports/chatgpt-review-packet.json` - machine-readable packet containing the form model, schema summary, controlled vocabularies, and sample profile
+
+Regenerate the packet after form/schema changes:
+
+```bash
+node tools/build-chatgpt-review-packet.js
+```
+
 Instead, use portable snapshots:
 
 - `Share Character` copies a self-contained JSON snapshot to the clipboard.
