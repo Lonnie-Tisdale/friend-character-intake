@@ -69,7 +69,7 @@
 <body>
   <header>
     <h1>HTF / K Street Descriptor Review Dashboard</h1>
-    <p>Private reviewer workflow for moving submitted profiles from Raw to Reviewed to Approved for Use. Static, local-first, JSON/Markdown portable.</p>
+    <p>Private lore-review workflow for moving submitted profiles from Raw to Reviewed to Approved for Use. Static, local-first, JSON/Markdown portable.</p>
   </header>
   <nav aria-label="Review navigation">
     <a class="file-button" href="index.html">Open Intake Form</a>
@@ -83,7 +83,7 @@
   <main>
     <aside>
       <h2>Submissions</h2>
-      <p class="hint">Import downloaded Formspree/profile JSON files. Review status is stored in this browser until exported or saved locally.</p>
+      <p class="hint">Import downloaded Formspree/profile JSON files. Treat this like the private lore desk: consent first, canon second, jokes only when they are safe to reuse.</p>
       <div class="drop-zone" id="dropZone">Drag JSON submissions here</div>
       <div class="toolbar">
         <select id="statusFilter" aria-label="Filter by status">
@@ -100,10 +100,10 @@
       <section>
         <h2>Review Checklist</h2>
         <ul class="summary-list">
-          <li>Confirm consent to store and fictionalize.</li>
-          <li>Check optional contact and private source image notes stay private.</li>
-          <li>Confirm project approval and canon level.</li>
-          <li>Add reviewer notes, confidence, and final status.</li>
+          <li>Confirm consent before any real friend becomes reusable canon.</li>
+          <li>Keep optional contact, real names, boundaries, and private source image notes private.</li>
+          <li>Confirm which projects can use the profile and how loud the cameo can be.</li>
+          <li>Add reviewer notes, confidence, canon level, and final status.</li>
           <li>Export Raw, Reviewed, or Approved packages into the private HTF / K Street cloud drive.</li>
         </ul>
         <p id="status" class="status">Ready.</p>
@@ -239,7 +239,7 @@
     function renderPanel() {
       const record = selectedRecord();
       if (!record) {
-        el("reviewPanel").innerHTML = "<h2>Selected Submission</h2><p class='hint'>Select a submission from the left. Nothing here writes to GitHub or a server.</p>";
+        el("reviewPanel").innerHTML = "<h2>Selected Submission</h2><p class='hint'>Select a submission from the left. Nothing here writes to GitHub or a server; this is a local review bench for private group lore.</p>";
         return;
       }
       const profile = record.profile;
@@ -251,7 +251,7 @@
             <select id="reviewStatus">${statuses.map(status => `<option value="${status}" ${record.status === status ? "selected" : ""}>${status}</option>`).join("")}</select>
           </label>
           <label>Reviewer
-            <input id="reviewer" value="${escapeHtml(record.reviewer)}" placeholder="Reviewer name">
+            <input id="reviewer" value="${escapeHtml(record.reviewer)}" placeholder="lore reviewer / trusted circle member">
           </label>
           <label>Confidence
             <select id="confidenceLevel">${["Unreviewed", "Low", "Medium", "High"].map(level => `<option value="${level}" ${record.confidence_level === level ? "selected" : ""}>${level}</option>`).join("")}</select>

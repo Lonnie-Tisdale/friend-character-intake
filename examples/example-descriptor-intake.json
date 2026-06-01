@@ -7,17 +7,17 @@
   "entity": {
     "entity_id": "person_example",
     "entity_type": "person",
-    "display_name": "Example Person",
+    "display_name": "Packet Ghost",
     "created_at": "2026-06-01T00:00:00.000Z",
     "updated_at": "2026-06-01T00:00:00.000Z",
-    "tags": ["example", "person"],
-    "notes": "Example root person entity.",
+    "tags": ["sample", "person", "htf", "k-street", "wccc"],
+    "notes": "Fictional sample root person entity with HTF / K Street / WCCC flavor.",
     "relationships": [
       {
         "target_entity_id": "org_shared_group",
         "relationship_type": "associated_with",
         "strength": "7",
-        "notes": "Example graph link."
+        "notes": "Sample graph link for a friend-circle profile."
       }
     ]
   },
@@ -30,40 +30,44 @@
     "permission_for_relationship_simulation": true,
     "contact_for_questions": false,
     "sensitive_topics_to_avoid": ["private family details"],
-    "consent_notes": "Example record only. Do not treat as a real submission."
+    "consent_notes": "Sample record only. Do not treat as a real submission. Keep private contact, real names, source images, and boundaries out of public exports unless explicitly approved."
   },
   "identity": {
-    "display_name": "Example Person",
+    "display_name": "Packet Ghost",
     "real_name_optional": "",
     "optional_contact": "",
-    "in_world_name": "The Compass",
-    "short_bio": "A practical planner with dry humor who helps friends turn messy situations into workable plans.",
-    "nicknames": ["Compass"],
+    "in_world_name": "Packet Ghost",
+    "short_bio": "A sleep-deprived internet friend who fixes weird problems, finds the useful room at conferences, and turns Discord jokes into actual project plans.",
+    "three_word_vibe": "Chaotic, creative, caffeinated",
+    "animal_affinity": "Crow with a laptop bag",
+    "current_obsession": "Local AI models, Bitcoin self-custody, retro RPG design, parkour history, and weird internet archaeology.",
+    "nicknames": ["Packet Ghost", "WiFi Oracle"],
     "pronouns": "they/them",
     "age_range": "30s",
-    "current_location": "Usually near the planning board",
-    "origin_location": "Pacific Northwest",
-    "communities": ["HTF", "K Street"],
-    "roles": ["organizer", "planner"],
-    "professions": ["researcher"],
-    "identity_tags": ["strategist", "community-builder"]
+    "current_location": "Usually between the group chat, a hacker house kitchen, and the crypto conference hallway track",
+    "origin_location": "Parkour forums and long road trips",
+    "communities": ["HTF", "K Street", "West Coast Crypto Cruise", "parkour community", "local AI Discord"],
+    "roles": ["lore keeper", "developer", "event instigator", "meme curator", "fixer"],
+    "professions": ["developer", "researcher", "full-time side quest"],
+    "identity_tags": ["hacker-house", "roadtrip", "ai-agents", "crypto-conference", "parkour-lore"]
   },
   "appearance": {
-    "height_build": "medium height, practical presence",
-    "hair": "practical haircut",
-    "eyes": "alert eyes",
-    "face_features": "memorable glasses, expressive eyebrows",
+    "height_build": "medium height, parkour-adjacent posture, hard to lose in a crowd",
+    "hair": "messy travel hair, usually under a beanie by day three",
+    "eyes": "alert, sleep-deprived, always scanning for outlets, exits, and the bit",
+    "face_features": "expressive eyebrows, too-aware resting face, looks like they just read the room and the room failed QA",
     "skin_tone": "",
-    "distinguishing_marks": "approved visual references only",
-    "silhouette": "upright, compact, ready to move",
-    "everyday_clothing": "Layered jacket, tidy sneakers",
-    "iconic_outfit": "Field jacket, notebook, reliable pen",
-    "accessories": "glasses, notebook",
-    "carried_items": "phone, pen, snacks",
-    "default_expression": "listening carefully with one eyebrow raised",
-    "movement_body_language": "still when thinking, precise hand motions when explaining",
-    "image_prompt_notes": "grounded modern strategist, warm but analytical",
-    "negative_image_prompt_notes": "avoid caricature or villain framing"
+    "distinguishing_marks": "old conference wristband, scuffed shoes, hoodie with mystery pockets",
+    "silhouette": "hoodie, backpack, forward lean, looks ready to climb a wall or fix a router",
+    "everyday_clothing": "black hoodie, conference badge, trail shoes, cargo pants, jacket with too many pockets",
+    "iconic_outfit": "sun-faded camp shirt, beat-up sneakers, sunglasses at night, backpack that has seen things",
+    "accessories": "camera, pocket notebook, hardware wallet, carabiner, old lanyard",
+    "carried_items": "half-charged laptop, coffee thermos, phone with 200 open tabs, multi-tool",
+    "signature_item": "Backpack containing an unknown dimension",
+    "default_expression": "half amused, half concerned, already debugging the situation",
+    "movement_body_language": "paces while thinking, perches on furniture wrong, talks with hands, moves like the floor is optional",
+    "image_prompt_notes": "modern internet nomad, hacker-house roadtrip energy, conference badge, travel-worn hoodie, bright tired eyes",
+    "negative_image_prompt_notes": "avoid corporate mascot, resume headshot, generic tech bro, quest hero cosplay, or villain caricature"
   },
   "asset_library": {
     "primary_reference_asset_id": "asset_example_face_reference",
@@ -79,36 +83,36 @@
       {
         "asset_id": "asset_example_face_reference",
         "asset_type": "reference_photo",
-        "title": "Current Face Reference",
-        "description": "Approved private face reference metadata.",
+        "title": "WCCC Hallway Face Reference",
+        "description": "Approved private face reference metadata from conference hallway chaos.",
         "linked_entity_id": "person_example",
-        "linked_project": "Internal Testing",
-        "file_name": "example-face-reference.jpg",
+        "linked_project": "West Coast Crypto Cruise",
+        "file_name": "packet-ghost-hallway-reference.jpg",
         "file_extension": "jpg",
-        "file_size": "example only",
+        "file_size": "sample metadata only",
         "url": "",
-        "local_path": "Source Images/Example Person/example-face-reference.jpg",
+        "local_path": "Source Images/Packet Ghost/packet-ghost-hallway-reference.jpg",
         "thumbnail_url": "",
         "date_added": "2026-06-01",
         "last_modified": "2026-06-01",
-        "source": "example",
-        "creator": "Example Person",
-        "copyright_holder": "Example Person",
+        "source": "sample self-submission",
+        "creator": "Packet Ghost",
+        "copyright_holder": "Packet Ghost",
         "license_type": "private",
         "consent_status": "private_only",
         "canon_level": "primary_reference",
-        "tags": ["face", "current", "portrait"],
-        "associated_projects": ["Internal Testing"],
+        "tags": ["face", "current", "portrait", "conference", "late-night"],
+        "associated_projects": ["West Coast Crypto Cruise", "HTF", "K Street"],
         "use_cases": ["portrait_generation", "art_generation"],
-        "do_not_use_for": ["marketing"],
-        "notes": "Example metadata only; no real image included."
+        "do_not_use_for": ["public ads", "romance subplot without consent"],
+        "notes": "Sample metadata only; no real image included. Private source files stay outside the public repo."
       }
     ],
     "asset_groups": [
       {
         "group_id": "group_example_face",
-        "group_name": "Example Face References",
-        "description": "Approved face reference metadata.",
+        "group_name": "Packet Ghost Face References",
+        "description": "Approved references where the person looks like themselves, not a stock photo.",
         "asset_ids": ["asset_example_face_reference"],
         "tags": ["face"],
         "notes": "Private source files stay outside the public repo."
@@ -117,10 +121,10 @@
     "style_guides": [
       {
         "guide_name": "Retro JRPG Style",
-        "description": "Example 32-bit RPG interpretation.",
+        "description": "Readable roadtrip RPG interpretation.",
         "asset_ids": ["asset_example_sprite"],
-        "prompt_notes": "Readable silhouette, expressive idle pose.",
-        "negative_prompt_notes": "Avoid photorealism."
+        "prompt_notes": "Readable silhouette, expressive idle pose, travel-worn outfit, useful chaos.",
+        "negative_prompt_notes": "Avoid polished resume headshot energy."
       }
     ]
   },
@@ -132,17 +136,17 @@
       {
         "entity_id": "person_example",
         "entity_type": "person",
-        "display_name": "Example Person",
+        "display_name": "Packet Ghost",
         "created_at": "2026-06-01T00:00:00.000Z",
         "updated_at": "2026-06-01T00:00:00.000Z",
-        "tags": ["example", "person"],
-        "notes": "Example root person entity.",
+        "tags": ["sample", "person", "htf", "k-street", "wccc"],
+        "notes": "Fictional sample root person entity with group-culture examples.",
         "relationships": [
           {
             "target_entity_id": "org_shared_group",
             "relationship_type": "associated_with",
             "strength": "7",
-            "notes": "Example graph link."
+            "notes": "Sample graph link."
           }
         ],
         "profile_ref": "current_profile"
@@ -153,18 +157,18 @@
         "display_name": "HTF / K Street",
         "created_at": "2026-06-01",
         "updated_at": "2026-06-01",
-        "tags": ["example", "organization"],
-        "notes": "Example organization node.",
+        "tags": ["friend-circle", "projects", "organization"],
+        "notes": "Sample organization node for the shared circle.",
         "relationships": []
       },
       {
         "entity_id": "asset_example_face_reference",
         "entity_type": "asset",
-        "display_name": "Current Face Reference",
+        "display_name": "WCCC Hallway Face Reference",
         "created_at": "2026-06-01",
         "updated_at": "2026-06-01",
-        "tags": ["face", "current", "portrait"],
-        "notes": "Example metadata only; no real image included.",
+        "tags": ["face", "current", "portrait", "conference"],
+        "notes": "Sample metadata only; no real image included.",
         "relationships": [
           {
             "target_entity_id": "person_example",
@@ -188,10 +192,10 @@
         "influence_level": "6",
         "communication_frequency": "regular",
         "relationship_health": "healthy",
-        "running_dynamic": "practical support plus dry humor",
-        "inside_jokes": "example-only bit",
-        "shared_history": "worked through several fictional crises",
-        "relationship_notes": "Example relationship entity.",
+        "running_dynamic": "practical support plus dry humor plus mutually bad ideas",
+        "inside_jokes": "airport floor lore; 'we're already committed'",
+        "shared_history": "Discord-to-road-trip friendship with several projects that escaped containment",
+        "relationship_notes": "Sample public-safe relationship entity.",
         "confidence_level": "high",
         "canon_level": "example_only",
         "consent_status": "approved"
@@ -202,83 +206,83 @@
         "entity_id": "org_shared_group",
         "organization_name": "HTF / K Street",
         "founding_date": "2026-01-01",
-        "description": "Example creative system.",
+        "description": "Strange capable circle building games, AI tools, events, and lore.",
         "members": ["person_example"],
-        "roles": ["organizer"],
-        "projects": ["project_example"],
-        "associated_locations": ["loc_example"],
+        "roles": ["developer", "lore keeper", "fixer"],
+        "projects": ["project_wccc"],
+        "associated_locations": ["loc_hacker_house_kitchen"],
         "assets": ["asset_example_face_reference"],
-        "history": "Example organization history.",
+        "history": "Grew through Discord threads, road trips, late-night builds, and occasional poor decisions.",
         "status": "active"
       }
     ],
     "factions": [],
     "locations": [
       {
-        "entity_id": "loc_example",
-        "display_name": "Planning Board",
-        "location_type": "fictional",
-        "description": "Example usual setting.",
+        "entity_id": "loc_hacker_house_kitchen",
+        "display_name": "Hacker House Kitchen",
+        "location_type": "real_world",
+        "description": "3 AM planning table, half-cleaned whiteboard, someone's laptop fan screaming.",
         "associated_people": ["person_example"],
-        "associated_events": ["event_example"],
+        "associated_events": ["event_midnight_build"],
         "associated_organizations": ["org_shared_group"],
         "associated_assets": [],
         "coordinates_optional": "",
-        "tags": ["example"]
+        "tags": ["hacker-house", "build-sprint"]
       }
     ],
     "events": [
       {
-        "entity_id": "event_example",
-        "title": "Example Milestone",
+        "entity_id": "event_midnight_build",
+        "title": "Midnight Build Sprint",
         "event_date": "2026-06-01",
         "participants": ["person_example"],
         "organizations": ["org_shared_group"],
-        "locations": ["loc_example"],
+        "locations": ["loc_hacker_house_kitchen"],
         "assets": [],
-        "stories": ["story_example"],
-        "outcomes": "Graph foundation example created.",
-        "notes": "Safe example event."
+        "stories": ["story_startup_from_joke"],
+        "outcomes": "Prototype worked badly enough to continue.",
+        "notes": "Approximate date; public-safe sample event."
       }
     ],
     "assets": [],
     "story_objects": [
       {
-        "entity_id": "story_example",
-        "title": "The Example Checklist",
-        "summary": "A reusable example story object.",
+        "entity_id": "story_startup_from_joke",
+        "title": "Started A Business From A Discord Joke",
+        "summary": "A side project escaped containment and became group lore.",
         "participants": ["person_example"],
-        "related_events": ["event_example"],
-        "related_locations": ["loc_example"],
+        "related_events": ["event_midnight_build"],
+        "related_locations": ["loc_hacker_house_kitchen"],
         "related_people": ["person_example"],
         "related_assets": [],
-        "importance": "low",
-        "canonical_status": "example_only"
+        "importance": "high",
+        "canonical_status": "semi_canon"
       }
     ],
     "projects": [
       {
-        "entity_id": "project_example",
-        "project_name": "Example Project",
-        "description": "Safe sample project.",
+        "entity_id": "project_wccc",
+        "project_name": "West Coast Crypto Cruise",
+        "description": "Game/narrative project about crypto conference chaos, friendship, and weird competence.",
         "contributors": ["person_example"],
         "organizations": ["org_shared_group"],
         "assets": [],
         "related_people": ["person_example"],
-        "related_events": ["event_example"],
-        "status": "example",
+        "related_events": ["event_midnight_build"],
+        "status": "active",
         "repository_links": []
       }
     ],
     "concepts": [
       {
         "entity_id": "concept_practical_care",
-        "concept_name": "Practical Care",
-        "definition": "Care expressed through useful action.",
-        "summary": "Example concept for graph/lore exports.",
+        "concept_name": "Hallway Track Lore",
+        "definition": "The real story that happens between official agenda items.",
+        "summary": "Conference friendships, rumors, jokes, and useful accidents.",
         "related_people": ["person_example"],
-        "related_projects": ["project_example"],
-        "related_stories": ["story_example"],
+        "related_projects": ["project_wccc"],
+        "related_stories": ["story_startup_from_joke"],
         "related_assets": []
       }
     ],
@@ -287,16 +291,16 @@
         "target_entity_id": "org_shared_group",
         "relationship_type": "associated_with",
         "strength": "7",
-        "notes": "Example graph link."
+        "notes": "Sample graph link."
       }
     ],
     "timeline": [
       {
         "date": "2026-06-01",
-        "entity_id": "event_example",
+        "entity_id": "event_midnight_build",
         "type": "event",
-        "title": "Example Milestone",
-        "notes": "Graph foundation example created.",
+        "title": "The joke became a build",
+        "notes": "Discord bit turned into an actual project plan.",
         "related_entities": ["person_example", "org_shared_group"]
       }
     ],
@@ -307,19 +311,21 @@
     }
   },
   "personality": {
-    "primary_social_energy": "Practical Fixer",
+    "primary_social_energy": "Chaotic Instigator",
     "secondary_social_energy": "Deadpan Commentator",
-    "personality_traits": ["observant", "loyal", "pragmatic"],
-    "custom_traits": ["quietly theatrical when comfortable"],
-    "strengths": ["pattern recognition", "group coordination"],
-    "flaws": ["over-functions", "impatient with vagueness"],
-    "temperament": "calm, alert, quietly intense",
-    "biggest_contradiction": "wants to trust people but prepares for them to drop the ball"
+    "personality_traits": ["curious", "stubborn", "reliable", "chaotic", "caffeinated"],
+    "custom_traits": ["can smell bad incentives", "answers Discord at impossible hours", "keeps receipts in the spiritual sense"],
+    "strengths": ["fixing servers at 2 AM", "finding cheap flights", "talking people off ledges", "remembering obscure lore"],
+    "flaws": ["overcommits to the bit", "forgets sleep is load-bearing", "buys the top", "turns every problem into a research spiral"],
+    "character_archetype": "Terminal Wizard / Roadtrip Bard",
+    "signature_ability": "Can find WiFi anywhere and somehow always knows somebody who knows somebody.",
+    "temperament": "sleep-deprived optimism with a suspicious amount of competence",
+    "biggest_contradiction": "wants a stable life but keeps joining side quests that become companies"
   },
   "motivation": {
     "core_motivation": "Make confusing situations survivable for the people they love.",
-    "ranked_values": ["Friendship", "Truth", "Curiosity", "Service"],
-    "what_they_optimize_for": "clarity, group safety, practical next steps",
+    "ranked_values": ["Friendship", "Freedom", "Curiosity", "Building real things"],
+    "what_they_optimize_for": "good signal, good people, enough battery, enough runway, nobody stranded at the wrong airport",
     "what_they_refuse_to_compromise": "will not betray a vulnerable ally for convenience",
     "what_tempts_them": "being needed, being right, having the answer first",
     "what_they_are_trying_to_become": "someone who trusts others enough to share the load",
@@ -332,7 +338,7 @@
     "decision_style": "Research First",
     "risk_tolerance": "Variable",
     "planning_horizon": "Long Term",
-    "under_pressure_behavior": "gets quieter, prioritizes essentials, delegates cleanly",
+    "under_pressure_behavior": "gets quieter, prioritizes essentials, delegates cleanly, checks who has water and who has the keys",
     "common_blind_spot": "assumes people want solved problems more than emotional processing",
     "failure_mode": "takes over and becomes terse",
     "recovery_pattern": "apologizes with a concrete repair plan",
@@ -340,10 +346,10 @@
     "what_makes_them_freeze": "competing needs where every option hurts someone"
   },
   "social_model": {
-    "group_role": "Strategist",
+    "group_role": "Fixer",
     "friendship_style": "Problem Solver",
-    "relationship_to_group_network": "Example-safe circle/community intake record for HTF / K Street testing.",
-    "how_they_show_care": "makes the plan easier and remembers needs",
+    "relationship_to_group_network": "Sample-safe HTF / K Street friend, Discord regular, and WCCC-ready background NPC energy.",
+    "how_they_show_care": "makes the plan easier, remembers who needed a ride, sends the useful link at exactly the right time",
     "how_they_receive_care": "responds to concrete help and honest presence",
     "how_they_ask_for_help": "frames it as a logistical need first",
     "trust_builders": ["follow-through", "honest constraints"],
@@ -357,103 +363,107 @@
   "relationship_graph": [],
   "knowledge_domains": [
     {
-      "domain": "Planning",
+      "domain": "Weird Internet Archaeology",
       "expertise_level": "Advanced",
       "confidence_level": "High",
       "lived_experience": "yes",
       "public_authority": "informal",
-      "notes": "turns scattered inputs into ordered next steps",
-      "dialogue_use": "can explain tradeoffs clearly"
+      "notes": "finds the old post, dead repo, or Discord lore everyone half-remembers",
+      "dialogue_use": "can explain why the cursed old thing still matters"
     }
   ],
   "humor_and_voice": {
-    "communication_modes": ["Analyst", "Coach"],
-    "humor_types": ["Dry", "Deadpan", "Intellectual"],
-    "voice_rhythm": "measured, concise, with a soft punchline",
-    "typical_phrases": ["Okay, three things."],
-    "vocabulary": ["constraints", "pattern", "signal"],
-    "topics_they_bring_up": ["systems", "food", "risk"],
+    "communication_modes": ["Discord essayist", "dry one-liner sniper", "voice memo philosopher"],
+    "humor_types": ["deadpan", "meme-literate", "absurdist", "founder gallows humor"],
+    "voice_rhythm": "starts with 'okay so' then builds a whole theory; pauses for the bit; gets very precise when stakes rise",
+    "typical_phrases": ["This seems like a bad idea. Let's do it.", "I have concerns, but not enough concerns.", "We're already committed."],
+    "vocabulary": ["vibes", "constraints", "signal", "rugged", "side quest", "load-bearing", "canonical", "cursed but useful"],
+    "topics_they_bring_up": ["Parkour", "AI agents", "Crypto", "Philosophy", "Street photography", "UFO lore", "Startups", "Open source software"],
     "topics_they_avoid": ["private family details"],
-    "example_quotes": ["We can panic after we know what the problem is."],
-    "dialogue_dos": ["be concise", "make practical emotional reads"],
-    "dialogue_donts": ["do not make them cruel"]
+    "example_quotes": ["How hard could it possibly be?", "That went better than expected.", "Let's never do that again."],
+    "battle_intro_quote": "This seems like a bad idea. Let's do it.",
+    "battle_victory_quote": "See? Completely under control.",
+    "dialogue_dos": ["sound like a real friend", "include practical weirdness", "know the lore"],
+    "dialogue_donts": ["do not make them a tech bro caricature", "do not turn every line into a pitch", "do not make private lore public"]
   },
   "conflict_and_stress": {
-    "when_challenged": ["Research", "Debate", "Take Control"],
-    "stress_signals": ["shorter sentences", "more lists"],
-    "escalation_triggers": ["bad-faith arguments"],
-    "deescalation_methods": ["clear facts", "a concrete next step"],
-    "conflict_strengths": ["separates facts from panic"],
-    "conflict_weaknesses": ["can become terse"],
-    "repair_pattern": "direct apology plus changed process",
-    "pressure_dialogue_style": "shorter and more procedural"
+    "when_challenged": ["research until the room gets tired", "debate the premise", "take control of logistics", "make a joke to lower the voltage"],
+    "stress_signals": ["shorter sentences", "more lists", "starts cleaning the kitchen", "opens the same tab six times"],
+    "escalation_triggers": ["bad-faith arguments", "avoidable risk to friends", "last-minute mystery plans"],
+    "deescalation_methods": ["clear facts", "food", "a concrete next step", "five minutes outside"],
+    "conflict_strengths": ["separates facts from panic", "names the real decision", "protects the quiet person in the room"],
+    "conflict_weaknesses": ["can become terse", "may over-control"],
+    "repair_pattern": "direct apology, changed process, and a follow-up message after everyone has slept",
+    "pressure_dialogue_style": "shorter, more procedural, fewer jokes, more 'okay, first we solve the immediate problem'"
   },
   "signature_behaviors": [
     {
-      "behavior": "summarizes chaos into three steps",
-      "context": "group spiraling",
+      "behavior": "opens twenty browser tabs",
+      "context": "fact-checking a Discord argument",
       "frequency": "Common",
       "comedic_exaggeration_potential": "Medium",
-      "game_use_notes": "can trigger Clarity bonus",
-      "dialogue_use_notes": "opens with numbered lists"
+      "game_use_notes": "can trigger Research Spiral mechanic",
+      "dialogue_use_notes": "mutters source comparisons"
     }
   ],
   "narrative_engine": {
-    "personal_quest": "prove care can be practical without becoming control",
-    "growth_arc": "learns to let other people carry weight",
-    "recurring_internal_conflict": "wants trust but prepares for failure",
-    "shadow_version": "controlling strategist",
-    "best_self_version": "calm anchor who makes others capable",
-    "running_joke": "always has exactly the oddly specific tool needed",
-    "symbolic_motifs": ["compass", "checklist"],
-    "character_themes": ["care as logistics", "trust as shared labor"],
-    "dramatic_question": "can care stay caring when it becomes logistics?",
-    "what_changes_them": "being trusted by competent allies",
-    "what_never_changes": "notices who is unsupported",
-    "role_in_group_story": "turns emotional chaos into coordinated action",
-    "ideal_scene": "a crisis meeting everyone leaves calmer",
-    "nightmare_scene": "a betrayal where facts arrive too late"
+    "personal_quest": "build something that probably should not work, make it useful, then accidentally turn it into a community",
+    "growth_arc": "learns to stop treating burnout as proof of commitment",
+    "legendary_story": "Accidentally slept through a conference and still made the keynote. Later drove across three states for a single taco recommendation.",
+    "most_chaotic_moment": "Missed a flight and accidentally joined a startup.",
+    "recurring_internal_conflict": "wants peace but keeps volunteering for impossible projects because the group needs someone with a spreadsheet and a car",
+    "shadow_version": "sleep-deprived chaos engine who mistakes urgency for meaning",
+    "best_self_version": "grounded builder who can hold ambition, friendship, and rest at the same time",
+    "running_joke": "always says they are leaving in ten minutes, then becomes load-bearing to the next three-hour conversation",
+    "symbolic_motifs": ["gas station coffee", "conference badge", "open tabs", "rooftop at sunrise", "dusty road"],
+    "character_themes": ["friendship under stress", "ambition without permission", "community as survival tech", "making meaning from chaos"],
+    "dramatic_question": "can you build impossible things without becoming impossible to live with?",
+    "what_changes_them": "a friend calling them out with love, a project failing honestly, a road trip that creates enough silence to think",
+    "what_never_changes": "they will always notice the person quietly falling out of the group orbit",
+    "role_in_group_story": "the one who knows the lore, finds the workaround, and somehow has the charger",
+    "ideal_scene": "3 AM kitchen table after the conference, everyone tired, the plan broken, and suddenly they make it make sense",
+    "nightmare_scene": "a high-stakes group decision with bad WiFi, no clear owner, and three people pretending they are fine"
   },
   "game_mechanics": {
-    "suggested_class_role": "Planner / Support Lead",
-    "potential_party_roles": ["support", "tactician"],
-    "passive_abilities": ["reads the room"],
-    "active_abilities": ["turn confusion into actionable steps"],
-    "traversal_abilities": ["find efficient routes through systems"],
-    "support_abilities": ["grant clarity bonus"],
-    "social_abilities": ["lower room tension"],
-    "research_abilities": ["rapid source triage"],
-    "weaknesses": ["control spiral"],
-    "status_effects": ["Focused", "Overextended"],
-    "special_dialogue_triggers": ["a plan has no owner"],
-    "failure_comedy_mechanics": ["too many tabs obscure the obvious answer"],
-    "power_curve": "support becomes strategic force multiplier",
-    "balance_notes": "strong support requires preparation or social context"
+    "suggested_class_role": "Lore Keeper / Fixer",
+    "potential_party_roles": ["organizer", "researcher", "hype engine", "chaos dampener", "road captain", "bad idea validator"],
+    "passive_abilities": ["can find WiFi anywhere", "knows somebody who knows somebody", "spots the weird incentive", "remembers obscure lore"],
+    "active_abilities": ["turns panic into a checklist", "makes a Discord thread useful", "finds cheap flights", "turns a joke into a prototype"],
+    "traversal_abilities": ["can sleep in airports", "navigates cities by vibes and coffee shops", "finds the back entrance", "climbs the thing safely"],
+    "support_abilities": ["talks people off ledges", "feeds the team", "keeps the group chat alive", "reminds people water exists"],
+    "social_abilities": ["befriends the venue staff", "reads the room", "finds the afterparty", "knows when the bit has gone too far"],
+    "research_abilities": ["weird internet archaeology", "source triangulation", "AI agent prototyping", "crypto wallet debugging", "parkour history recall"],
+    "weaknesses": ["low battery", "bad coffee", "no sleep", "ambiguous plans", "someone says 'quick call'"],
+    "status_effects": ["Caffeinated", "Rugged", "In Flow", "Overclocked", "Airport Mode", "Research Spiral", "Conference Brain"],
+    "special_dialogue_triggers": ["someone says 'how hard could it be?'", "a wallet is missing", "a plan has no owner", "someone opens a 40-tab research stack"],
+    "failure_comedy_mechanics": ["generates ideas faster than consequences", "gets on the wrong bus but finds better lore", "forgets the charger but has three adapters"],
+    "power_curve": "starts as a useful weirdo, becomes the person everyone quietly routes impossible problems through",
+    "balance_notes": "strong improvisation should cost sleep, battery, social credit, or snacks"
   },
   "ai_generation": {
-    "canonical_short_description": "A grounded strategist with dry humor who turns chaos into practical steps.",
-    "canonical_long_description": "A calm, observant support character driven by friendship, clarity, and practical care.",
-    "art_prompt_summary": "grounded modern strategist with practical clothing and warm analytical presence",
-    "dialogue_prompt_summary": "write concise practical dialogue with dry humor",
-    "behavioral_prompt_summary": "prioritize clarity, protect allies, ask useful questions",
-    "game_design_summary": "support/tactician who converts chaos into clarity",
-    "do_not_misrepresent": ["Do not make them cruel"],
+    "canonical_short_description": "A sleep-deprived builder with road-trip instincts, Discord lore, and the suspicious ability to make bad plans useful.",
+    "canonical_long_description": "A capable internet friend shaped by hacker houses, parkour culture, startup chaos, crypto conferences, AI projects, and late-night conversations.",
+    "art_prompt_summary": "modern hacker-house roadtrip character, conference badge, travel-worn hoodie, bright tired eyes, backpack full of impossible tools",
+    "dialogue_prompt_summary": "write like a real group-chat regular: specific, funny, tired, capable, slightly too online, never generic",
+    "behavioral_prompt_summary": "protect the group, follow the weird lead, ask practical questions, keep the humor sharp, and remember friendship is part logistics",
+    "game_design_summary": "support/chaos utility character who converts bad plans into survivable adventures and unlocks hidden social routes",
+    "do_not_misrepresent": ["Do not make them cruel", "Do not make them a generic tech bro", "Do not reveal private contact information"],
     "sensitive_topics": ["private family details"],
-    "safe_exaggerations": ["opens too many research tabs"],
+    "safe_exaggerations": ["opens too many research tabs", "can find WiFi anywhere", "has a plan for snacks", "knows somebody who knows somebody"],
     "unsafe_exaggerations": ["cruelty"],
-    "prompt_tags": ["strategist", "anchor", "dry wit"],
-    "negative_prompt_tags": ["villain", "caricature"]
+    "prompt_tags": ["hacker-house", "roadtrip", "AI-agents", "crypto-conference", "parkour-lore", "deadpan"],
+    "negative_prompt_tags": ["corporate stock photo", "resume headshot", "quest hero cosplay", "generic cyberpunk villain"]
   },
   "project_usage": {
-    "approved_projects": ["Generic NPC System", "Internal Testing"],
-    "project_relevance_notes": "Safe example for testing person/entity database exports.",
-    "project_specific_notes": "example only",
+    "approved_projects": ["HTF", "K Street", "West Coast Crypto Cruise", "Shared Person Database", "AI Dialogue Agent", "Art Generation"],
+    "project_relevance_notes": "Good sample for cruise NPC energy, group memory, social cameos, late-night dialogue, and support-character writing.",
+    "project_specific_notes": "Okay as a background NPC on West Coast Crypto Cruise; ask before making this sample a main character or romance subplot.",
     "canon_level": "Raw"
   },
   "source_notes": {
     "source_images": [],
-    "source_interviews": ["example only"],
-    "source_notes": "fictional example",
+    "source_interviews": ["2026-06 sample intake form", "fictional Discord thread summary"],
+    "source_notes": "fictional sample with HTF / K Street / WCCC voice; no real person or private image included",
     "contributors": ["HTF / K Street"],
     "reviewers": [],
     "last_reviewed": "2026-06-01",
@@ -461,7 +471,7 @@
     "unresolved_questions": []
   },
   "generated_content": {
-    "character_summary": "The Compass is a grounded planner whose calm presence turns confusion into action.",
+    "character_summary": "Packet Ghost is a sleep-deprived fixer whose road-trip instincts, weird internet memory, and deadpan timing turn group chaos into usable lore.",
     "ai_context_output": "",
     "art_prompt_output": "",
     "dialogue_prompt_output": "",

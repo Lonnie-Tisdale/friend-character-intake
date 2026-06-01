@@ -130,7 +130,7 @@
 <body data-mode="simple">
   <header>
     <h1>HTF / K Street Character Database</h1>
-    <p>This shared profile system helps generate consistent characters, dialogue, art prompts, NPCs, relationship maps, and project memory across HTF, K Street, and future group projects. Person schema <strong>3.0.0</strong> with Knowledge Graph v4 foundation.</p>
+    <p>This shared profile system turns real group lore into consistent characters, dialogue, art prompts, NPCs, relationship maps, and project memory across HTF, K Street, West Coast Crypto Cruise, and future weird ambitious builds. Person schema <strong>3.0.0</strong> with Knowledge Graph v4 foundation.</p>
   </header>
   <nav class="mode-nav" aria-label="Interface modes">
     <strong>MODE</strong>
@@ -150,9 +150,9 @@
     <div>
       <section class="intro-card simple-only">
         <h2>Simple Member Intake</h2>
-        <p>Fill in what feels easy. The point is to capture the traits that make you recognizable as a fictional/game character: vibe, voice, decisions, boundaries, visual anchors, and how you connect to the group, projects, or community.</p>
-        <p><strong>What will this be used for?</strong> Approved answers may help create consistent characters, dialogue, art prompts, NPC behavior, project memory, and relationship maps. Consent fields decide what can be stored, fictionalized, simulated, or reused.</p>
-        <p><strong>Easy path:</strong> add your display name, short bio, vibe, visual description, voice style, relationship/project context, and consent choices. Then click <strong>Submit Descriptor</strong>. If you want to share a reference photo, describe where the reviewer can find it or send it privately.</p>
+        <p>Fill in what feels easy. The point is to capture what makes you recognizable in the group lore: your vibe, voice, obsessions, road-trip energy, Discord behavior, questionable superpowers, and how you show up when a plan gets weird.</p>
+        <p><strong>What will this be used for?</strong> Approved answers may help create consistent characters, dialogue, art prompts, NPC behavior, project memory, and relationship maps for shared HTF / K Street projects. Consent fields decide what can be stored, fictionalized, simulated, or reused.</p>
+        <p><strong>Easy path:</strong> add your display name, three-word vibe, current obsession, legendary story, visual description, voice style, group/project context, and consent choices. Then click <strong>Submit Descriptor</strong>. If you want to share a reference photo, describe where the reviewer can find it or send it privately.</p>
         <p>Public repos should not contain real private images unless explicitly approved.</p>
       </section>
       <section class="intro-card advanced-only">
@@ -362,12 +362,12 @@
     const SIMPLE_SECTION_IDS = new Set(["consent", "identity", "appearance", "personality", "social_model", "humor_and_voice", "project_usage", "source_notes", "generated_content"]);
     const SIMPLE_FIELD_IDS = new Set([
       "permission_to_store", "permission_to_fictionalize", "permission_for_ai_dialogue", "permission_for_art_generation", "permission_for_cross_project_reuse", "permission_for_relationship_simulation", "consent_notes",
-      "display_name", "optional_contact", "in_world_name", "pronouns", "short_bio", "current_location",
-      "image_prompt_notes", "everyday_clothing", "default_expression", "movement_body_language", "source_images",
-      "primary_social_energy", "secondary_social_energy", "personality_traits", "custom_traits", "strengths", "flaws",
-      "voice_rhythm", "typical_phrases", "example_quotes", "dialogue_dos", "dialogue_donts",
+      "display_name", "optional_contact", "in_world_name", "pronouns", "short_bio", "three_word_vibe", "animal_affinity", "current_obsession", "current_location",
+      "image_prompt_notes", "everyday_clothing", "default_expression", "movement_body_language", "signature_item", "source_images",
+      "primary_social_energy", "secondary_social_energy", "personality_traits", "custom_traits", "strengths", "flaws", "character_archetype", "signature_ability",
+      "voice_rhythm", "typical_phrases", "example_quotes", "battle_intro_quote", "battle_victory_quote", "dialogue_dos", "dialogue_donts",
       "relationship_to_group_network", "how_they_show_care", "friendship_style",
-      "approved_projects", "project_relevance_notes", "canon_level",
+      "approved_projects", "project_relevance_notes", "legendary_story", "most_chaotic_moment", "topics_they_bring_up", "canon_level",
       "character_summary", "ai_context_output"
     ]);
 
@@ -375,60 +375,64 @@
       {
         id: "consent",
         title: "Consent",
-        note: "Permissions and safety limits. These fields control whether submitted profiles can be stored, fictionalized, simulated, or reused.",
+        note: "The yes/no stuff that keeps the group from accidentally turning private lore into public canon.",
         fields: [
-          b("permission_to_store", "Permission to store this descriptor", "Required before keeping submissions."),
-          b("permission_to_fictionalize", "Permission to fictionalize", "Required before adapting into projects."),
-          b("permission_for_ai_dialogue", "Permission for AI dialogue", "Allows voice/dialogue simulation."),
-          b("permission_for_art_generation", "Permission for art generation", "Controls whether visual prompt fields can be reused."),
-          b("permission_for_cross_project_reuse", "Permission for cross-project reuse", "Useful for shared HTF / K Street profile databases."),
-          b("permission_for_relationship_simulation", "Permission for relationship simulation", "Allows graph and social model simulation."),
-          b("contact_for_questions", "Contact for questions", "Allows follow-up questions."),
-          l("sensitive_topics_to_avoid", "Sensitive topics to avoid", "Private topics that should not appear in generated content.", "family details\nmedical specifics"),
-          f("consent_notes", "Consent notes", "textarea", "Records usage limits, approvals, and review context.", "May be used as a fictionalized support character; avoid private family details.")
+          b("permission_to_store", "Okay to save this profile", "Required before keeping submissions."),
+          b("permission_to_fictionalize", "Okay to fictionalize me", "Required before adapting into stories, games, or NPCs."),
+          b("permission_for_ai_dialogue", "Okay to use my vibe for AI dialogue", "Allows voice/dialogue simulation."),
+          b("permission_for_art_generation", "Okay to use visual notes for art prompts", "Controls whether visual prompt fields can be reused."),
+          b("permission_for_cross_project_reuse", "Okay to reuse across group projects", "Useful for shared HTF / K Street profiles."),
+          b("permission_for_relationship_simulation", "Okay to map relationships and dynamics", "Allows graph and social model simulation."),
+          b("contact_for_questions", "Okay to ask me follow-up questions", "Allows follow-up questions."),
+          l("sensitive_topics_to_avoid", "Stuff that should stay out of canon", "Private topics that should not appear in generated content.", "family details\nmedical specifics\nold drama\nanything involving actual legal trouble"),
+          f("consent_notes", "Consent notes / weird edge cases", "textarea", "Records usage limits, approvals, and review context.", "Okay for fictionalized group lore; keep real names, family details, and private relationship stuff out of public exports.")
         ]
       },
       {
         id: "identity",
         title: "Identity",
-        note: "Basic person/profile identity. Contact information is private and should not be committed to public repos.",
+        note: "The public-safe handle, vibe, obsessions, and table-intro version of the person.",
         fields: [
-          f("display_name", "Display name", "text", "Private review name or public-safe display name.", "Example: Jordan Rivera"),
-          f("real_name_optional", "Real name optional", "text", "Only collect if useful and approved. Keep private.", "Jordan Rivera"),
-          f("optional_contact", "Optional contact", "text", "Private follow-up contact if the person permits clarification.", "name@email.com"),
-          f("in_world_name", "In-world name", "text", "Reusable character handle for fiction, games, and prompts.", "The Compass"),
-          f("short_bio", "Short bio", "textarea", "A friendly one-paragraph intro in the person's own words.", "I help people turn messy ideas into practical plans, usually with dry jokes and snacks."),
-          l("nicknames", "Nicknames", "Alternate names, handles, or social aliases.", "Compass\nJR"),
-          f("pronouns", "Pronouns", "text", "Supports respectful dialogue and profile generation.", "they/them"),
-          f("age_range", "Age range", "text", "Keeps profiles useful without over-collecting precise personal data.", "30s"),
-          f("current_location", "Current location", "text", "Current public-safe location or usual region.", "Portland, Oregon"),
-          f("origin_location", "Origin location", "text", "Where they are from, if relevant and approved.", "Pacific Northwest"),
-          l("communities", "Communities", "Groups, scenes, or cultures they belong to.", "HTF\nK Street\nParkour community"),
-          l("roles", "Roles", "Social or project roles.", "organizer\nmentor"),
-          l("professions", "Professions", "Jobs, callings, or work identities.", "coach\nresearcher"),
-          l("identity_tags", "Tags", "Searchable identity tags.", "strategist\ncommunity-builder")
+          f("display_name", "What should we call you?", "text", "Public-safe display name, handle, or nickname.", "Maya / @packetghost / whatever people actually call me"),
+          f("real_name_optional", "Real name, only if you want it stored", "text", "Only collect if useful and approved. Keep private.", "Full legal name optional, usually not needed"),
+          f("optional_contact", "Best way to ask follow-up questions", "text", "Private follow-up contact if the person permits clarification.", "Discord handle, Signal, email, or 'ask me in the group chat'"),
+          f("in_world_name", "Character handle / codename", "text", "Reusable character handle for fiction, games, and prompts.", "Terminal Wizard, Roadtrip Bard, Meme Archaeologist"),
+          f("short_bio", "Two-sentence lore intro", "textarea", "A friendly one-paragraph intro in the person's own words.", "I fix weird problems, ask too many questions, and somehow become useful during chaos. I am usually holding coffee and three unfinished ideas."),
+          f("three_word_vibe", "Three words that describe you", "text", "Fast vibe check for people, writers, and NPC systems.", "Chaotic, creative, caffeinated"),
+          f("animal_affinity", "Animal you identify with", "text", "Totem, mascot, self-own, or recurring group bit.", "Crow, raccoon, wolf, octopus, coyote, house cat, honey badger, pigeon of destiny"),
+          f("current_obsession", "Current obsession", "textarea", "The topic currently eating your browser tabs.", "Local AI models, parkour history, retro RPG design, Bitcoin self-custody, urban exploration, weird internet archaeology"),
+          l("nicknames", "Nicknames / handles / aliases", "Alternate names, handles, or social aliases.", "Packet Ghost\nWiFi Oracle\nthat one guy from the Austin house"),
+          f("pronouns", "Pronouns or how people should refer to you", "text", "Supports respectful dialogue and profile generation.", "they/them, he/him, she/her, name only, no preference"),
+          f("age_range", "Approx age range, if useful", "text", "Keeps profiles useful without over-collecting precise personal data.", "20s, 30s, old enough to have seen multiple crypto cycles"),
+          f("current_location", "Current base / usual orbit", "text", "Current public-safe location or usual region.", "San Diego, Austin, the road, airport lounges, wherever the group chat sends me"),
+          f("origin_location", "Where did your lore start?", "text", "Where they are from, if relevant and approved.", "Parkour forums, hacker houses, desert builds, Midwest LAN parties"),
+          l("communities", "Communities / scenes", "Groups, scenes, or cultures they belong to.", "HTF\nK Street\nParkour community\nlocal AI Discord\nburner camp\ncrypto conference hallway track"),
+          l("roles", "Project roles people actually ask you to play", "Social or project roles.", "Community Builder\nLore Keeper\nDeveloper\nEvent Instigator\nProfessional Bad Influence\nSpreadsheet Wizard\nMeme Curator\nFixer"),
+          l("professions", "Work / craft / hustle", "Jobs, callings, or work identities.", "developer\nartist\nfounder\ncoach\nresearcher\norganizer\nfull-time side quest"),
+          l("identity_tags", "Search tags / vibe tags", "Searchable identity tags.", "internet-weirdo\nparkour\nAI-agents\nstartup-chaos\nroadtrip-certified")
         ]
       },
       {
         id: "appearance",
         title: "Appearance",
-        note: "Visual cues for art, prose, and casting without requiring public source images.",
+        note: "Visual anchors for art, prose, sprites, and memory. Think recognizability, not biometric paperwork.",
         fields: [
-          f("height_build", "Height / build", "text", "Broad physical read, not exact biometric detail.", "medium height, compact athletic build"),
-          f("hair", "Hair", "text", "Hair color, style, and silhouette cues.", "short dark hair, practical cut"),
-          f("eyes", "Eyes", "text", "Eye description for art/prose.", "alert, focused eyes"),
-          f("face_features", "Face features", "textarea", "Memorable facial features without over-indexing on appearance.", "expressive eyebrows, thoughtful resting face"),
+          f("height_build", "General silhouette / build", "text", "Broad physical read, not exact biometric detail.", "compact parkour build, tall conference cryptid, small but impossible to lose in a crowd"),
+          f("hair", "Hair / head silhouette", "text", "Hair color, style, and silhouette cues.", "messy travel hair, shaved sides, beanie most of the time, looks like they cut it during a sprint"),
+          f("eyes", "Eyes / attention style", "text", "Eye description for art/prose.", "alert, sleep-deprived, always scanning for exits, outlets, or the bit"),
+          f("face_features", "Recognizable face details", "textarea", "Memorable facial features without over-indexing on appearance.", "expressive eyebrows, too-aware resting face, looks like they just read the room and the room failed QA"),
           f("skin_tone", "Skin tone", "text", "Optional visual descriptor for respectful art direction.", ""),
-          f("distinguishing_marks", "Distinguishing marks", "textarea", "Scars, tattoos, glasses, or other approved markers.", "memorable glasses"),
-          f("silhouette", "Silhouette", "textarea", "Shape language for quick recognition.", "upright, compact, practical, always ready to move"),
-          f("everyday_clothing", "Everyday clothing", "textarea", "Default wardrobe.", "Layered jacket, tidy sneakers, durable clothes."),
-          f("iconic_outfit", "Iconic outfit", "textarea", "The outfit they would be recognized in.", "Field jacket, notebook, reliable pen."),
-          f("accessories", "Accessories", "textarea", "Visual accessories.", "glasses, notebook, pen"),
-          f("carried_items", "Carried items", "textarea", "Props that can drive scenes or mechanics.", "phone, notebook, snacks, multitool"),
-          f("default_expression", "Default expression", "text", "A fast visual anchor for illustration and NPC idle states.", "Listening carefully with one eyebrow raised."),
-          f("movement_body_language", "Movement and body language", "textarea", "How the character occupies space and communicates nonverbally.", "Still when thinking; precise hand motions when explaining."),
-          f("image_prompt_notes", "Image prompt notes", "textarea", "Approved notes for visual generation.", "Grounded modern strategist, warm but analytical, practical layered clothing."),
-          f("negative_image_prompt_notes", "Negative image prompt notes", "textarea", "What art prompts should avoid.", "Do not exaggerate into villainy or caricature.")
+          f("distinguishing_marks", "Recognizable marks / recurring visual bits", "textarea", "Scars, tattoos, glasses, or other approved markers.", "glasses, chipped black nail polish, old conference wristband, tattoo people keep asking about"),
+          f("silhouette", "Sprite silhouette", "textarea", "Shape language for quick recognition.", "hoodie + backpack + forward lean, looks ready to climb a wall or fix a router"),
+          f("everyday_clothing", "Default outfit", "textarea", "Default wardrobe.", "black hoodie, conference badge, trail shoes, cargo pants, jacket with too many pockets"),
+          f("iconic_outfit", "Iconic outfit / legendary fit", "textarea", "The outfit they would be recognized in.", "sun-faded camp shirt, beat-up sneakers, sunglasses at night, backpack that has seen things"),
+          f("accessories", "Accessories / visual tells", "textarea", "Visual accessories.", "camera, pocket notebook, enamel pin, hardware wallet, carabiner, old lanyard"),
+          f("carried_items", "Signature item", "textarea", "Props that can drive scenes or mechanics.", "half-charged laptop, coffee thermos, sketchbook, multi-tool, phone with 200 open tabs, backpack containing an unknown dimension"),
+          f("signature_item", "Signature item if we only draw one prop", "text", "One prop that says 'yes, that is them.'", "Coffee thermos, camera, notebook, hardware wallet, multi-tool, suspiciously heavy backpack"),
+          f("default_expression", "Default expression", "text", "A fast visual anchor for illustration and NPC idle states.", "half amused, half concerned, already debugging the situation"),
+          f("movement_body_language", "Movement / body language", "textarea", "How the character occupies space and communicates nonverbally.", "paces while thinking, perches on furniture wrong, talks with hands, moves like the floor is optional"),
+          f("image_prompt_notes", "Visual description for artists / AI", "textarea", "Approved notes for visual generation.", "modern internet nomad, parkour-adjacent posture, travel-worn clothes, bright eyes, late-night build energy"),
+          f("negative_image_prompt_notes", "What art should avoid", "textarea", "What art prompts should avoid.", "Do not turn them into a corporate mascot, quest-hero cosplay, villain caricature, or generic influencer.")
         ]
       },
       {
@@ -445,9 +449,9 @@
           f("primary_outfit_reference_asset_id", "Primary outfit reference asset ID", "text", "Quick link for outfit reference.", ""),
           f("primary_token_asset_id", "Primary token asset ID", "text", "Quick link for token reference.", ""),
           f("primary_voice_reference_asset_id", "Primary voice reference asset ID", "text", "Quick link for voice reference.", ""),
-          rows("asset_entries", "Assets", "asset_id | asset_type | title | description | person/entity linked | project linked | file_name | file_extension | file_size | url | local_path | thumbnail_url | date_added | last_modified | source | creator | copyright_holder | license_type | consent_status | canon_level | tags comma-list | associated_projects comma-list | use_cases comma-list | do_not_use_for comma-list | notes", "asset_001 | reference_photo | Current face reference | approved current face photo | person_example | Shared Character Database | face.jpg | jpg | 2.4 MB | https://... | Source Images/Name/face.jpg | https://... | 2026-06-01 | 2026-06-01 | self-submitted | Example Person | Example Person | private | approved | primary_reference | face,current,portrait | Shared Character Database,Generic NPC System | portrait_generation,art_generation | marketing | private source image"),
-          rows("asset_group_entries", "Asset groups", "group_id | group_name | description | asset_ids comma-list | tags comma-list | notes", "group_face | Face References | approved face references | asset_001,asset_002 | face,current | use for portraits"),
-          rows("style_guide_entries", "Style guides", "guide_name | description | asset_ids comma-list | prompt_notes | negative_prompt_notes", "Retro JRPG Style | 32-bit RPG interpretation | asset_003 | bold readable sprite silhouette | avoid modern photo-realism"),
+          rows("asset_entries", "Assets", "asset_id | asset_type | title | description | person/entity linked | project linked | file_name | file_extension | file_size | url | local_path | thumbnail_url | date_added | last_modified | source | creator | copyright_holder | license_type | consent_status | canon_level | tags comma-list | associated_projects comma-list | use_cases comma-list | do_not_use_for comma-list | notes", "asset_001 | reference_photo | WCCC hallway face reference | approved current face photo from crypto conference chaos | person_packetghost | West Coast Crypto Cruise | hallway.jpg | jpg | 2.4 MB | https://... | Source Images/Packet Ghost/hallway.jpg | https://... | 2026-06-01 | 2026-06-01 | self-submitted | Packet Ghost | Packet Ghost | private | approved | primary_reference | face,current,conference,late-night | West Coast Crypto Cruise,HTF,K Street | portrait_generation,art_generation | public ads,dating sim without consent | private source image; okay for internal art refs"),
+          rows("asset_group_entries", "Asset groups", "group_id | group_name | description | asset_ids comma-list | tags comma-list | notes", "group_face | Face References | approved photos where they look like themselves | asset_001,asset_002 | face,current,not-corporate | use for portraits, tokens, and vibe checks"),
+          rows("style_guide_entries", "Style guides", "guide_name | description | asset_ids comma-list | prompt_notes | negative_prompt_notes", "Roadtrip RPG Style | readable indie game interpretation | asset_003 | strong silhouette, travel-worn outfit, expressive idle pose | avoid polished resume headshot energy"),
           f("visual_reference_sheet", "Visual reference sheet", "textarea", "Generated artist/image model reference summary.", "")
         ]
       },
@@ -456,21 +460,21 @@
         title: "Knowledge Graph",
         note: "v4 foundation fields. The current person profile becomes one graph node, and these rows add linked entities, relationships, events, projects, lore, and concepts.",
         fields: [
-          f("entity_id", "Entity ID", "text", "Stable graph ID for this person node.", "person_example"),
+          f("entity_id", "Entity ID", "text", "Stable graph ID for this person node.", "person_packetghost"),
           s("entity_type", "Entity type", ENTITY_TYPES, "The current profile should usually remain person."),
-          l("graph_tags", "Graph tags", "Tags used across the knowledge graph.", "person\nhtf\nk-street\nparkour"),
-          f("graph_notes", "Graph notes", "textarea", "Graph-level notes for this person node.", "Central profile node for project graph queries."),
-          rows("graph_link_entries", "Graph links", "target entity id | relationship type | strength 1-10 | notes", "org_sdpk | founder_of | 9 | founded / helped establish community\nproject_tao_of_parkour | author_of | 10 | major concept project"),
-          rows("graph_entity_entries", "Linked entities", "entity_id | entity_type | display_name | created_at | updated_at | tags comma-list | notes", "org_sdpk | organization | SDPK | 2003-01-01 | 2026-06-01 | parkour,community | San Diego parkour organization\nloc_san_diego | location | San Diego |  |  | city,parkour | early movement history"),
-          rows("relationship_entity_entries", "Relationship entities", "relationship_id | person_a | person_b | relationship_type | trust level | conflict level | history level | influence level | communication frequency | relationship health | running dynamic | inside jokes | shared history | relationship notes | confidence level | canon level | consent status", "rel_example_friend | person_example | person_friend | friend | 8 | 2 | 7 | 6 | frequent | healthy | creative pressure-testing | old bits | shared movement history | example relationship | high | canon | approved"),
-          rows("organization_entity_entries", "Organization entities", "entity_id | organization name | founding date | description | members comma-list | roles comma-list | projects comma-list | associated locations comma-list | assets comma-list | history | status", "org_shared_group | HTF / K Street | 2026-01-01 | shared creative circle | person_example | member | project_shared_database | loc_shared_space | asset_logo | evolving project network | active"),
-          rows("faction_entity_entries", "Faction entities", "entity_id | faction name | description | members comma-list | roles comma-list | projects comma-list | associated locations comma-list | assets comma-list | goals | status", "faction_rooftop_pragmatists | Rooftop Pragmatists | informal movement crew | person_example,person_friend | scout,planner | project_shared_database | loc_san_diego | asset_patch | protect the route | active"),
-          rows("location_entity_entries", "Location entities", "entity_id | display name | location type | description | associated people comma-list | associated events comma-list | associated organizations comma-list | associated assets comma-list | coordinates optional | tags comma-list", "loc_san_diego | San Diego | real_world | early community location | person_example | event_sdpk_founding | org_sdpk | asset_photo |  | parkour,history"),
-          rows("event_entity_entries", "Event entities", "entity_id | title | event date | participants comma-list | organizations comma-list | locations comma-list | assets comma-list | stories comma-list | outcomes | notes", "event_sdpk_founding | SDPK Founding | 2003-01-01 | person_example | org_sdpk | loc_san_diego |  | story_sdpk_origin | community formed | approximate date"),
-          rows("story_object_entries", "Story object entities", "entity_id | title | summary | participants comma-list | related events comma-list | related locations comma-list | related people comma-list | related assets comma-list | importance | canonical status", "story_running_joke | Running Joke | recurring community bit | person_example,person_friend |  | loc_san_diego | person_friend |  | medium | semi_canon"),
-          rows("project_entity_entries", "Project entities", "entity_id | project name | description | contributors comma-list | organizations comma-list | assets comma-list | related people comma-list | related events comma-list | status | repository links comma-list", "project_shared_database | Shared Character Database | group memory / character database | person_example | org_shared_group | asset_logo | person_friend | event_game_jam | active | https://github.com/example"),
-          rows("concept_entity_entries", "Concept entities", "entity_id | concept name | definition | summary | related people comma-list | related projects comma-list | related stories comma-list | related assets comma-list", "concept_shared_memory | Shared Memory | group continuity concept | stable character memory across projects | person_example | project_shared_database | story_spiral | asset_symbol"),
-          rows("timeline_entries", "Timeline entries", "date | entity_id | timeline type | title | summary | related entities comma-list", "2026-06-01 | project_shared_database | milestone | Public graph foundation | v4 graph exports added | person_example,org_shared_group,project_shared_database"),
+          l("graph_tags", "Graph tags", "Tags used across the knowledge graph.", "person\nhtf\nk-street\nwccc\nparkour\nai-agents\nroadtrip-lore"),
+          f("graph_notes", "Graph notes", "textarea", "Graph-level notes for this person node.", "Root node for a real friend profile that can become WCCC NPC context, group lore, and future project memory."),
+          rows("graph_link_entries", "Graph links", "target entity id | relationship type | strength 1-10 | notes", "org_htf_kstreet | organization_member | 8 | long-running friend/project circle\nproject_wccc | project_member | 6 | approved for light cruise NPC energy\nloc_conference_hallway | location_association | 7 | usually found where the best hallway track is happening"),
+          rows("graph_entity_entries", "Linked entities", "entity_id | entity_type | display_name | created_at | updated_at | tags comma-list | notes", "org_htf_kstreet | organization | HTF / K Street | 2026-01-01 | 2026-06-01 | friend-circle,projects | equal circle of builders, artists, researchers, instigators\nloc_conference_hallway | location | Crypto Conference Hallway Track |  |  | conference,roadtrip | where half the real plot happens"),
+          rows("relationship_entity_entries", "Relationship entities", "relationship_id | person_a | person_b | relationship_type | trust level | conflict level | history level | influence level | communication frequency | relationship health | running dynamic | inside jokes | shared history | relationship notes | confidence level | canon level | consent status", "rel_packetghost_crew | person_packetghost | person_crew | friend | 8 | 2 | 7 | 6 | frequent | healthy | starts projects from jokes | airport floor lore | Discord-to-road-trip friendship | public-safe relationship summary only | high | semi_canon | approved"),
+          rows("organization_entity_entries", "Organization entities", "entity_id | organization name | founding date | description | members comma-list | roles comma-list | projects comma-list | associated locations comma-list | assets comma-list | history | status", "org_htf_kstreet | HTF / K Street | 2026-01-01 | strange capable circle building games, AI tools, events, and lore | person_packetghost,person_crew | member,lore_keeper,fixer | project_wccc,project_profile_database | loc_hacker_house,loc_conference_hallway | asset_logo | grew through Discord threads, road trips, late nights, and poor timing | active"),
+          rows("faction_entity_entries", "Faction entities", "entity_id | faction name | description | members comma-list | roles comma-list | projects comma-list | associated locations comma-list | assets comma-list | goals | status", "faction_hallway_track | Hallway Track Diplomats | informal conference crew that finds the real conversation | person_packetghost,person_crew | connector,scout | project_wccc | loc_conference_hallway | asset_badge | turn chance encounters into useful lore | active"),
+          rows("location_entity_entries", "Location entities", "entity_id | display name | location type | description | associated people comma-list | associated events comma-list | associated organizations comma-list | associated assets comma-list | coordinates optional | tags comma-list", "loc_hacker_house_kitchen | Hacker House Kitchen | real_world | 3 AM planning table, half-cleaned whiteboard, someone's laptop fan screaming | person_packetghost | event_midnight_build | org_htf_kstreet | asset_reference_photo |  | hacker-house,build-sprint"),
+          rows("event_entity_entries", "Event entities", "entity_id | title | event date | participants comma-list | organizations comma-list | locations comma-list | assets comma-list | stories comma-list | outcomes | notes", "event_midnight_build | Midnight Build Sprint | 2026-06-01 | person_packetghost,person_crew | org_htf_kstreet | loc_hacker_house_kitchen | asset_reference_photo | story_startup_from_joke | prototype worked badly enough to continue | approximate date; public-safe"),
+          rows("story_object_entries", "Story object entities", "entity_id | title | summary | participants comma-list | related events comma-list | related locations comma-list | related people comma-list | related assets comma-list | importance | canonical status", "story_startup_from_joke | Started A Business From A Discord Joke | side project escaped containment and became group lore | person_packetghost,person_crew | event_midnight_build | loc_hacker_house_kitchen | person_crew |  | high | semi_canon"),
+          rows("project_entity_entries", "Project entities", "entity_id | project name | description | contributors comma-list | organizations comma-list | assets comma-list | related people comma-list | related events comma-list | status | repository links comma-list", "project_wccc | West Coast Crypto Cruise | game/narrative project about crypto conference chaos, friendship, and weird competence | person_packetghost,person_crew | org_htf_kstreet | asset_logo,asset_reference_photo | person_crew | event_midnight_build | active | https://github.com/htf-kstreet/friend-character-intake"),
+          rows("concept_entity_entries", "Concept entities", "entity_id | concept name | definition | summary | related people comma-list | related projects comma-list | related stories comma-list | related assets comma-list", "concept_hallway_track_lore | Hallway Track Lore | the real story that happens between official agenda items | conference friendships, rumors, jokes, and useful accidents | person_packetghost | project_wccc | story_startup_from_joke | asset_badge"),
+          rows("timeline_entries", "Timeline entries", "date | entity_id | timeline type | title | summary | related entities comma-list", "2026-06-01 | event_midnight_build | milestone | The joke became a build | Discord bit turned into an actual project plan | person_packetghost,org_htf_kstreet,project_wccc"),
           f("character_context_output", "Character context", "textarea", "Generated graph-aware character context.", ""),
           f("organization_summary_output", "Organization summary", "textarea", "Generated organization and faction summary.", ""),
           f("project_summary_output", "Project summary", "textarea", "Generated project summary.", ""),
@@ -482,16 +486,18 @@
       {
         id: "personality",
         title: "Personality",
-        note: "Stable traits, strengths, flaws, and recognizable habits.",
+        note: "Vibe, useful chaos, recurring patterns, and the things the group already knows are true.",
         fields: [
-          s("primary_social_energy", "Primary Social Energy", ["Warm Stabilizer", "Thoughtful Mentor", "Curious Guide", "Practical Fixer", "Chaotic Instigator", "Deadpan Commentator", "Magnetic Performer", "Quiet Observer", "Community Builder", "Explorer", "Storyteller", "Scholar", "Philosopher", "Connector", "Visionary", "Trusted Advisor", "Trickster Sage", "Reluctant Leader", "Investigator", "Catalyst"], "Primary recognizable social presence."),
-          s("secondary_social_energy", "Secondary Social Energy", ["Warm Stabilizer", "Thoughtful Mentor", "Curious Guide", "Practical Fixer", "Chaotic Instigator", "Deadpan Commentator", "Magnetic Performer", "Quiet Observer", "Community Builder", "Explorer", "Storyteller", "Scholar", "Philosopher", "Connector", "Visionary", "Trusted Advisor", "Trickster Sage", "Reluctant Leader", "Investigator", "Catalyst"], "Secondary social flavor."),
-          l("personality_traits", "Personality traits", "Useful trait tags for filtering and generation.", "observant\nloyal\npragmatic"),
-          l("custom_traits", "Custom traits", "Nuanced traits that standard lists miss.", "quietly theatrical when comfortable"),
-          l("strengths", "Strengths", "Competencies that shape story and mechanics.", "pattern recognition\ngroup coordination"),
-          l("flaws", "Flaws", "Limitations that create believable conflict.", "over-functions\nimpatient with vagueness"),
-          f("temperament", "Temperament", "textarea", "Baseline emotional weather.", "calm, alert, quietly intense when focused"),
-          f("biggest_contradiction", "Biggest contradiction", "textarea", "The tension that makes them feel real.", "Wants to trust people but keeps preparing for them to drop the ball.")
+          s("primary_social_energy", "Primary social energy", ["Warm Stabilizer", "Thoughtful Mentor", "Curious Guide", "Practical Fixer", "Chaotic Instigator", "Deadpan Commentator", "Magnetic Performer", "Quiet Observer", "Community Builder", "Explorer", "Storyteller", "Scholar", "Philosopher", "Connector", "Visionary", "Trusted Advisor", "Trickster Sage", "Reluctant Leader", "Investigator", "Catalyst"], "Primary recognizable social presence."),
+          s("secondary_social_energy", "Secondary social energy", ["Warm Stabilizer", "Thoughtful Mentor", "Curious Guide", "Practical Fixer", "Chaotic Instigator", "Deadpan Commentator", "Magnetic Performer", "Quiet Observer", "Community Builder", "Explorer", "Storyteller", "Scholar", "Philosopher", "Connector", "Visionary", "Trusted Advisor", "Trickster Sage", "Reluctant Leader", "Investigator", "Catalyst"], "Secondary social flavor."),
+          l("personality_traits", "Vibe tags", "Useful trait tags for filtering and generation.", "curious\nstubborn\nreliable\nchaotic\ncreative\ncaffeinated\nquiet\nanalytical\ndangerous"),
+          l("custom_traits", "Oddly specific traits", "Nuanced traits that standard lists miss.", "can smell bad incentives\nanswers Discord at impossible hours\nkeeps receipts in the spiritual sense"),
+          l("strengths", "What do people always come to you for?", "Competencies that shape story and mechanics.", "fixing servers at 2 AM\nfinding cheap flights\ntalking people off ledges\nremembering obscure lore\nturning chaos into a plan"),
+          l("flaws", "Failure modes / recurring bugs", "Limitations that create believable conflict.", "overcommits to the bit\nforgets sleep is load-bearing\nbuys the top\nturns every problem into a research spiral"),
+          f("character_archetype", "Character archetype", "text", "The slightly mythic group-chat version of this person.", "Accelerator Ghost, Terminal Wizard, Logistics Goblin, Chaos Engineer, ZK Monk, Meme Archaeologist, Burnout Prophet, Startup Necromancer, Desert Mystic, Roadtrip Bard, Vibe Cartographer, Parkour Historian"),
+          f("signature_ability", "Signature ability", "textarea", "The thing they can do that feels unfair but somehow real.", "Can find WiFi anywhere. Knows somebody who knows somebody. Solves impossible problems at 3 AM. Generates ideas faster than consequences."),
+          f("temperament", "Baseline emotional weather", "textarea", "Baseline emotional weather.", "sleep-deprived optimism with a suspicious amount of competence"),
+          f("biggest_contradiction", "Biggest contradiction", "textarea", "The tension that makes them feel real.", "Wants a stable life but keeps joining side quests that become companies.")
         ]
       },
       {
@@ -499,15 +505,15 @@
         title: "Motivation",
         note: "What the person optimizes for, protects, refuses, and is trying to become.",
         fields: [
-          l("ranked_values", "Ranked values", "Ordered by priority. Include built-ins or custom values.", "Friendship\nTruth\nCuriosity\nService"),
-          f("core_motivation", "Core motivation", "textarea", "The deepest engine behind action.", "Make confusing situations survivable for the people they love."),
-          f("what_they_optimize_for", "What they optimize for", "textarea", "Decision utility function in plain language.", "Clarity, group safety, and practical next steps."),
+          l("ranked_values", "What actually matters to you?", "Ordered by priority. Include built-ins or custom values.", "friendship\nfreedom\ncuriosity\nbuilding real things\nnot leaving people stranded\ntruth even when annoying"),
+          f("core_motivation", "What keeps pulling you forward?", "textarea", "The deepest engine behind action.", "Make confusing situations survivable for the people they love."),
+          f("what_they_optimize_for", "What they optimize for", "textarea", "What they instinctively try to protect or improve.", "Good signal, good people, enough battery, enough runway, nobody stranded at the wrong airport."),
           f("what_they_refuse_to_compromise", "What they refuse to compromise", "textarea", "Non-negotiables for character consistency.", "They will not betray a vulnerable ally for convenience."),
           f("what_tempts_them", "What tempts them", "textarea", "Pressure points that create drama.", "Being needed, being right, having the answer first."),
           f("what_they_are_trying_to_become", "What they are trying to become", "textarea", "Forward motion for growth arcs.", "Someone who trusts others enough to share the load."),
           f("greatest_need", "Greatest need", "textarea", "What they emotionally need even if they do not say it.", "Permission to not be useful every second."),
           f("greatest_fear", "Greatest fear", "textarea", "Core fear that drives avoidance.", "Being useless when people are counting on them."),
-          f("moral_center", "Moral center", "textarea", "The ethical center of gravity.", "Care is practical, but people are never merely problems."),
+          f("moral_center", "Moral center", "textarea", "The ethical center of gravity.", "Do not abandon people just because the plan got inconvenient."),
           f("shadow_desire", "Shadow desire", "textarea", "The desire that could become dangerous if unchecked.", "To control the room so no one can fail.")
         ]
       },
@@ -516,10 +522,10 @@
         title: "Decision-Making",
         note: "How the profile chooses, fails, recovers, and handles risk.",
         fields: [
-          s("decision_style", "Decision style", ["Research First", "Intuition First", "Consensus Seeking", "Decisive", "Cautious", "Trial And Error", "Expert Guided", "Emotion Driven", "Principle Driven", "Opportunistic"], "How they usually choose a path."),
-          s("risk_tolerance", "Risk tolerance", ["Low", "Medium", "High", "Variable"], "Risk appetite for story and mechanics."),
-          s("planning_horizon", "Planning horizon", ["Immediate", "Short Term", "Long Term", "Legacy"], "How far ahead they naturally think."),
-          f("under_pressure_behavior", "Under pressure behavior", "textarea", "Default behavior when stakes rise.", "Gets quieter, prioritizes essentials, delegates cleanly."),
+          s("decision_style", "How you choose a path", ["Research First", "Intuition First", "Consensus Seeking", "Decisive", "Cautious", "Trial And Error", "Expert Guided", "Emotion Driven", "Principle Driven", "Opportunistic"], "How they usually choose a path."),
+          s("risk_tolerance", "Risk appetite", ["Low", "Medium", "High", "Variable"], "Risk appetite for story and mechanics."),
+          s("planning_horizon", "How far ahead are you thinking?", ["Immediate", "Short Term", "Long Term", "Legacy"], "How far ahead they naturally think."),
+          f("under_pressure_behavior", "What happens when the plan catches fire?", "textarea", "Default behavior when stakes rise.", "Gets quieter, prioritizes essentials, delegates cleanly, checks who has water and who has the keys."),
           f("common_blind_spot", "Common blind spot", "textarea", "What they often miss.", "Assumes everyone wants a solved problem more than emotional processing."),
           f("failure_mode", "Failure mode", "textarea", "How they break down or make mistakes.", "Takes over and becomes terse."),
           f("recovery_pattern", "Recovery pattern", "textarea", "How they return to balance.", "Apologizes with a concrete repair plan and revised boundaries."),
@@ -532,10 +538,10 @@
         title: "Social Model",
         note: "How the profile bonds, disagrees, cares, and fits into groups.",
         fields: [
-          s("group_role", "Group role", ["Leader", "Glue", "Wildcard", "Strategist", "Mediator", "Scout", "Mentor", "Fixer", "Instigator", "Observer", "Protector", "Entertainer", "Analyst"], "The role they naturally occupy in groups."),
+          s("group_role", "Role you fall into when people gather", ["Leader", "Glue", "Wildcard", "Strategist", "Mediator", "Scout", "Mentor", "Fixer", "Instigator", "Observer", "Protector", "Entertainer", "Analyst"], "The role they naturally occupy in groups."),
           s("friendship_style", "Friendship style", ["Protector", "Teacher", "Teammate", "Entertainer", "Problem Solver", "Listener", "Challenger", "Nurturer"], "How they show up for friends."),
-          f("relationship_to_group_network", "Relationship to group / projects / community", "textarea", "Plain-language relationship context for intake, review, and graph migration.", "Part of the HTF / K Street network; interested in being used as a light fictional support character."),
-          f("how_they_show_care", "How they show care", "textarea", "Care language for dialogue and relationship simulation.", "Makes the plan easier, remembers needs, checks on basics."),
+          f("relationship_to_group_network", "How you connect to the circle / projects / scenes", "textarea", "Plain-language relationship context for intake, review, and graph migration.", "HTF / K Street friend, Discord regular, WCCC contributor, parkour-adjacent chaos witness, conference hallway ally."),
+          f("how_they_show_care", "How people know you care", "textarea", "Care language for dialogue and relationship simulation.", "Makes the plan easier, remembers who needed a ride, checks on basics, sends the useful link at exactly the right time."),
           f("how_they_receive_care", "How they receive care", "textarea", "How support gets through to them.", "Responds to concrete help and honest presence."),
           f("how_they_ask_for_help", "How they ask for help", "textarea", "Whether and how they request support.", "Frames it as a logistical need before naming feelings."),
           l("trust_builders", "Trust builders", "What increases trust.", "follow-through\nhonest constraints\nshared effort"),
@@ -552,7 +558,7 @@
         title: "Relationship Graph",
         note: "Repeatable relationship entries for future graph and simulation systems.",
         fields: [
-          rows("relationship_entries", "Relationship entries", "related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes", "Alex | mentor | 8 | 2 | 7 | 6 | warm respect | asks hard questions | old collaborator")
+          rows("relationship_entries", "Relationship entries", "related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes", "Kai | collaborator | 8 | 2 | 7 | 6 | loyal chaos | starts projects from jokes | old Discord-to-road-trip friend")
         ]
       },
       {
@@ -566,18 +572,20 @@
       {
         id: "humor_and_voice",
         title: "Humor And Voice",
-        note: "Dialogue voice, humor, preferred topics, and example quotes.",
+        note: "How they sound in the group chat, on a road trip, during a build sprint, and after the plan has obviously gone sideways.",
         fields: [
-          l("communication_modes", "Communication modes", "One per line.", "Teacher\nAnalyst\nPhilosopher"),
-          l("humor_types", "Humor types", "One per line.", "Dry\nDeadpan\nIntellectual"),
-          f("voice_rhythm", "Voice rhythm", "textarea", "Cadence and sentence shape.", "Measured, concise, then a soft punchline."),
-          l("typical_phrases", "Typical phrases", "Lines or phrase patterns.", "Okay, three things.\nLet's separate facts from vibes."),
-          l("vocabulary", "Vocabulary", "Words they reach for often.", "constraints\npattern\nsignal\nclean"),
-          l("topics_they_bring_up", "Topics they bring up", "Conversation magnets.", "systems\nfood\nrisk\nwhy plans fail"),
-          l("topics_they_avoid", "Topics they avoid", "Avoidance helps respectful generation.", "private family details\nmedical specifics"),
-          l("example_quotes", "Example quotes", "Representative lines for dialogue generation.", "We can panic after we know what the problem is.\nThat is not a plan; that is a weather event."),
-          l("dialogue_dos", "Dialogue dos", "What generated dialogue should do.", "be concise\nmake practical emotional reads"),
-          l("dialogue_donts", "Dialogue don'ts", "What generated dialogue should avoid.", "do not make them cruel\ndo not over-explain obvious points")
+          l("communication_modes", "How you communicate", "One per line.", "voice memo philosopher\nDiscord essayist\ndry one-liner sniper\nwhiteboard goblin\ncalm crisis operator"),
+          l("humor_types", "Humor types", "One per line.", "deadpan\nmeme-literate\nabsurdist\nfounder gallows humor\naccidental prophecy"),
+          f("voice_rhythm", "Voice rhythm", "textarea", "Cadence and sentence shape.", "starts with 'okay so' then builds a whole theory; pauses for the bit; gets very precise when stakes rise"),
+          l("typical_phrases", "Typical phrases", "Lines or phrase patterns.", "This seems like a bad idea. Let's do it.\nI have concerns, but not enough concerns.\nWe're already committed.\nNobody learns from success."),
+          l("vocabulary", "Vocabulary / recurring words", "Words they reach for often.", "vibes\nconstraints\nsignal\nrugged\nside quest\nload-bearing\ncanonical\ncursed but useful"),
+          l("topics_they_bring_up", "Topics you can talk about for hours", "Conversation magnets.", "Parkour\nAI agents\nCrypto\nPhilosophy\nStreet photography\nUFO lore\nFitness\nHistory\nStartups\nOpen source software\nDreams\nHuman behavior"),
+          l("topics_they_avoid", "Topics to avoid or handle carefully", "Avoidance helps respectful generation.", "private family details\nmedical specifics\nreal money amounts\nold drama that is not public lore"),
+          l("example_quotes", "Representative quotes", "Representative lines for dialogue generation.", "How hard could it possibly be?\nThat went better than expected.\nLet's never do that again.\nSee? Completely under control."),
+          f("battle_intro_quote", "Battle intro quote", "textarea", "A heightened game-style line that still sounds like them.", "This seems like a bad idea. Let's do it.\nI have concerns, but not enough concerns.\nWe're already committed."),
+          f("battle_victory_quote", "Victory quote", "textarea", "What they say after surviving the situation.", "Nobody learns from success.\nThat went better than expected.\nLet's never do that again."),
+          l("dialogue_dos", "Dialogue should do this", "What generated dialogue should do.", "sound like a real friend\ninclude practical weirdness\nknow the lore\nkeep the humor human"),
+          l("dialogue_donts", "Dialogue should avoid this", "What generated dialogue should avoid.", "do not make them a tech bro caricature\ndo not turn every line into a pitch\ndo not make private lore public")
         ]
       },
       {
@@ -585,14 +593,14 @@
         title: "Conflict And Stress",
         note: "How pressure changes behavior and what restores trust.",
         fields: [
-          l("when_challenged", "When challenged", "One per line.", "Research\nDebate\nTake Control"),
-          l("stress_signals", "Stress signals", "Observable stress tells.", "shorter sentences\nless eye contact\nmore lists"),
-          l("escalation_triggers", "Escalation triggers", "What makes conflict worse.", "bad-faith arguments\navoidable risk to friends"),
-          l("deescalation_methods", "Deescalation methods", "What helps them settle.", "clear facts\nfood\na concrete next step"),
-          l("conflict_strengths", "Conflict strengths", "What they do well in conflict.", "separates facts from panic\nnames the real decision"),
+          l("when_challenged", "When challenged, you usually...", "One per line.", "research until the room gets tired\ndebate the premise\ntake control of logistics\nmake a joke to lower the voltage"),
+          l("stress_signals", "How friends can tell you are stressed", "Observable stress tells.", "shorter sentences\nless eye contact\nmore lists\nstarts cleaning the kitchen\nopens the same tab six times"),
+          l("escalation_triggers", "What makes it worse", "What makes conflict worse.", "bad-faith arguments\navoidable risk to friends\npeople pretending there is no problem\nlast-minute mystery plans"),
+          l("deescalation_methods", "What helps you come back down", "What helps them settle.", "clear facts\nfood\na concrete next step\nsomeone taking one task off the board\nfive minutes outside"),
+          l("conflict_strengths", "What you are good at when things get tense", "What they do well in conflict.", "separates facts from panic\nnames the real decision\nprotects the quiet person in the room"),
           l("conflict_weaknesses", "Conflict weaknesses", "Where they struggle.", "can become terse\nmay over-control"),
-          f("repair_pattern", "Repair pattern", "textarea", "How they repair after conflict.", "Direct apology plus changed process."),
-          f("pressure_dialogue_style", "Pressure dialogue style", "textarea", "How their voice changes under stress.", "Shorter, more procedural, with fewer jokes.")
+          f("repair_pattern", "How you repair after a bad moment", "textarea", "How they repair after conflict.", "Direct apology, changed process, and a follow-up message after everyone has slept."),
+          f("pressure_dialogue_style", "How your voice changes under stress", "textarea", "How their voice changes under stress.", "Shorter, more procedural, fewer jokes, more 'okay, first we solve the immediate problem.'")
         ]
       },
       {
@@ -600,78 +608,80 @@
         title: "Signature Behaviors",
         note: "Repeatable behavior entries for recognition, comedy, and mechanics.",
         fields: [
-          rows("signature_behavior_entries", "Signature behaviors", "behavior | context | frequency | comedic exaggeration potential | game-use notes | dialogue-use notes", "Opens twenty browser tabs | when fact-checking | Common | High | can trigger Research Spiral mechanic | mutters source comparisons")
+          rows("signature_behavior_entries", "Signature behaviors", "behavior | context | frequency | comedic exaggeration potential | game-use notes | dialogue-use notes", "Opens twenty browser tabs | when fact-checking a Discord argument | Common | High | can trigger Research Spiral mechanic | mutters source comparisons\nFinds the afterparty | conference hallway chaos | Sometimes | Medium | unlocks hidden social route | says 'I think I know a guy'")
         ]
       },
       {
         id: "narrative_engine",
         title: "Narrative Engine",
-        note: "Story functions for character bibles, arcs, themes, and project adaptation.",
+        note: "The lore layer: stories people retell, chaos patterns, running bits, and what changes over time.",
         fields: [
-          f("personal_quest", "Personal quest", "textarea", "What they would pursue in story terms.", "Prove care can be practical without becoming control."),
-          f("growth_arc", "Growth arc", "textarea", "Change over time.", "Learns to delegate emotional and practical risk."),
-          f("recurring_internal_conflict", "Recurring internal conflict", "textarea", "Inner contradiction.", "Wants trust but keeps preparing for everyone to drop the ball."),
-          f("shadow_version", "Shadow version", "textarea", "Unhealthy extreme.", "Controlling strategist who treats people like fragile systems."),
-          f("best_self_version", "Best-self version", "textarea", "Aspirational extreme.", "A calm anchor who helps others become more capable."),
-          f("running_joke", "Running joke", "textarea", "Recurring comic bit.", "Always has exactly the oddly specific tool needed."),
-          l("symbolic_motifs", "Symbolic motifs", "Images, props, or symbols.", "compass\nchecklist\nwarm light in a messy room"),
-          l("character_themes", "Character themes", "Abstract themes.", "care as logistics\ntrust as shared labor"),
-          f("dramatic_question", "Dramatic question", "textarea", "The question their arc asks.", "Can care stay caring when it becomes logistics?"),
-          f("what_changes_them", "What changes them", "textarea", "Forces that actually move the character.", "Being trusted by competent allies."),
-          f("what_never_changes", "What never changes", "textarea", "The invariant core.", "They will notice who is being left unsupported."),
-          f("role_in_group_story", "Role in group story", "textarea", "Narrative function inside ensemble stories.", "The planner who turns emotional chaos into coordinated action."),
-          f("ideal_scene", "Ideal scene", "textarea", "Scene type where they shine.", "A crisis meeting where everyone leaves calmer and useful."),
-          f("nightmare_scene", "Nightmare scene", "textarea", "Scene type that stresses them.", "A betrayal where every fact arrives too late.")
+          f("personal_quest", "What are you usually chasing?", "textarea", "What they would pursue in story terms.", "Build something that probably should not work, make it useful, then accidentally turn it into a community."),
+          f("growth_arc", "Growth arc", "textarea", "Change over time.", "Learns to stop treating burnout as proof of commitment."),
+          f("legendary_story", "Legendary story people tell about you", "textarea", "A story that already sounds like a side quest.", "Accidentally slept through a conference and still made the keynote. Drove across three states for a single taco recommendation. Started a business from a Discord joke."),
+          f("most_chaotic_moment", "Most chaotic moment", "textarea", "A memorable moment where the plan became lore.", "Missed a flight and accidentally joined a startup. Lost a wallet, found a friend. Ended up at Burning Man with 24 hours notice."),
+          f("recurring_internal_conflict", "Recurring internal conflict", "textarea", "Inner contradiction.", "Wants peace but keeps volunteering for impossible projects because the group needs someone with a spreadsheet and a car."),
+          f("shadow_version", "Shadow version", "textarea", "Unhealthy extreme.", "Becomes a sleep-deprived chaos engine who mistakes urgency for meaning."),
+          f("best_self_version", "Best-self version", "textarea", "Aspirational extreme.", "A grounded builder who can hold ambition, friendship, and rest at the same time."),
+          f("running_joke", "Running joke", "textarea", "Recurring comic bit.", "Always says they are leaving in ten minutes, then becomes load-bearing to the next three-hour conversation."),
+          l("symbolic_motifs", "Symbols / motifs", "Images, props, or symbols.", "gas station coffee\nconference badge\nopen tabs\nrooftop at sunrise\ndusty road\nhalf-built prototype"),
+          l("character_themes", "Themes", "Abstract themes.", "friendship under stress\nambition without permission\ncommunity as survival tech\nmaking meaning from chaos"),
+          f("dramatic_question", "Dramatic question", "textarea", "The question their arc asks.", "Can you build impossible things without becoming impossible to live with?"),
+          f("what_changes_them", "What actually changes them?", "textarea", "Forces that actually move the character.", "A friend calling them out with love, a project failing honestly, a road trip that creates enough silence to think."),
+          f("what_never_changes", "What never changes?", "textarea", "The invariant core.", "They will always notice the person quietly falling out of the group orbit."),
+          f("role_in_group_story", "Role in the group story", "textarea", "Narrative function inside ensemble stories.", "The one who knows the lore, finds the workaround, and somehow has the charger."),
+          f("ideal_scene", "Scene where you shine", "textarea", "Scene type where they shine.", "3 AM kitchen table after the conference, everyone tired, the plan broken, and suddenly they make it make sense."),
+          f("nightmare_scene", "Scene that breaks your brain", "textarea", "Scene type that stresses them.", "A high-stakes group decision with bad WiFi, no clear owner, and three people pretending they are fine.")
         ]
       },
       {
         id: "game_mechanics",
         title: "Game Mechanics",
-        note: "Mechanics hooks for RPG, adventure, party, and simulation systems.",
+        note: "How this person turns into mechanics, abilities, NPC behavior, and party utility without sanding off the real-world weirdness.",
         fields: [
-          f("suggested_class_role", "Suggested class / role", "text", "System-neutral class or archetype.", "Planner / Support Lead"),
-          l("potential_party_roles", "Potential party roles", "Multi-select style list.", "support\ntactician\nsocial stabilizer"),
-          l("passive_abilities", "Passive abilities", "Always-on mechanics.", "reads the room\ndetects weak plans"),
-          l("active_abilities", "Active abilities", "Triggered mechanics.", "turn confusion into three actionable steps"),
-          l("traversal_abilities", "Traversal abilities", "Movement/exploration mechanics.", "finds efficient routes through crowded systems"),
-          l("support_abilities", "Support abilities", "How they help allies mechanically.", "grant clarity bonus\nreduce panic"),
-          l("social_abilities", "Social abilities", "Social mechanics.", "lower room tension\nspot hidden disagreement"),
-          l("research_abilities", "Research abilities", "Knowledge and investigation mechanics.", "rapid source triage\npattern map"),
-          l("weaknesses", "Weaknesses", "Mechanical or narrative vulnerabilities.", "overload from ambiguity\ncontrol spiral"),
-          l("status_effects", "Status effects", "States this character causes or receives.", "Focused\nOverextended\nResearch Spiral"),
-          l("special_dialogue_triggers", "Special dialogue triggers", "When unique lines should fire.", "someone skips a meal\na plan has no owner"),
-          l("failure_comedy_mechanics", "Failure / comedy mechanics", "How flaws become playable comedy.", "too many tabs obscure the obvious answer"),
-          f("power_curve", "Power curve", "textarea", "How their utility scales over time.", "Starts as practical support, becomes strategic force multiplier."),
-          f("balance_notes", "Balance notes", "textarea", "How to keep mechanics fair.", "Strong support must require preparation or social context.")
+          f("suggested_class_role", "Project role / character role", "text", "System-neutral class or archetype.", "Community Builder, Organizer, Lore Keeper, Artist, Developer, Historian, Researcher, Event Instigator, Professional Bad Influence, Spreadsheet Wizard, Meme Curator, Fixer"),
+          l("potential_party_roles", "Potential party roles", "Multi-select style list.", "organizer\nresearcher\nhype engine\nchaos dampener\nroad captain\nlore keeper\nbad idea validator"),
+          l("passive_abilities", "Passive abilities", "Always-on mechanics.", "can find WiFi anywhere\nknows somebody who knows somebody\nspots the weird incentive\nremembers obscure lore"),
+          l("active_abilities", "Active abilities", "Triggered mechanics.", "turns panic into a checklist\nmakes a Discord thread useful\nfinds cheap flights\nturns a joke into a prototype"),
+          l("traversal_abilities", "Traversal abilities", "Movement/exploration mechanics.", "can sleep in airports\nnavigates cities by vibes and coffee shops\nfinds the back entrance\nclimbs the thing safely"),
+          l("support_abilities", "Support abilities", "How they help allies mechanically.", "talks people off ledges\nfeeds the team\nkeeps the group chat alive\nreminds people water exists"),
+          l("social_abilities", "Social abilities", "Social mechanics.", "befriends the venue staff\nreads the room\nfinds the afterparty\nknows when the bit has gone too far"),
+          l("research_abilities", "Research abilities", "Knowledge and investigation mechanics.", "weird internet archaeology\nsource triangulation\nAI agent prototyping\ncrypto wallet debugging\nparkour history recall"),
+          l("weaknesses", "Weaknesses / exploit conditions", "Mechanical or narrative vulnerabilities.", "low battery\nbad coffee\nno sleep\nambiguous plans\nsomeone says 'quick call'"),
+          l("status_effects", "Status effects", "States this character causes or receives.", "Caffeinated\nRugged\nIn Flow\nOverclocked\nAirport Mode\nResearch Spiral\nConference Brain"),
+          l("special_dialogue_triggers", "Special dialogue triggers", "When unique lines should fire.", "someone says 'how hard could it be?'\na wallet is missing\na plan has no owner\nsomeone opens a 40-tab research stack"),
+          l("failure_comedy_mechanics", "Failure / comedy mechanics", "How flaws become playable comedy.", "generates ideas faster than consequences\ngets on the wrong bus but finds better lore\nforgets the charger but has three adapters"),
+          f("power_curve", "Power curve", "textarea", "How their utility scales over time.", "Starts as a useful weirdo, becomes the person everyone quietly routes impossible problems through."),
+          f("balance_notes", "Balance notes", "textarea", "How to keep mechanics fair.", "Strong improvisation should cost sleep, battery, social credit, or snacks.")
         ]
       },
       {
         id: "ai_generation",
         title: "AI Generation",
-        note: "Prompt-ready summaries, canonical descriptions, tags, flags, and misrepresentation guardrails.",
+        note: "Prompt-ready summaries, guardrails, and tags so agents do not sand the weird edges off.",
         fields: [
-          f("canonical_short_description", "Canonical short description", "textarea", "One compact identity line.", "A grounded strategist with dry humor who turns chaos into practical steps."),
-          f("canonical_long_description", "Canonical long description", "textarea", "Longer stable description for LLM context.", "A calm, observant support character driven by friendship, clarity, and practical care."),
-          f("art_prompt_summary", "Art prompt summary", "textarea", "LLM/image prompt summary.", "Grounded modern strategist, warm but analytical, practical layered clothing."),
-          f("behavioral_prompt_summary", "Behavioral prompt summary", "textarea", "How AI should simulate behavior.", "Prioritize clarity, protect allies, ask useful questions, avoid needless drama."),
-          f("dialogue_prompt_summary", "Dialogue prompt summary", "textarea", "How AI should write their dialogue.", "Write concise, practical dialogue with dry humor and careful emotional reads."),
-          f("game_design_summary", "Game design summary", "textarea", "Concise game design translation.", "Support/tactician who converts chaos into clarity and coordination."),
-          l("do_not_misrepresent", "Do-not-misrepresent list", "Guardrails for AI and adaptation.", "Do not make them cruel\nDo not reveal private contact information"),
-          l("sensitive_topics", "Sensitive topics", "Topics AI should handle cautiously or avoid.", "family details\nmedical specifics"),
-          l("safe_exaggerations", "Safe exaggerations", "Traits that can be heightened.", "opens too many research tabs\nhas a plan for snacks"),
-          l("unsafe_exaggerations", "Unsafe exaggerations", "Traits that should not be heightened.", "cruelty\nparanoia"),
-          l("prompt_tags", "Prompt tags", "Search and generation tags.", "strategist\nanchor\ndry wit"),
-          l("negative_prompt_tags", "Negative prompt tags", "Tags to avoid in generation.", "villain\ncaricature")
+          f("canonical_short_description", "One-line character read", "textarea", "One compact identity line.", "Sleep-deprived builder with road-trip instincts, Discord lore, and the suspicious ability to make bad plans useful."),
+          f("canonical_long_description", "Longer AI context summary", "textarea", "Longer stable description for LLM context.", "A capable internet friend shaped by hacker houses, parkour culture, startup chaos, and late-night conversations; funny under pressure, useful in emergencies, allergic to fake certainty."),
+          f("art_prompt_summary", "Art prompt summary", "textarea", "LLM/image prompt summary.", "modern hacker-house roadtrip character, conference badge, travel-worn hoodie, bright tired eyes, backpack full of impossible tools"),
+          f("behavioral_prompt_summary", "Behavioral prompt summary", "textarea", "How AI should simulate behavior.", "Protect the group, follow the weird lead, ask practical questions, keep the humor sharp, and remember that friendship is part logistics."),
+          f("dialogue_prompt_summary", "Dialogue prompt summary", "textarea", "How AI should write their dialogue.", "Write like a real group-chat regular: specific, funny, tired, capable, slightly too online, never generic."),
+          f("game_design_summary", "Game design summary", "textarea", "Concise game design translation.", "Support/chaos utility character who converts bad plans into survivable adventures and unlocks hidden social routes."),
+          l("do_not_misrepresent", "Do-not-misrepresent list", "Guardrails for AI and adaptation.", "Do not make them cruel\nDo not make them a generic tech bro\nDo not reveal private contact information\nDo not flatten the weirdness into productivity-speak"),
+          l("sensitive_topics", "Sensitive topics", "Topics AI should handle cautiously or avoid.", "family details\nmedical specifics\nreal finances\nold drama\nprivate relationships"),
+          l("safe_exaggerations", "Safe exaggerations", "Traits that can be heightened.", "opens too many research tabs\ncan find WiFi anywhere\nhas a plan for snacks\nknows somebody who knows somebody"),
+          l("unsafe_exaggerations", "Unsafe exaggerations", "Traits that should not be heightened.", "cruelty\nactual paranoia\nreal legal trouble\nprivate financial losses"),
+          l("prompt_tags", "Prompt tags", "Search and generation tags.", "hacker-house\nroadtrip\nAI-agents\ncrypto-conference\nparkour-lore\ndeadpan"),
+          l("negative_prompt_tags", "Negative prompt tags", "Tags to avoid in generation.", "corporate stock photo\nresume headshot\nquest hero cosplay\ngeneric cyberpunk villain")
         ]
       },
       {
         id: "project_usage",
         title: "Project Usage",
-        note: "Controls which projects may use the profile and how canonical it is.",
+        note: "Where this profile can show up: cruise NPC, Discord lore, art prompts, internal memory, game systems, or future chaos.",
         fields: [
-          l("approved_projects", "Approved projects", "One per line.", "HTF\nK Street\nShared Character Database\nAI Dialogue Agent\nArt Generation\nGeneric NPC System\nInternal Testing\nFuture Project"),
-          f("project_relevance_notes", "Project relevance", "textarea", "Why this person/entity matters to one or more projects.", "Useful for group memory, social cameos, and support NPC writing."),
-          f("project_specific_notes", "Project-specific notes", "textarea", "Usage notes per project.", "Use generic NPC form unless explicitly approved for a named project."),
+          l("approved_projects", "Where can this be used?", "One per line.", "HTF\nK Street\nWest Coast Crypto Cruise\nShared Person Database\nAI Dialogue Agent\nArt Generation\nGroup Memory\nPrivate Review\nFuture Weird Project"),
+          f("project_relevance_notes", "Why do you belong in the database?", "textarea", "Why this person/entity matters to one or more projects.", "Good for cruise NPC energy, group memory, social cameos, late-night dialogue, and support-character writing."),
+          f("project_specific_notes", "Project-specific notes / boundaries", "textarea", "Usage notes per project.", "Okay as a background NPC on West Coast Crypto Cruise; ask before making me a main character or romance subplot."),
           s("canon_level", "Canon level", ["Raw", "Semi Canon", "Canon", "Parody Only", "Private Reference Only"], "How authoritative the profile is.")
         ]
       },
@@ -680,14 +690,14 @@
         title: "Source Notes",
         note: "Source provenance and review information.",
         fields: [
-          l("source_images", "Source images", "Private image references or file paths.", "Source Images/Person Name/approved-reference.jpg"),
-          l("source_interviews", "Source interviews", "Interview notes, dates, or links.", "2026-06 intake conversation"),
-          f("source_notes", "Source notes", "textarea", "General provenance notes.", "Self-submitted public form plus later review."),
+          l("source_images", "Reference photos / source images", "Private image references or file paths.", "Source Images/Packet Ghost/approved-conference-reference.jpg"),
+          l("source_interviews", "Source conversations", "Interview notes, dates, or links.", "2026-06 intake form\nvoice memo after the road trip\nDiscord thread that should probably be summarized"),
+          f("source_notes", "Source notes", "textarea", "General provenance notes.", "Self-submitted form plus later lore review; private images stay in the cloud drive, not the public repo."),
           l("contributors", "Contributors", "People who contributed profile data.", "self-submitted"),
           l("reviewers", "Reviewers", "People who reviewed the profile.", "HTF / K Street reviewer"),
           f("last_reviewed", "Last reviewed", "text", "Review date.", "2026-06-01"),
           s("accuracy_confidence", "Accuracy confidence", ["Low", "Medium", "High", "Unreviewed"], "Confidence in the profile accuracy."),
-          l("unresolved_questions", "Unresolved questions", "Open questions for later review.", "Confirm art prompt permission")
+          l("unresolved_questions", "Questions for later", "Open questions for later review.", "Confirm art prompt permission\nAsk if the legendary taco story is public-safe\nCheck whether WCCC can use this as an NPC cameo")
         ]
       },
       {
@@ -844,8 +854,8 @@
           sensitive_topics_to_avoid: values.sensitive_topics_to_avoid,
           consent_notes: values.consent_notes
         },
-        identity: pick(values, ["display_name", "real_name_optional", "optional_contact", "in_world_name", "short_bio", "nicknames", "pronouns", "age_range", "current_location", "origin_location", "communities", "roles", "professions", "identity_tags"]),
-        appearance: pick(values, ["height_build", "hair", "eyes", "face_features", "skin_tone", "distinguishing_marks", "silhouette", "everyday_clothing", "iconic_outfit", "accessories", "carried_items", "default_expression", "movement_body_language", "image_prompt_notes", "negative_image_prompt_notes"]),
+        identity: pick(values, ["display_name", "real_name_optional", "optional_contact", "in_world_name", "short_bio", "three_word_vibe", "animal_affinity", "current_obsession", "nicknames", "pronouns", "age_range", "current_location", "origin_location", "communities", "roles", "professions", "identity_tags"]),
+        appearance: pick(values, ["height_build", "hair", "eyes", "face_features", "skin_tone", "distinguishing_marks", "silhouette", "everyday_clothing", "iconic_outfit", "accessories", "carried_items", "signature_item", "default_expression", "movement_body_language", "image_prompt_notes", "negative_image_prompt_notes"]),
         asset_library: {
           primary_reference_asset_id: values.primary_reference_asset_id,
           primary_portrait_asset_id: values.primary_portrait_asset_id,
@@ -862,16 +872,16 @@
           visual_reference_sheet: values.visual_reference_sheet
         },
         knowledge_graph: buildKnowledgeGraph(values),
-        personality: pick(values, ["primary_social_energy", "secondary_social_energy", "personality_traits", "custom_traits", "strengths", "flaws", "temperament", "biggest_contradiction"]),
+        personality: pick(values, ["primary_social_energy", "secondary_social_energy", "personality_traits", "custom_traits", "strengths", "flaws", "character_archetype", "signature_ability", "temperament", "biggest_contradiction"]),
         motivation: pick(values, ["core_motivation", "ranked_values", "what_they_optimize_for", "what_they_refuse_to_compromise", "what_tempts_them", "what_they_are_trying_to_become", "greatest_need", "greatest_fear", "moral_center", "shadow_desire"]),
         decision_making: pick(values, ["decision_style", "risk_tolerance", "planning_horizon", "under_pressure_behavior", "common_blind_spot", "failure_mode", "recovery_pattern", "what_makes_them_act", "what_makes_them_freeze"]),
         social_model: pick(values, ["group_role", "friendship_style", "relationship_to_group_network", "how_they_show_care", "how_they_receive_care", "how_they_ask_for_help", "trust_builders", "trust_breakers", "disagreement_style", "apology_style", "boundary_style", "loyalty_triggers", "betrayal_triggers"]),
         relationship_graph: values.relationship_entries,
         knowledge_domains: values.knowledge_domain_entries,
-        humor_and_voice: pick(values, ["communication_modes", "humor_types", "voice_rhythm", "typical_phrases", "vocabulary", "topics_they_bring_up", "topics_they_avoid", "example_quotes", "dialogue_dos", "dialogue_donts"]),
+        humor_and_voice: pick(values, ["communication_modes", "humor_types", "voice_rhythm", "typical_phrases", "vocabulary", "topics_they_bring_up", "topics_they_avoid", "example_quotes", "battle_intro_quote", "battle_victory_quote", "dialogue_dos", "dialogue_donts"]),
         conflict_and_stress: pick(values, ["when_challenged", "stress_signals", "escalation_triggers", "deescalation_methods", "conflict_strengths", "conflict_weaknesses", "repair_pattern", "pressure_dialogue_style"]),
         signature_behaviors: values.signature_behavior_entries,
-        narrative_engine: pick(values, ["personal_quest", "growth_arc", "recurring_internal_conflict", "shadow_version", "best_self_version", "running_joke", "symbolic_motifs", "character_themes", "dramatic_question", "what_changes_them", "what_never_changes", "role_in_group_story", "ideal_scene", "nightmare_scene"]),
+        narrative_engine: pick(values, ["personal_quest", "growth_arc", "legendary_story", "most_chaotic_moment", "recurring_internal_conflict", "shadow_version", "best_self_version", "running_joke", "symbolic_motifs", "character_themes", "dramatic_question", "what_changes_them", "what_never_changes", "role_in_group_story", "ideal_scene", "nightmare_scene"]),
         game_mechanics: pick(values, ["suggested_class_role", "potential_party_roles", "passive_abilities", "active_abilities", "traversal_abilities", "support_abilities", "social_abilities", "research_abilities", "weaknesses", "status_effects", "special_dialogue_triggers", "failure_comedy_mechanics", "power_curve", "balance_notes"]),
         ai_generation: pick(values, ["canonical_short_description", "canonical_long_description", "art_prompt_summary", "dialogue_prompt_summary", "behavioral_prompt_summary", "game_design_summary", "do_not_misrepresent", "sensitive_topics", "safe_exaggerations", "unsafe_exaggerations", "prompt_tags", "negative_prompt_tags"]),
         project_usage: pick(values, ["approved_projects", "project_relevance_notes", "project_specific_notes", "canon_level"]),
@@ -1019,10 +1029,14 @@
       const traits = p.personality.personality_traits.slice(0, 3).join(", ");
       const line = [
         `${name} is ${p.identity.short_bio || p.ai_generation.canonical_short_description || p.motivation.core_motivation || "a reusable person profile"}.`,
+        p.identity.three_word_vibe ? `Three-word vibe: ${p.identity.three_word_vibe}.` : "",
+        p.identity.current_obsession ? `Current obsession: ${p.identity.current_obsession}` : "",
         values ? `They prioritize ${values}.` : "",
         traits ? `They read as ${traits}.` : "",
+        p.personality.character_archetype ? `Archetype: ${p.personality.character_archetype}.` : "",
         role ? `Their functional role is ${role}.` : "",
         p.social_model.relationship_to_group_network ? `Group relationship: ${p.social_model.relationship_to_group_network}` : "",
+        p.narrative_engine.legendary_story ? `Legendary story: ${p.narrative_engine.legendary_story}` : "",
         p.narrative_engine.growth_arc ? `Their growth arc: ${p.narrative_engine.growth_arc}` : ""
       ].filter(Boolean).join(" ");
       setField("character_summary", line);
@@ -1203,6 +1217,9 @@
         `Speech rhythm: ${profile.humor_and_voice.voice_rhythm}`,
         `Humor: ${profile.humor_and_voice.humor_types.join(", ")}`,
         `Typical phrases: ${profile.humor_and_voice.typical_phrases.join("; ")}`,
+        `Topics they can talk about for hours: ${profile.humor_and_voice.topics_they_bring_up.join("; ")}`,
+        profile.humor_and_voice.battle_intro_quote ? `Heightened intro quote: ${profile.humor_and_voice.battle_intro_quote}` : "",
+        profile.humor_and_voice.battle_victory_quote ? `After-action quote: ${profile.humor_and_voice.battle_victory_quote}` : "",
         `Avoid topics: ${profile.humor_and_voice.topics_they_avoid.join("; ")}`
       ].filter(Boolean).join("\n");
     }
@@ -1332,6 +1349,16 @@
         "## Short Bio",
         profile.identity.short_bio || profile.generated_content.character_summary || "_Not provided._",
         "",
+        "## Fast Vibe",
+        [
+          profile.identity.three_word_vibe ? `Three words: ${profile.identity.three_word_vibe}` : "",
+          profile.identity.animal_affinity ? `Animal: ${profile.identity.animal_affinity}` : "",
+          profile.identity.current_obsession ? `Current obsession: ${profile.identity.current_obsession}` : "",
+          profile.personality.character_archetype ? `Archetype: ${profile.personality.character_archetype}` : "",
+          profile.personality.signature_ability ? `Signature ability: ${profile.personality.signature_ability}` : "",
+          profile.appearance.signature_item ? `Signature item: ${profile.appearance.signature_item}` : ""
+        ].filter(Boolean).join("\n") || "_Not provided._",
+        "",
         "## Personality / Vibe",
         formatMarkdownValue(profile.personality.personality_traits.concat(profile.personality.custom_traits)),
         "",
@@ -1340,6 +1367,14 @@
         "",
         "## Voice / Dialogue",
         dialoguePrompt(profile) || "_Not provided._",
+        "",
+        "## Lore",
+        [
+          profile.narrative_engine.legendary_story ? `Legendary story: ${profile.narrative_engine.legendary_story}` : "",
+          profile.narrative_engine.most_chaotic_moment ? `Most chaotic moment: ${profile.narrative_engine.most_chaotic_moment}` : "",
+          profile.humor_and_voice.battle_intro_quote ? `Intro quote: ${profile.humor_and_voice.battle_intro_quote}` : "",
+          profile.humor_and_voice.battle_victory_quote ? `Victory quote: ${profile.humor_and_voice.battle_victory_quote}` : ""
+        ].filter(Boolean).join("\n") || "_Not provided._",
         "",
         "## Relationship To Group / Projects / Community",
         profile.social_model.relationship_to_group_network || profile.project_usage.project_relevance_notes || "_Not provided._",

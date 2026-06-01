@@ -8,6 +8,8 @@ The current person profile schema is `kstreet_person_profile.v3` version `3.0.0`
 
 This tool prioritizes the parts of a person that make a character recognizable and reusable: motivation, behavior, decision-making, strengths, flaws, communication style, social energy, boundaries, habits, and visual cues.
 
+The public prompts and sample values are intentionally written in the voice of the circle: hacker houses, startup chaos, burner/road-trip stories, Discord communities, parkour history, crypto conferences, AI projects, internet weirdness, and long-running friend lore. Avoid turning the form into HR, corporate bio, personality-test, or fantasy-only language when adding new fields.
+
 It can support:
 
 - Character bibles
