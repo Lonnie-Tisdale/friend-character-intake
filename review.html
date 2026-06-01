@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>HTF / K Street Descriptor Review Dashboard</title>
+  <title>Profile Review Dashboard</title>
   <style>
     :root {
       --bg: #f2f0e8;
@@ -68,8 +68,8 @@
 </head>
 <body>
   <header>
-    <h1>HTF / K Street Descriptor Review Dashboard</h1>
-    <p>Private lore-review workflow for moving submitted profiles from Raw to Reviewed to Approved for Use. Static, local-first, JSON/Markdown portable.</p>
+    <h1>Profile Review Dashboard</h1>
+    <p>Private review workflow for moving profiles from Raw to Reviewed to Approved for Use. Static, local-first, JSON/Markdown portable.</p>
   </header>
   <nav aria-label="Review navigation">
     <a class="file-button" href="index.html">Open Intake Form</a>
@@ -82,9 +82,9 @@
 
   <main>
     <aside>
-      <h2>Submissions</h2>
-      <p class="hint">Import downloaded Formspree/profile JSON files. Treat this like the private lore desk: consent first, canon second, jokes only when they are safe to reuse.</p>
-      <div class="drop-zone" id="dropZone">Drag JSON submissions here</div>
+      <h2>Profiles</h2>
+      <p class="hint">Import downloaded Formspree/profile JSON files. Consent first, privacy second, canon/project approval third.</p>
+      <div class="drop-zone" id="dropZone">Drag JSON profiles here</div>
       <div class="toolbar">
         <select id="statusFilter" aria-label="Filter by status">
           <option value="">All statuses</option>
@@ -100,24 +100,25 @@
       <section>
         <h2>Review Checklist</h2>
         <ul class="summary-list">
-          <li>Confirm consent before any real friend becomes reusable canon.</li>
+          <li>Confirm consent before any real person becomes reusable canon.</li>
           <li>Keep optional contact, real names, boundaries, and private source image notes private.</li>
-          <li>Confirm which projects can use the profile and how loud the cameo can be.</li>
+          <li>Confirm which projects can use the profile and how visible the adaptation can be.</li>
           <li>Add reviewer notes, confidence, canon level, and final status.</li>
-          <li>Export Raw, Reviewed, or Approved packages into the private HTF / K Street cloud drive.</li>
+          <li>Export Raw, Reviewed, or Approved packages into the private project archive.</li>
         </ul>
         <p id="status" class="status">Ready.</p>
       </section>
 
       <section id="reviewPanel">
-        <h2>Selected Submission</h2>
-        <p class="hint">Select a submission from the left. Nothing here writes to GitHub or a server.</p>
+        <h2>Selected Profile</h2>
+        <p class="hint">Select a profile from the left. Nothing here writes to GitHub or a server.</p>
       </section>
     </div>
   </main>
 
   <script>
-    const QUEUE_KEY = "kstreet_descriptor_review_queue";
+    const QUEUE_KEY = "profile_review_queue";
+    const LEGACY_QUEUE_KEY = "kstreet_descriptor_review_queue";
     const statuses = ["raw", "reviewed", "approved"];
     let records = [];
     let selectedId = "";
@@ -167,7 +168,7 @@
 
     function reviewEnvelope(record) {
       return {
-        review_schema: "kstreet_descriptor_review.v1",
+        review_schema: "profile_review.v1",
         review_status: record.status,
         reviewed_at: record.updated_at,
         reviewer: record.reviewer,
@@ -182,10 +183,12 @@
 
     function reviewMarkdown(record) {
       const profile = record.profile;
+      const profileKind = profile?.entity?.entity_type || profile?.metadata?.profile_type || profile?.identity?.profile_type || "profile";
       return [
-        "# HTF / K Street Descriptor Review",
+        "# Profile Review",
         "",
         `Profile: ${profileName(profile)}`,
+        `Profile type: ${profileKind}`,
         `Status: ${record.status}`,
         `Reviewer: ${record.reviewer || "_Not assigned._"}`,
         `Reviewed at: ${record.updated_at}`,
@@ -222,7 +225,7 @@
           <div><span class="badge ${statusClass(record.status)}">${escapeHtml(record.status)}</span> <span class="hint">${escapeHtml(record.profile_id)}</span></div>
           <div class="hint">${escapeHtml(record.consent_status)} · ${escapeHtml(record.canon_level)}</div>
         </div>
-      `).join("") || "<p class='hint'>No submissions loaded yet.</p>";
+      `).join("") || "<p class='hint'>No profiles loaded yet.</p>";
       document.querySelectorAll("[data-record-id]").forEach(card => card.addEventListener("click", () => selectRecord(card.getAttribute("data-record-id"))));
     }
 
@@ -239,7 +242,7 @@
     function renderPanel() {
       const record = selectedRecord();
       if (!record) {
-        el("reviewPanel").innerHTML = "<h2>Selected Submission</h2><p class='hint'>Select a submission from the left. Nothing here writes to GitHub or a server; this is a local review bench for private group lore.</p>";
+        el("reviewPanel").innerHTML = "<h2>Selected Profile</h2><p class='hint'>Select a profile from the left. Nothing here writes to GitHub or a server; this is a local review bench for private profile data.</p>";
         return;
       }
       const profile = record.profile;
@@ -251,7 +254,7 @@
             <select id="reviewStatus">${statuses.map(status => `<option value="${status}" ${record.status === status ? "selected" : ""}>${status}</option>`).join("")}</select>
           </label>
           <label>Reviewer
-            <input id="reviewer" value="${escapeHtml(record.reviewer)}" placeholder="lore reviewer / trusted circle member">
+            <input id="reviewer" value="${escapeHtml(record.reviewer)}" placeholder="reviewer / trusted archive editor">
           </label>
           <label>Confidence
             <select id="confidenceLevel">${["Unreviewed", "Low", "Medium", "High"].map(level => `<option value="${level}" ${record.confidence_level === level ? "selected" : ""}>${level}</option>`).join("")}</select>
@@ -274,10 +277,11 @@
         ${warnings.length ? `<h3>Review Warnings</h3><ul class="summary-list">${warnings.map(warning => `<li>${escapeHtml(warning)}</li>`).join("")}</ul>` : "<p class='status ok'>No blocking review warnings detected.</p>"}
         <h3>Quick Read</h3>
         <ul class="summary-list">
+          <li>Profile type: ${escapeHtml(profile.entity?.entity_type || profile.metadata?.profile_type || profile.identity?.profile_type || "profile")}</li>
           <li>Display name: ${escapeHtml(profile.identity?.display_name || "")}</li>
           <li>Short bio: ${escapeHtml(profile.identity?.short_bio || profile.generated_content?.character_summary || "")}</li>
           <li>Projects: ${escapeHtml((profile.project_usage?.approved_projects || []).join(", "))}</li>
-          <li>Relationship context: ${escapeHtml(profile.social_model?.relationship_to_group_network || profile.social_model?.relationship_to_kstreet_circle || profile.social_model?.relationship_to_lonnie_kstreet || "")}</li>
+          <li>Relationship/project context: ${escapeHtml(profile.social_model?.relationship_to_group_network || profile.social_model?.relationship_to_kstreet_circle || profile.social_model?.relationship_to_lonnie_kstreet || "")}</li>
         </ul>
         <h3>Profile Preview</h3>
         <pre>${escapeHtml(JSON.stringify(profile, null, 2))}</pre>
@@ -298,7 +302,7 @@
       if (!p?.consent?.permission_to_fictionalize) warnings.push("Missing permission to fictionalize.");
       if (!p?.identity?.display_name) warnings.push("Missing display name.");
       if (!p?.project_usage?.approved_projects?.length) warnings.push("No approved projects selected.");
-      if ((p?.source_notes?.source_images || []).length) warnings.push("Source image references may be private; keep actual files in private cloud storage.");
+      if ((p?.source_notes?.source_images || []).length) warnings.push("Source image references may be private; keep actual files in the private project archive.");
       if (record.status === "approved" && record.consent_status !== "usable_with_limits") warnings.push("Approved status conflicts with missing consent.");
       return warnings;
     }
@@ -366,7 +370,7 @@
     }
 
     function loadQueue() {
-      const raw = localStorage.getItem(QUEUE_KEY);
+      const raw = localStorage.getItem(QUEUE_KEY) || localStorage.getItem(LEGACY_QUEUE_KEY);
       if (!raw) {
         setStatus("No saved local review queue found.", "warn");
         return;
