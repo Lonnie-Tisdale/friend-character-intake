@@ -38,6 +38,24 @@ Relationship entities are separate from simple links. Use them when the relation
 - `inside_jokes`
 - `shared_history`
 - `relationship_notes`
+- `confidence_level`
+- `canon_level`
+- `consent_status`
+
+Recommended relationship types:
+
+- `friend`
+- `family`
+- `collaborator`
+- `mentor`
+- `rival`
+- `ex`
+- `project_member`
+- `location_association`
+- `event_participant`
+- `organization_member`
+- `inspiration_source`
+- `fictionalized_as`
 
 ## Entity Rows
 

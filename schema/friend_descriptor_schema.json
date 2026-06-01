@@ -169,7 +169,10 @@
         "running_dynamic": { "type": "string" },
         "inside_jokes": { "type": "string" },
         "shared_history": { "type": "string" },
-        "relationship_notes": { "type": "string" }
+        "relationship_notes": { "type": "string" },
+        "confidence_level": { "type": "string" },
+        "canon_level": { "type": "string" },
+        "consent_status": { "type": "string" }
       },
       "additionalProperties": true
     },
@@ -343,6 +346,8 @@
         "asset_type": { "type": "string" },
         "title": { "type": "string" },
         "description": { "type": "string" },
+        "linked_entity_id": { "type": "string" },
+        "linked_project": { "type": "string" },
         "file_name": { "type": "string" },
         "file_extension": { "type": "string" },
         "file_size": { "type": "string" },

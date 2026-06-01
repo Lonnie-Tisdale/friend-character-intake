@@ -35,7 +35,9 @@
   "identity": {
     "display_name": "Example Person",
     "real_name_optional": "",
+    "optional_contact": "",
     "in_world_name": "The Compass",
+    "short_bio": "A practical planner with dry humor who helps friends turn messy situations into workable plans.",
     "nicknames": ["Compass"],
     "pronouns": "they/them",
     "age_range": "30s",
@@ -79,6 +81,8 @@
         "asset_type": "reference_photo",
         "title": "Current Face Reference",
         "description": "Approved private face reference metadata.",
+        "linked_entity_id": "person_example",
+        "linked_project": "Internal Testing",
         "file_name": "example-face-reference.jpg",
         "file_extension": "jpg",
         "file_size": "example only",
@@ -187,7 +191,10 @@
         "running_dynamic": "practical support plus dry humor",
         "inside_jokes": "example-only bit",
         "shared_history": "worked through several fictional crises",
-        "relationship_notes": "Example relationship entity."
+        "relationship_notes": "Example relationship entity.",
+        "confidence_level": "high",
+        "canon_level": "example_only",
+        "consent_status": "approved"
       }
     ],
     "organizations": [
@@ -335,6 +342,7 @@
   "social_model": {
     "group_role": "Strategist",
     "friendship_style": "Problem Solver",
+    "relationship_to_lonnie_kstreet": "Example-safe friend/intake record for K Street testing.",
     "how_they_show_care": "makes the plan easier and remembers needs",
     "how_they_receive_care": "responds to concrete help and honest presence",
     "how_they_ask_for_help": "frames it as a logistical need first",
@@ -438,6 +446,7 @@
   },
   "project_usage": {
     "approved_projects": ["Generic NPC System", "Internal Testing"],
+    "project_relevance_notes": "Safe example for testing person/entity database exports.",
     "project_specific_notes": "example only",
     "canon_level": "Raw"
   },

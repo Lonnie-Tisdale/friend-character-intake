@@ -44,10 +44,13 @@ Open `index.html` in a browser. No server or backend is required.
 Use the buttons at the top of the form to:
 
 - Submit the descriptor to a configured intake endpoint
+- Switch between Simple Intake, Advanced Canon, and Agent Export modes
+- Save a draft locally in the current browser and load it later
 - Generate a character summary, AI context, art prompt, dialogue prompt, NPC summary, and relationship summary
 - Manage a canonical asset library with gallery/table views, uploads-to-metadata, filters, bulk tagging/editing/delete, preview, and visual reference generation
 - Build a static Knowledge Graph with entity rows, relationship entities, graph links, a node browser, relationship browser, entity inspector, search/filter controls, timeline view, and SVG network view
 - Generate graph-aware Character Context, Relationship Summary, Organization Summary, Project Summary, Timeline Summary, Lore Summary, and AI Agent Context
+- Copy one bundled agent-ready context package for AI/game/dev workflows
 - Generate AI context
 - Copy JSON or Markdown
 - Share a portable JSON snapshot
@@ -122,6 +125,12 @@ The submission payload includes:
 
 ## Schema 3.0.0 Sections
 
+The interface has three modes:
+
+- `Simple Intake` - default friend-facing mode with only essential identity, bio, vibe, visual, voice, relationship, consent, project, and source-image fields.
+- `Advanced Canon` - full v3 person schema plus asset library and Knowledge Graph editing.
+- `Agent Export` - grouped JSON, Markdown, AI, game, art, asset, and graph export tools.
+
 The form is organized into collapsible sections:
 
 - Identity
@@ -161,6 +170,8 @@ Every profile now exports a top-level `entity` object and a `knowledge_graph` ob
 Supported entity types are `person`, `relationship`, `organization`, `location`, `event`, `asset`, `story_object`, `project`, `faction`, and `concept`.
 
 Existing v3 exports automatically become `entity_type: "person"` on import. Unknown fields are still preserved under `extensions`.
+
+Recent UX/schema additions include `identity.short_bio`, `social_model.relationship_to_lonnie_kstreet`, `project_usage.project_relevance_notes`, per-asset `linked_entity_id` / `linked_project`, and relationship metadata for confidence, canon, and consent.
 
 ## Migration
 

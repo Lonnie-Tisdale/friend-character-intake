@@ -47,6 +47,17 @@ Unknown imported fields must be preserved under `extensions`.
 
 `entity` and `knowledge_graph` are the additive v4 foundation layer. They make the v3 person profile usable inside the K Street Knowledge Graph while preserving v3 compatibility. See `docs/knowledge-graph-v4-foundation.md`.
 
+UX-facing additions that remain JSON-portable:
+
+- `identity.short_bio` - friendly intake bio for nontechnical submitters
+- `social_model.relationship_to_lonnie_kstreet` - plain-language relationship/project context
+- `project_usage.project_relevance_notes` - why the profile matters to projects
+- `asset_library.assets[].linked_entity_id`
+- `asset_library.assets[].linked_project`
+- `knowledge_graph.relationship_entities[].confidence_level`
+- `knowledge_graph.relationship_entities[].canon_level`
+- `knowledge_graph.relationship_entities[].consent_status`
+
 See `docs/asset-library-schema.md` for the asset library object, asset types, canon levels, consent status values, groups, and style guides.
 
 ## Repeatable Entries

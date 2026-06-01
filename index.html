@@ -7,13 +7,14 @@
   <style>
     :root {
       color-scheme: light;
-      --bg: #f4f3ef;
-      --panel: #fff;
+      --bg: #f2f0e8;
+      --panel: #fffdf7;
       --ink: #1f2328;
       --muted: #656d76;
       --line: #d7d2c8;
       --accent: #216b68;
       --accent-dark: #174d4b;
+      --terminal: #17201f;
       --warn: #9a5b00;
       --ok: #24733b;
       --radius: 8px;
@@ -21,12 +22,24 @@
     }
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--bg); color: var(--ink); line-height: 1.45; }
-    header { background: #24302f; color: #fff; padding: 20px clamp(14px, 4vw, 40px); border-bottom: 5px solid var(--accent); }
+    header { background: var(--terminal); color: #fff; padding: 20px clamp(14px, 4vw, 40px); border-bottom: 5px solid var(--accent); }
     h1 { margin: 0 0 4px; font-size: clamp(1.35rem, 2.4vw, 2.2rem); letter-spacing: 0; }
     header p { margin: 0; color: #e8efec; max-width: 980px; }
-    main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(360px, 0.56fr); gap: 16px; padding: 16px clamp(10px, 3vw, 28px) 30px; align-items: start; }
+    .mode-nav { position: sticky; top: 0; z-index: 8; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px clamp(10px, 3vw, 28px); background: #fffdf7f2; border-bottom: 1px solid var(--line); backdrop-filter: blur(10px); }
+    .mode-nav strong { margin-right: 4px; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; color: var(--accent-dark); }
+    .mode-button[aria-pressed="true"] { background: var(--terminal); border-color: var(--terminal); color: #e8f5f1; }
+    main { display: grid; grid-template-columns: 220px minmax(0, 1fr) minmax(360px, 0.56fr); gap: 16px; padding: 16px clamp(10px, 3vw, 28px) 30px; align-items: start; }
     .toolbar, .export-panel, details, aside { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
-    .toolbar { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; position: sticky; top: 0; z-index: 4; margin-bottom: 14px; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; margin-bottom: 14px; }
+    .intro-card { background: #fffdf7; border: 1px solid var(--line); border-left: 5px solid var(--accent); border-radius: var(--radius); padding: 14px; margin-bottom: 12px; }
+    .intro-card p { margin: 6px 0; color: #36403e; }
+    .outline { position: sticky; top: 66px; display: grid; gap: 8px; padding: 12px; background: var(--terminal); color: #e8f5f1; border-radius: var(--radius); border: 1px solid #31413f; }
+    .outline h2 { margin: 0 0 4px; font-size: .94rem; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .outline a { color: #d8f0e8; text-decoration: none; border-left: 3px solid transparent; padding: 4px 6px; font-size: .87rem; }
+    .outline a:hover { border-color: #f2cc5d; background: rgba(255,255,255,.06); }
+    .action-group { border: 1px solid var(--line); border-radius: var(--radius); padding: 10px; background: #fbfaf4; margin-bottom: 10px; }
+    .action-group h3 { margin: 0 0 8px; font-size: .92rem; color: var(--accent-dark); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .action-grid { display: flex; flex-wrap: wrap; gap: 8px; }
     button, .file-button {
       border: 1px solid #9dbdbc; background: #e8f3f1; color: var(--accent-dark); border-radius: 6px;
       min-height: 38px; padding: 8px 11px; font-weight: 750; cursor: pointer;
@@ -60,6 +73,7 @@
     .status.ok { color: var(--ok); }
     .status.warn { color: var(--warn); }
     .warnings { color: var(--warn); font-size: .86rem; margin: 8px 0 0; }
+    .validation-list { margin: 8px 0 0; padding-left: 18px; color: var(--warn); font-size: .88rem; }
     .meter { display: grid; gap: 6px; margin-bottom: 10px; }
     .meter-bar { height: 10px; border-radius: 999px; background: #dfe4df; overflow: hidden; }
     .meter-fill { height: 100%; width: 0; background: var(--accent); transition: width .2s ease; }
@@ -82,13 +96,30 @@
     .timeline-list { display: grid; gap: 8px; }
     .timeline-item { border-left: 3px solid var(--accent); padding: 6px 8px; background: #fff; border-radius: 0 6px 6px 0; }
     aside { position: sticky; top: 70px; padding: 14px; }
-    pre { margin: 0; min-height: 460px; max-height: calc(100vh - 190px); overflow: auto; border-radius: 6px; padding: 12px; background: #17201f; color: #e8f5f1; font-size: .8rem; white-space: pre-wrap; word-break: break-word; }
+    pre { margin: 0; min-height: 460px; max-height: calc(100vh - 190px); overflow: auto; border-radius: 6px; padding: 12px; background: var(--terminal); color: #e8f5f1; font-size: .8rem; white-space: pre-wrap; word-break: break-word; }
     input[type="file"] { display: none; }
-    @media (max-width: 1040px) { main { grid-template-columns: 1fr; } aside { position: static; } pre { max-height: 560px; } }
+    body[data-mode="simple"] .advanced-only,
+    body[data-mode="simple"] .agent-only,
+    body[data-mode="simple"] #asset-manager,
+    body[data-mode="simple"] #knowledge-graph-manager,
+    body[data-mode="simple"] #export-import { display: none; }
+    body[data-mode="simple"] #profileForm details:not(.simple-section) { display: none; }
+    body[data-mode="simple"] #profileForm label:not(.simple-field) { display: none; }
+    body[data-mode="advanced"] .simple-only,
+    body[data-mode="advanced"] .agent-only { display: none; }
+    body[data-mode="agent"] .simple-only,
+    body[data-mode="agent"] #profileForm,
+    body[data-mode="agent"] #asset-manager,
+    body[data-mode="agent"] #knowledge-graph-manager,
+    body[data-mode="agent"] .primary-toolbar { display: none; }
+    body[data-mode="agent"] #export-import { display: block; }
+    body[data-mode="agent"] main { grid-template-columns: 220px minmax(0, 1fr) minmax(360px, 0.56fr); }
+    @media (max-width: 1040px) { main, body[data-mode="agent"] main { grid-template-columns: 1fr; } aside, .outline { position: static; } pre { max-height: 560px; } }
     @media (max-width: 660px) {
       main { padding-inline: 10px; }
       .grid { grid-template-columns: 1fr; }
-      .toolbar { position: static; }
+      .mode-nav, .toolbar { position: static; }
+      .mode-nav { align-items: stretch; }
       button, .file-button { width: 100%; }
       .asset-gallery { grid-template-columns: 1fr; }
       .asset-table { min-width: 720px; }
@@ -96,33 +127,58 @@
     }
   </style>
 </head>
-<body>
+<body data-mode="simple">
   <header>
     <h1>K Street Person Profile Database</h1>
-    <p>Canonical source-of-truth profiles and graph-aware entities for K Street projects, dialogue systems, NPC generation, art prompts, relationship simulations, narrative systems, and agent memory. Person schema <strong>3.0.0</strong> with Knowledge Graph v4 foundation.</p>
+    <p>This profile helps generate consistent characters, dialogue, art prompts, NPCs, relationship maps, and project memory across K Street projects. Person schema <strong>3.0.0</strong> with Knowledge Graph v4 foundation.</p>
   </header>
+  <nav class="mode-nav" aria-label="Interface modes">
+    <strong>MODE</strong>
+    <button type="button" class="mode-button" data-mode-target="simple" aria-pressed="true">Simple Intake</button>
+    <button type="button" class="mode-button" data-mode-target="advanced" aria-pressed="false">Advanced Canon</button>
+    <button type="button" class="mode-button" data-mode-target="agent" aria-pressed="false">Agent Export</button>
+    <button type="button" id="saveLocalBtn">Save Locally</button>
+    <button type="button" id="loadLocalBtn">Load Locally</button>
+  </nav>
 
   <main>
+    <nav class="outline" aria-label="Section outline">
+      <h2>Sections</h2>
+      <div id="sectionOutline"></div>
+    </nav>
     <div>
-      <div class="toolbar" aria-label="Primary actions">
+      <section class="intro-card simple-only">
+        <h2>Simple Friend Intake</h2>
+        <p>Fill in what feels easy. The point is to capture the traits that make you recognizable as a fictional/game character: vibe, voice, decisions, boundaries, visual anchors, and how you connect to Lonnie or K Street.</p>
+        <p><strong>What will this be used for?</strong> Approved answers may help create consistent characters, dialogue, art prompts, NPC behavior, project memory, and relationship maps. Consent fields decide what can be stored, fictionalized, simulated, or reused.</p>
+        <p>For reference photos, use the Asset Library in Advanced mode or include private source image notes. Public repos should not contain real private images unless explicitly approved.</p>
+      </section>
+      <section class="intro-card advanced-only">
+        <h2>Advanced Canon Editing</h2>
+        <p>Full person schema, asset/reference metadata, canon controls, source notes, timeline entries, and graph-aware entity linking for K Street project maintainers.</p>
+      </section>
+      <section class="intro-card agent-only">
+        <h2>Agent Export Console</h2>
+        <p>Generate clean JSON, Markdown, visual references, graph files, and one bundled context block for ChatGPT, Claude, Gemini, local agents, game tools, and project imports.</p>
+      </section>
+
+      <div class="toolbar primary-toolbar" aria-label="Primary actions">
         <button type="button" class="primary" id="submitBtn">Submit Descriptor</button>
         <button type="button" id="generateSummaryBtn">Generate Character Summary</button>
-        <button type="button" id="generateAiBtn">Generate AI Context</button>
-        <button type="button" id="generateArtBtn">Generate Art Prompt</button>
-        <button type="button" id="generateDialogueBtn">Generate Dialogue Prompt</button>
-        <button type="button" id="generateNpcBtn">Generate NPC Summary</button>
-        <button type="button" id="generateRelationshipBtn">Generate Relationship Summary</button>
-        <button type="button" id="generateVisualRefBtn">Generate Visual Reference Sheet</button>
-        <button type="button" id="generateCharacterContextBtn">Generate Character Context</button>
-        <button type="button" id="generateOrganizationBtn">Generate Organization Summary</button>
-        <button type="button" id="generateProjectBtn">Generate Project Summary</button>
-        <button type="button" id="generateTimelineBtn">Generate Timeline Summary</button>
-        <button type="button" id="generateLoreBtn">Generate Lore Summary</button>
-        <button type="button" id="generateAgentContextBtn">Generate AI Agent Context</button>
-        <button type="button" id="copyJsonBtn">Copy JSON</button>
-        <button type="button" id="copyMarkdownBtn">Copy Markdown</button>
-        <button type="button" id="downloadAllBtn">Download All</button>
-        <label class="file-button" for="importFile">Import JSON</label>
+        <button type="button" id="copyShareableProfileBtn">Copy Shareable Profile</button>
+        <button type="button" class="advanced-only" id="generateAiBtn">Generate AI Context</button>
+        <button type="button" class="advanced-only" id="generateArtBtn">Generate Art Prompt</button>
+        <button type="button" class="advanced-only" id="generateDialogueBtn">Generate Dialogue Prompt</button>
+        <button type="button" class="advanced-only" id="generateNpcBtn">Generate NPC Summary</button>
+        <button type="button" class="advanced-only" id="generateRelationshipBtn">Generate Relationship Summary</button>
+        <button type="button" class="advanced-only" id="generateVisualRefBtn">Generate Visual Reference Sheet</button>
+        <button type="button" class="advanced-only" id="generateCharacterContextBtn">Generate Character Context</button>
+        <button type="button" class="advanced-only" id="generateOrganizationBtn">Generate Organization Summary</button>
+        <button type="button" class="advanced-only" id="generateProjectBtn">Generate Project Summary</button>
+        <button type="button" class="advanced-only" id="generateTimelineBtn">Generate Timeline Summary</button>
+        <button type="button" class="advanced-only" id="generateLoreBtn">Generate Lore Summary</button>
+        <button type="button" class="advanced-only" id="generateAgentContextBtn">Generate AI Agent Context</button>
+        <label class="file-button advanced-only" for="importFile">Import JSON</label>
         <input id="importFile" type="file" accept="application/json,.json">
         <button type="button" class="warning" id="resetBtn">Reset</button>
       </div>
@@ -196,31 +252,64 @@
       </section>
 
       <section class="export-panel" id="export-import">
-        <h2>Export / Import</h2>
+        <h2>Agent Export / Import</h2>
+        <div class="action-group">
+          <h3>Profile JSON</h3>
+          <div class="action-grid">
+            <button type="button" id="downloadFullJsonBtn">Profile JSON</button>
+            <button type="button" id="downloadCompactJsonBtn">Compact JSON</button>
+            <button type="button" id="copyJsonBtn">Copy JSON</button>
+          </div>
+        </div>
+        <div class="action-group">
+          <h3>Markdown And Agent Context</h3>
+          <div class="action-grid">
+            <button type="button" id="downloadMarkdownBtn">Markdown Profile</button>
+            <button type="button" id="downloadAiContextBtn">AI Context</button>
+            <button type="button" id="copyMarkdownBtn">Copy Markdown</button>
+            <button type="button" id="copyAllAgentContextBtn">Copy All Agent Context</button>
+          </div>
+        </div>
+        <div class="action-group">
+          <h3>Game, Art, Dialogue</h3>
+          <div class="action-grid">
+            <button type="button" id="downloadGameSummaryBtn">Game Design Summary</button>
+            <button type="button" id="downloadArtPromptBtn">Art Prompt</button>
+            <button type="button" id="downloadDialoguePromptBtn">Dialogue Prompt</button>
+            <button type="button" id="downloadNpcSummaryBtn">NPC Summary</button>
+            <button type="button" id="downloadRelationshipSummaryBtn">Relationship Summary</button>
+            <button type="button" id="downloadVisualRefBtn">Visual Reference Sheet</button>
+            <button type="button" id="downloadArtRefBtn">Art Reference Pack</button>
+            <button type="button" id="downloadSpriteRefBtn">Sprite Reference</button>
+          </div>
+        </div>
+        <div class="action-group">
+          <h3>Assets And Graph</h3>
+          <div class="action-grid">
+            <button type="button" id="downloadRelationshipsBtn">Relationships JSON</button>
+            <button type="button" id="downloadAssetsBtn">Assets JSON</button>
+            <button type="button" id="downloadAssetManifestBtn">Asset Manifest</button>
+            <button type="button" id="downloadGraphFullBtn">Graph JSON</button>
+            <button type="button" id="downloadGraphPeopleBtn">Graph People</button>
+            <button type="button" id="downloadGraphRelationshipsBtn">Graph Relationships</button>
+            <button type="button" id="downloadGraphOrganizationsBtn">Graph Organizations</button>
+            <button type="button" id="downloadGraphLocationsBtn">Graph Locations</button>
+            <button type="button" id="downloadGraphEventsBtn">Graph Events</button>
+            <button type="button" id="downloadGraphAssetsBtn">Graph Assets</button>
+            <button type="button" id="downloadGraphProjectsBtn">Graph Projects</button>
+          </div>
+        </div>
+        <div class="action-group">
+          <h3>Validation, Sharing, Import</h3>
+          <div class="action-grid">
+            <button type="button" id="downloadAllBtn">Download Everything</button>
+            <button type="button" id="validateJsonBtn">Validate JSON</button>
+            <button type="button" id="copyShareLinkBtn">Copy Share Link</button>
+            <label class="file-button" for="importFileAgent">Import JSON</label>
+            <input id="importFileAgent" type="file" accept="application/json,.json">
+          </div>
+        </div>
         <div class="grid">
-          <button type="button" id="downloadFullJsonBtn">Full JSON</button>
-          <button type="button" id="downloadCompactJsonBtn">Compact JSON</button>
-          <button type="button" id="downloadMarkdownBtn">Markdown Profile</button>
-          <button type="button" id="downloadAiContextBtn">AI Context Markdown</button>
-          <button type="button" id="downloadGameSummaryBtn">Game Design Summary</button>
-          <button type="button" id="downloadArtPromptBtn">Art Prompt</button>
-          <button type="button" id="downloadDialoguePromptBtn">Dialogue Prompt</button>
-          <button type="button" id="downloadRelationshipsBtn">Relationships JSON</button>
-          <button type="button" id="downloadAssetsBtn">Assets JSON</button>
-          <button type="button" id="downloadAssetManifestBtn">Asset Manifest</button>
-          <button type="button" id="downloadVisualRefBtn">Visual Reference</button>
-          <button type="button" id="downloadArtRefBtn">Art Reference</button>
-          <button type="button" id="downloadSpriteRefBtn">Sprite Reference</button>
-          <button type="button" id="downloadGraphFullBtn">Graph Full JSON</button>
-          <button type="button" id="downloadGraphPeopleBtn">Graph People</button>
-          <button type="button" id="downloadGraphRelationshipsBtn">Graph Relationships</button>
-          <button type="button" id="downloadGraphOrganizationsBtn">Graph Organizations</button>
-          <button type="button" id="downloadGraphLocationsBtn">Graph Locations</button>
-          <button type="button" id="downloadGraphEventsBtn">Graph Events</button>
-          <button type="button" id="downloadGraphAssetsBtn">Graph Assets</button>
-          <button type="button" id="downloadGraphProjectsBtn">Graph Projects</button>
-          <button type="button" id="validateJsonBtn">Validate JSON</button>
-          <button type="button" id="copyShareLinkBtn">Copy Share Link</button>
           <label class="full">Search fields
             <input id="field_search" placeholder="Search labels, tooltips, or placeholders">
           </label>
@@ -241,6 +330,7 @@
           </label>
         </div>
         <p id="warnings" class="warnings"></p>
+        <ul id="validationMessages" class="validation-list"></ul>
       </section>
     </div>
 
@@ -261,11 +351,23 @@
     const LEGACY_SCHEMA_VERSION = "friend_descriptor_intake.v2";
     const SOURCE = "K Street Person Profile Database";
     const SUBMISSION_ENDPOINT = "https://formspree.io/f/xredwazb";
-    const ASSET_TYPES = ["reference_photo", "portrait", "character_art", "sprite", "sprite_sheet", "pixel_art", "token", "concept_art", "ui_graphic", "logo", "symbol", "icon", "animation", "video", "voice_reference", "audio_clip", "music_reference", "document", "pdf", "3d_model", "texture", "moodboard", "screenshot", "historical_reference", "other"];
+    const ASSET_TYPES = ["reference_photo", "portrait", "full_body", "sprite", "background", "voice_sample", "document", "model_3d", "logo_symbol", "moodboard", "character_art", "sprite_sheet", "pixel_art", "token", "concept_art", "ui_graphic", "logo", "symbol", "icon", "animation", "video", "voice_reference", "audio_clip", "music_reference", "pdf", "3d_model", "texture", "screenshot", "historical_reference", "other"];
     const ASSET_CANON_LEVELS = ["primary_reference", "secondary_reference", "historical_reference", "current_reference", "legacy_reference", "semi_canon", "canon", "noncanon", "prototype", "deprecated"];
     const ASSET_CONSENT_STATUSES = ["approved", "limited_use", "private_only", "internal_only", "do_not_use", "unknown"];
     const ASSET_USE_CASES = ["portrait_generation", "art_generation", "sprite_generation", "npc_generation", "dialogue_generation", "relationship_system", "historical_reference", "worldbuilding", "animation_reference", "voice_reference", "3d_model_reference", "marketing", "documentation"];
     const ENTITY_TYPES = ["person", "relationship", "organization", "location", "event", "asset", "story_object", "project", "faction", "concept"];
+    const RELATIONSHIP_TYPES = ["friend", "family", "collaborator", "mentor", "rival", "ex", "project_member", "location_association", "event_participant", "organization_member", "inspiration_source", "fictionalized_as"];
+    const SIMPLE_SECTION_IDS = new Set(["consent", "identity", "appearance", "personality", "social_model", "humor_and_voice", "project_usage", "source_notes", "generated_content"]);
+    const SIMPLE_FIELD_IDS = new Set([
+      "permission_to_store", "permission_to_fictionalize", "permission_for_ai_dialogue", "permission_for_art_generation", "permission_for_cross_project_reuse", "permission_for_relationship_simulation", "consent_notes",
+      "display_name", "optional_contact", "in_world_name", "pronouns", "short_bio", "current_location",
+      "image_prompt_notes", "everyday_clothing", "default_expression", "movement_body_language", "source_images",
+      "primary_social_energy", "secondary_social_energy", "personality_traits", "custom_traits", "strengths", "flaws",
+      "voice_rhythm", "typical_phrases", "example_quotes", "dialogue_dos", "dialogue_donts",
+      "relationship_to_lonnie_kstreet", "how_they_show_care", "friendship_style",
+      "approved_projects", "project_relevance_notes", "canon_level",
+      "character_summary", "ai_context_output"
+    ]);
 
     const FIELD_SECTIONS = [
       {
@@ -293,6 +395,7 @@
           f("real_name_optional", "Real name optional", "text", "Only collect if useful and approved. Keep private.", "Jordan Rivera"),
           f("optional_contact", "Optional contact", "text", "Private follow-up contact if the person permits clarification.", "name@email.com"),
           f("in_world_name", "In-world name", "text", "Reusable character handle for fiction, games, and prompts.", "The Compass"),
+          f("short_bio", "Short bio", "textarea", "A friendly one-paragraph intro in the person's own words.", "I help people turn messy ideas into practical plans, usually with dry jokes and snacks."),
           l("nicknames", "Nicknames", "Alternate names, handles, or social aliases.", "Compass\nJR"),
           f("pronouns", "Pronouns", "text", "Supports respectful dialogue and profile generation.", "they/them"),
           f("age_range", "Age range", "text", "Keeps profiles useful without over-collecting precise personal data.", "30s"),
@@ -340,7 +443,7 @@
           f("primary_outfit_reference_asset_id", "Primary outfit reference asset ID", "text", "Quick link for outfit reference.", ""),
           f("primary_token_asset_id", "Primary token asset ID", "text", "Quick link for token reference.", ""),
           f("primary_voice_reference_asset_id", "Primary voice reference asset ID", "text", "Quick link for voice reference.", ""),
-          rows("asset_entries", "Assets", "asset_id | asset_type | title | description | file_name | file_extension | file_size | url | local_path | thumbnail_url | date_added | last_modified | source | creator | copyright_holder | license_type | consent_status | canon_level | tags comma-list | associated_projects comma-list | use_cases comma-list | do_not_use_for comma-list | notes", "asset_001 | reference_photo | Current face reference | approved current face photo | face.jpg | jpg | 2.4 MB | https://... | Source Images/Name/face.jpg | https://... | 2026-06-01 | 2026-06-01 | self-submitted | Lonnie | Lonnie | private | approved | primary_reference | face,current,portrait | K Street,Generic NPC System | portrait_generation,art_generation | marketing | private source image"),
+          rows("asset_entries", "Assets", "asset_id | asset_type | title | description | person/entity linked | project linked | file_name | file_extension | file_size | url | local_path | thumbnail_url | date_added | last_modified | source | creator | copyright_holder | license_type | consent_status | canon_level | tags comma-list | associated_projects comma-list | use_cases comma-list | do_not_use_for comma-list | notes", "asset_001 | reference_photo | Current face reference | approved current face photo | person_lonnie | K Street | face.jpg | jpg | 2.4 MB | https://... | Source Images/Name/face.jpg | https://... | 2026-06-01 | 2026-06-01 | self-submitted | Lonnie | Lonnie | private | approved | primary_reference | face,current,portrait | K Street,Generic NPC System | portrait_generation,art_generation | marketing | private source image"),
           rows("asset_group_entries", "Asset groups", "group_id | group_name | description | asset_ids comma-list | tags comma-list | notes", "group_face | Lonnie Face References | approved face references | asset_001,asset_002 | face,current | use for portraits"),
           rows("style_guide_entries", "Style guides", "guide_name | description | asset_ids comma-list | prompt_notes | negative_prompt_notes", "Retro JRPG Style | 32-bit RPG interpretation | asset_003 | bold readable sprite silhouette | avoid modern photo-realism"),
           f("visual_reference_sheet", "Visual reference sheet", "textarea", "Generated artist/image model reference summary.", "")
@@ -357,7 +460,7 @@
           f("graph_notes", "Graph notes", "textarea", "Graph-level notes for this person node.", "Central profile node for project graph queries."),
           rows("graph_link_entries", "Graph links", "target entity id | relationship type | strength 1-10 | notes", "org_sdpk | founder_of | 9 | founded / helped establish community\nproject_tao_of_parkour | author_of | 10 | major concept project"),
           rows("graph_entity_entries", "Linked entities", "entity_id | entity_type | display_name | created_at | updated_at | tags comma-list | notes", "org_sdpk | organization | SDPK | 2003-01-01 | 2026-06-01 | parkour,community | San Diego parkour organization\nloc_san_diego | location | San Diego |  |  | city,parkour | early movement history"),
-          rows("relationship_entity_entries", "Relationship entities", "relationship_id | person_a | person_b | relationship_type | trust level | conflict level | history level | influence level | communication frequency | relationship health | running dynamic | inside jokes | shared history | relationship notes", "rel_lonnie_damien | person_lonnie | person_damien | friend | 8 | 2 | 7 | 6 | frequent | healthy | creative pressure-testing | old bits | shared movement history | example relationship"),
+          rows("relationship_entity_entries", "Relationship entities", "relationship_id | person_a | person_b | relationship_type | trust level | conflict level | history level | influence level | communication frequency | relationship health | running dynamic | inside jokes | shared history | relationship notes | confidence level | canon level | consent status", "rel_lonnie_damien | person_lonnie | person_damien | friend | 8 | 2 | 7 | 6 | frequent | healthy | creative pressure-testing | old bits | shared movement history | example relationship | high | canon | approved"),
           rows("organization_entity_entries", "Organization entities", "entity_id | organization name | founding date | description | members comma-list | roles comma-list | projects comma-list | associated locations comma-list | assets comma-list | history | status", "org_kstreet | K Street | 2026-01-01 | umbrella creative system | person_lonnie | founder | project_oregon_fail | loc_oregon | asset_logo | evolving project network | active"),
           rows("faction_entity_entries", "Faction entities", "entity_id | faction name | description | members comma-list | roles comma-list | projects comma-list | associated locations comma-list | assets comma-list | goals | status", "faction_rooftop_pragmatists | Rooftop Pragmatists | informal movement crew | person_lonnie,person_damien | scout,planner | project_oregon_fail | loc_san_diego | asset_patch | protect the route | active"),
           rows("location_entity_entries", "Location entities", "entity_id | display name | location type | description | associated people comma-list | associated events comma-list | associated organizations comma-list | associated assets comma-list | coordinates optional | tags comma-list", "loc_san_diego | San Diego | real_world | early community location | person_lonnie | event_sdpk_founding | org_sdpk | asset_photo |  | parkour,history"),
@@ -429,6 +532,7 @@
         fields: [
           s("group_role", "Group role", ["Leader", "Glue", "Wildcard", "Strategist", "Mediator", "Scout", "Mentor", "Fixer", "Instigator", "Observer", "Protector", "Entertainer", "Analyst"], "The role they naturally occupy in groups."),
           s("friendship_style", "Friendship style", ["Protector", "Teacher", "Teammate", "Entertainer", "Problem Solver", "Listener", "Challenger", "Nurturer"], "How they show up for friends."),
+          f("relationship_to_lonnie_kstreet", "Relationship to Lonnie / K Street / projects", "textarea", "Plain-language relationship context for intake, review, and graph migration.", "Friend of Lonnie; interested in being used as a light fictional support character."),
           f("how_they_show_care", "How they show care", "textarea", "Care language for dialogue and relationship simulation.", "Makes the plan easier, remembers needs, checks on basics."),
           f("how_they_receive_care", "How they receive care", "textarea", "How support gets through to them.", "Responds to concrete help and honest presence."),
           f("how_they_ask_for_help", "How they ask for help", "textarea", "Whether and how they request support.", "Frames it as a logistical need before naming feelings."),
@@ -564,6 +668,7 @@
         note: "Controls which projects may use the profile and how canonical it is.",
         fields: [
           l("approved_projects", "Approved projects", "One per line.", "Oregon Fail\nWest Coast Crypto Cruise\nHTF Coder\nK Street\nEmpirical Neoshamanism\nTao Of Parkour\nAI Dialogue Agent\nArt Generation\nGeneric NPC System\nInternal Testing"),
+          f("project_relevance_notes", "Project relevance", "textarea", "Why this person/entity matters to one or more projects.", "Useful for K Street memory, social cameos, and support NPC writing."),
           f("project_specific_notes", "Project-specific notes", "textarea", "Usage notes per project.", "Use generic NPC form unless explicitly approved for a named project."),
           s("canon_level", "Canon level", ["Raw", "Semi Canon", "Canon", "Parody Only", "Private Reference Only"], "How authoritative the profile is.")
         ]
@@ -599,7 +704,7 @@
     ];
 
     const DEFAULT_VALUE_ORDER = ["Truth", "Friendship", "Freedom", "Curiosity", "Mastery", "Security", "Family", "Status", "Creativity", "Justice", "Service", "Discovery", "Legacy", "Belonging", "Stability", "Beauty", "Power", "Peace", "Autonomy", "Loyalty"];
-    const assetObjectKeys = ["asset_id", "asset_type", "title", "description", "file_name", "file_extension", "file_size", "url", "local_path", "thumbnail_url", "date_added", "last_modified", "source", "creator", "copyright_holder", "license_type", "consent_status", "canon_level", "tags", "associated_projects", "use_cases", "do_not_use_for", "notes"];
+    const assetObjectKeys = ["asset_id", "asset_type", "title", "description", "linked_entity_id", "linked_project", "file_name", "file_extension", "file_size", "url", "local_path", "thumbnail_url", "date_added", "last_modified", "source", "creator", "copyright_holder", "license_type", "consent_status", "canon_level", "tags", "associated_projects", "use_cases", "do_not_use_for", "notes"];
 
     function f(id, label, type, tip, placeholder) { return { id, label, type, tip, placeholder, max: type === "text" ? 220 : 1200 }; }
     function l(id, label, tip, placeholder) { return { id, label, type: "list", tip, placeholder, max: 1000 }; }
@@ -656,7 +761,7 @@
         style_guide_entries: ["guide_name", "description", "asset_ids", "prompt_notes", "negative_prompt_notes"],
         graph_link_entries: ["target_entity_id", "relationship_type", "strength", "notes"],
         graph_entity_entries: ["entity_id", "entity_type", "display_name", "created_at", "updated_at", "tags", "notes"],
-        relationship_entity_entries: ["relationship_id", "person_a", "person_b", "relationship_type", "trust_level", "conflict_level", "history_level", "influence_level", "communication_frequency", "relationship_health", "running_dynamic", "inside_jokes", "shared_history", "relationship_notes"],
+        relationship_entity_entries: ["relationship_id", "person_a", "person_b", "relationship_type", "trust_level", "conflict_level", "history_level", "influence_level", "communication_frequency", "relationship_health", "running_dynamic", "inside_jokes", "shared_history", "relationship_notes", "confidence_level", "canon_level", "consent_status"],
         organization_entity_entries: ["entity_id", "organization_name", "founding_date", "description", "members", "roles", "projects", "associated_locations", "assets", "history", "status"],
         faction_entity_entries: ["entity_id", "faction_name", "description", "members", "roles", "projects", "associated_locations", "assets", "goals", "status"],
         location_entity_entries: ["entity_id", "display_name", "location_type", "description", "associated_people", "associated_events", "associated_organizations", "associated_assets", "coordinates_optional", "tags"],
@@ -676,7 +781,7 @@
     function renderForm() {
       const form = el("profileForm");
       form.innerHTML = FIELD_SECTIONS.map((section, index) => `
-        <details ${index < 3 ? "open" : ""} id="section-${section.id}">
+        <details ${index < 3 || SIMPLE_SECTION_IDS.has(section.id) ? "open" : ""} id="section-${section.id}" class="${SIMPLE_SECTION_IDS.has(section.id) ? "simple-section" : "advanced-section"}">
           <summary>${section.title}</summary>
           <p class="section-note">${section.note}</p>
           <div class="grid">
@@ -686,21 +791,29 @@
       `).join("");
       if (el("ranked_values") && !el("ranked_values").value) el("ranked_values").value = DEFAULT_VALUE_ORDER.join("\n");
       updateCounters();
+      renderOutline();
     }
 
     function renderField(field) {
       const tip = `<span class="tip" title="${escapeHtml(field.tip)}">?</span>`;
       const placeholder = field.placeholder ? ` placeholder="${escapeHtml(field.placeholder)}"` : "";
+      const simpleClass = SIMPLE_FIELD_IDS.has(field.id) ? " simple-field" : "";
       if (field.type === "boolean") {
-        return `<label class="check-row full"><input type="checkbox" id="${field.id}"><span>${field.label} ${tip}<span class="hint">${escapeHtml(field.tip)}</span></span></label>`;
+        return `<label class="check-row full${simpleClass}"><input type="checkbox" id="${field.id}"><span>${field.label} ${tip}<span class="hint">${escapeHtml(field.tip)}</span></span></label>`;
       }
       if (field.type === "select") {
-        return `<label>${field.label} ${tip}<select id="${field.id}">${field.options.map(option => `<option value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("")}</select></label>`;
+        return `<label class="${simpleClass.trim()}">${field.label} ${tip}<select id="${field.id}">${field.options.map(option => `<option value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("")}</select></label>`;
       }
-      if (field.type === "text") return `<label>${field.label} ${tip}<input id="${field.id}" maxlength="${field.max}"${placeholder}></label>`;
-      const classes = field.type === "rows" ? "full" : "";
+      if (field.type === "text") return `<label class="${simpleClass.trim()}">${field.label} ${tip}<input id="${field.id}" maxlength="${field.max}"${placeholder}></label>`;
+      const classes = `${field.type === "rows" ? "full" : ""}${simpleClass}`;
       const rowHint = field.format ? `<span class="hint">Format: ${escapeHtml(field.format)}</span>` : "";
       return `<label class="${classes}">${field.label} ${tip}${rowHint}<textarea id="${field.id}" maxlength="${field.max}"${placeholder}></textarea><span class="counter"></span></label>`;
+    }
+
+    function renderOutline() {
+      const mode = document.body.dataset.mode || "simple";
+      const visibleSections = FIELD_SECTIONS.filter(section => mode !== "simple" || SIMPLE_SECTION_IDS.has(section.id));
+      el("sectionOutline").innerHTML = visibleSections.map(section => `<a href="#section-${section.id}">${escapeHtml(section.title)}</a>`).join("");
     }
 
     function escapeHtml(text) {
@@ -729,7 +842,7 @@
           sensitive_topics_to_avoid: values.sensitive_topics_to_avoid,
           consent_notes: values.consent_notes
         },
-        identity: pick(values, ["display_name", "real_name_optional", "optional_contact", "in_world_name", "nicknames", "pronouns", "age_range", "current_location", "origin_location", "communities", "roles", "professions", "identity_tags"]),
+        identity: pick(values, ["display_name", "real_name_optional", "optional_contact", "in_world_name", "short_bio", "nicknames", "pronouns", "age_range", "current_location", "origin_location", "communities", "roles", "professions", "identity_tags"]),
         appearance: pick(values, ["height_build", "hair", "eyes", "face_features", "skin_tone", "distinguishing_marks", "silhouette", "everyday_clothing", "iconic_outfit", "accessories", "carried_items", "default_expression", "movement_body_language", "image_prompt_notes", "negative_image_prompt_notes"]),
         asset_library: {
           primary_reference_asset_id: values.primary_reference_asset_id,
@@ -750,7 +863,7 @@
         personality: pick(values, ["primary_social_energy", "secondary_social_energy", "personality_traits", "custom_traits", "strengths", "flaws", "temperament", "biggest_contradiction"]),
         motivation: pick(values, ["core_motivation", "ranked_values", "what_they_optimize_for", "what_they_refuse_to_compromise", "what_tempts_them", "what_they_are_trying_to_become", "greatest_need", "greatest_fear", "moral_center", "shadow_desire"]),
         decision_making: pick(values, ["decision_style", "risk_tolerance", "planning_horizon", "under_pressure_behavior", "common_blind_spot", "failure_mode", "recovery_pattern", "what_makes_them_act", "what_makes_them_freeze"]),
-        social_model: pick(values, ["group_role", "friendship_style", "how_they_show_care", "how_they_receive_care", "how_they_ask_for_help", "trust_builders", "trust_breakers", "disagreement_style", "apology_style", "boundary_style", "loyalty_triggers", "betrayal_triggers"]),
+        social_model: pick(values, ["group_role", "friendship_style", "relationship_to_lonnie_kstreet", "how_they_show_care", "how_they_receive_care", "how_they_ask_for_help", "trust_builders", "trust_breakers", "disagreement_style", "apology_style", "boundary_style", "loyalty_triggers", "betrayal_triggers"]),
         relationship_graph: values.relationship_entries,
         knowledge_domains: values.knowledge_domain_entries,
         humor_and_voice: pick(values, ["communication_modes", "humor_types", "voice_rhythm", "typical_phrases", "vocabulary", "topics_they_bring_up", "topics_they_avoid", "example_quotes", "dialogue_dos", "dialogue_donts"]),
@@ -759,7 +872,7 @@
         narrative_engine: pick(values, ["personal_quest", "growth_arc", "recurring_internal_conflict", "shadow_version", "best_self_version", "running_joke", "symbolic_motifs", "character_themes", "dramatic_question", "what_changes_them", "what_never_changes", "role_in_group_story", "ideal_scene", "nightmare_scene"]),
         game_mechanics: pick(values, ["suggested_class_role", "potential_party_roles", "passive_abilities", "active_abilities", "traversal_abilities", "support_abilities", "social_abilities", "research_abilities", "weaknesses", "status_effects", "special_dialogue_triggers", "failure_comedy_mechanics", "power_curve", "balance_notes"]),
         ai_generation: pick(values, ["canonical_short_description", "canonical_long_description", "art_prompt_summary", "dialogue_prompt_summary", "behavioral_prompt_summary", "game_design_summary", "do_not_misrepresent", "sensitive_topics", "safe_exaggerations", "unsafe_exaggerations", "prompt_tags", "negative_prompt_tags"]),
-        project_usage: pick(values, ["approved_projects", "project_specific_notes", "canon_level"]),
+        project_usage: pick(values, ["approved_projects", "project_relevance_notes", "project_specific_notes", "canon_level"]),
         source_notes: pick(values, ["source_images", "source_interviews", "source_notes", "contributors", "reviewers", "last_reviewed", "accuracy_confidence", "unresolved_questions"]),
         generated_content: pick(values, ["character_summary", "ai_context_output", "art_prompt_output", "dialogue_prompt_output", "npc_summary", "relationship_summary", "character_context_output", "organization_summary_output", "project_summary_output", "timeline_summary", "lore_summary", "ai_agent_context"]),
         extensions: importedExtensions.unknown_fields || {}
@@ -879,7 +992,8 @@
       updateCounters();
     }
     function updateCompleteness(profile = buildProfile()) {
-      const scored = flatFields.filter(field => !["boolean"].includes(field.type));
+      const mode = document.body.dataset.mode || "simple";
+      const scored = flatFields.filter(field => !["boolean"].includes(field.type) && (mode !== "simple" || SIMPLE_FIELD_IDS.has(field.id)));
       const filled = scored.filter(field => {
         const value = fieldValue(field.id);
         return Array.isArray(value) ? value.length > 0 : Boolean(value);
@@ -902,10 +1016,11 @@
       const role = p.game_mechanics.suggested_class_role || p.social_model.group_role;
       const traits = p.personality.personality_traits.slice(0, 3).join(", ");
       const line = [
-        `${name} is ${p.ai_generation.canonical_short_description || p.motivation.core_motivation || "a reusable person profile"}.`,
+        `${name} is ${p.identity.short_bio || p.ai_generation.canonical_short_description || p.motivation.core_motivation || "a reusable person profile"}.`,
         values ? `They prioritize ${values}.` : "",
         traits ? `They read as ${traits}.` : "",
         role ? `Their functional role is ${role}.` : "",
+        p.social_model.relationship_to_lonnie_kstreet ? `K Street relationship: ${p.social_model.relationship_to_lonnie_kstreet}` : "",
         p.narrative_engine.growth_arc ? `Their growth arc: ${p.narrative_engine.growth_arc}` : ""
       ].filter(Boolean).join(" ");
       setField("character_summary", line);
@@ -1205,6 +1320,69 @@
       ].join("\n");
     }
 
+    function shareableProfile(profile = buildProfile()) {
+      return [
+        "# Shareable K Street Profile",
+        "",
+        `Name: ${profile.identity.display_name || "_Not provided._"}`,
+        `Pronouns/address preference: ${profile.identity.pronouns || "_Not provided._"}`,
+        "",
+        "## Short Bio",
+        profile.identity.short_bio || profile.generated_content.character_summary || "_Not provided._",
+        "",
+        "## Personality / Vibe",
+        formatMarkdownValue(profile.personality.personality_traits.concat(profile.personality.custom_traits)),
+        "",
+        "## Visual Description",
+        profile.appearance.image_prompt_notes || profile.appearance.everyday_clothing || "_Not provided._",
+        "",
+        "## Voice / Dialogue",
+        dialoguePrompt(profile) || "_Not provided._",
+        "",
+        "## Relationship To Lonnie / K Street / Projects",
+        profile.social_model.relationship_to_lonnie_kstreet || profile.project_usage.project_relevance_notes || "_Not provided._",
+        "",
+        "## Consent Notes",
+        profile.consent.consent_notes || "_Not provided._"
+      ].join("\n");
+    }
+
+    function allAgentContext(profile = buildProfile()) {
+      return [
+        "# K Street Agent Context Bundle",
+        "",
+        "This bundle is for AI/game/dev workflows. Respect consent, privacy, source notes, canon level, and do-not-misrepresent fields.",
+        "",
+        "## Shareable Profile",
+        shareableProfile(profile),
+        "",
+        "## AI Context",
+        aiContext(profile),
+        "",
+        "## Game Design Summary",
+        gameDesignSummary(profile),
+        "",
+        "## NPC Summary",
+        profile.generated_content.npc_summary || generateNpcSummary(),
+        "",
+        "## Relationship Summary",
+        profile.generated_content.relationship_summary || generateRelationshipSummary(),
+        "",
+        "## Visual Reference Sheet",
+        visualReferenceSheet(profile),
+        "",
+        "## Asset Manifest",
+        "```json",
+        JSON.stringify(assetManifest(profile), null, 2),
+        "```",
+        "",
+        "## Knowledge Graph",
+        "```json",
+        JSON.stringify(graphFull(profile), null, 2),
+        "```"
+      ].join("\n");
+    }
+
     function graphFull(profile = buildProfile()) {
       return {
         graph_schema_version: profile.knowledge_graph.graph_schema_version,
@@ -1360,6 +1538,8 @@
           asset_type: type,
           title: file.name.replace(/\.[^.]+$/, ""),
           description: "Uploaded metadata captured in static browser mode. Store the actual file in private/cloud/GitHub/CDN storage and add a stable URL or local path.",
+          linked_entity_id: fieldValue("entity_id") || "",
+          linked_project: fieldValue("approved_projects")[0] || "",
           file_name: file.name,
           file_extension: extension,
           file_size: `${file.size} bytes`,
@@ -1390,10 +1570,10 @@
 
     function inferAssetType(file, extension) {
       if (file.type.startsWith("image/")) return extension === "gif" ? "animation" : "reference_photo";
-      if (file.type.startsWith("audio/")) return "audio_clip";
+      if (file.type.startsWith("audio/")) return "voice_sample";
       if (file.type.startsWith("video/")) return "video";
       if (extension === "pdf") return "pdf";
-      if (["glb", "gltf", "obj", "fbx", "blend"].includes(extension)) return "3d_model";
+      if (["glb", "gltf", "obj", "fbx", "blend"].includes(extension)) return "model_3d";
       if (["txt", "doc", "docx", "md"].includes(extension)) return "document";
       return "other";
     }
@@ -1621,11 +1801,50 @@
 
     function validateProfile(profile) {
       const warnings = [];
-      if (!profile.schema_version) warnings.push("Missing schema_version; defaulted to 3.0.0.");
-      if (!profile.identity?.display_name) warnings.push("Missing display name.");
-      if (!profile.consent?.permission_to_store) warnings.push("Permission to store is not checked.");
-      if (!profile.consent?.permission_to_fictionalize) warnings.push("Permission to fictionalize is not checked.");
+      if (!profile.schema_version) warnings.push("Schema: missing schema_version; defaulted to 3.0.0.");
+      if (!profile.identity?.display_name) warnings.push("Identity: display name is missing.");
+      if (!profile.identity?.short_bio && !profile.generated_content?.character_summary) warnings.push("Simple intake: short bio or generated character summary is missing.");
+      if (!profile.consent?.permission_to_store) warnings.push("Consent: permission to store is not checked.");
+      if (!profile.consent?.permission_to_fictionalize) warnings.push("Consent: permission to fictionalize is not checked.");
+      if (!profile.project_usage?.approved_projects?.length) warnings.push("Project usage: no approved projects listed.");
       return warnings;
+    }
+
+    function showValidationMessages(warnings) {
+      const node = el("validationMessages");
+      if (!node) return;
+      node.innerHTML = warnings.map(warning => `<li>${escapeHtml(warning)}</li>`).join("");
+    }
+
+    function setMode(mode) {
+      document.body.dataset.mode = mode;
+      document.querySelectorAll("[data-mode-target]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.modeTarget === mode)));
+      renderOutline();
+      updatePreview();
+      setStatus(mode === "simple" ? "Simple intake mode." : mode === "advanced" ? "Advanced canon mode." : "Agent export mode.", "ok");
+    }
+
+    function saveLocal() {
+      const profile = buildProfile();
+      localStorage.setItem("kstreet_person_profile_draft", JSON.stringify(profile));
+      localStorage.setItem("kstreet_person_profile_draft_saved_at", nowIso());
+      dirty = false;
+      setStatus("Saved draft in this browser.", "ok");
+    }
+
+    function loadLocal() {
+      const raw = localStorage.getItem("kstreet_person_profile_draft");
+      if (!raw) {
+        setStatus("No local draft found in this browser.", "warn");
+        return;
+      }
+      if (dirty && !confirm("Load the local draft and replace the current form values?")) return;
+      try {
+        migrateImport(JSON.parse(raw));
+        setStatus(`Loaded local draft saved ${localStorage.getItem("kstreet_person_profile_draft_saved_at") || ""}.`, "ok");
+      } catch (error) {
+        setStatus(`Local draft load failed: ${error.message}`, "warn");
+      }
     }
 
     function migrateImport(input) {
@@ -1773,7 +1992,8 @@
     async function submitProfile() {
       const profile = buildProfile();
       const warnings = validateProfile(profile);
-      if (warnings.some(w => w.startsWith("Missing") || w.includes("not checked"))) {
+      showValidationMessages(warnings);
+      if (warnings.some(w => w.includes("display name") || w.includes("not checked"))) {
         setStatus(`Before submitting: ${warnings.join(" ")}`, "warn");
         el("submission_status").value = "Needs required consent/profile fields.";
         return;
@@ -1818,13 +2038,17 @@
       reader.readAsText(file);
       event.target.value = "";
     }
-    function resetForm() {
+    function resetForm(skipConfirm = false) {
+      if (!skipConfirm && !confirm("Reset the form and clear current values?")) return;
       flatFields.forEach(field => setField(field.id, defaultForField(field)));
       importedExtensions = {};
       importedWarnings = [];
       el("migration_report").value = "";
+      showValidationMessages([]);
       dirty = false;
       updatePreview();
+      renderGraphView();
+      renderAssetLibrary();
       setStatus("Form reset.", "ok");
     }
     function filterFields(query) {
@@ -1855,7 +2079,7 @@
     });
 
     renderForm();
-    resetForm();
+    resetForm(true);
     ASSET_TYPES.forEach(type => el("asset_filter_type").insertAdjacentHTML("beforeend", `<option value="${type}">${type}</option>`));
     ASSET_CANON_LEVELS.forEach(level => el("asset_filter_canon").insertAdjacentHTML("beforeend", `<option value="${level}">${level}</option>`));
     ASSET_CONSENT_STATUSES.forEach(status => el("asset_filter_consent").insertAdjacentHTML("beforeend", `<option value="${status}">${status}</option>`));
@@ -1864,8 +2088,12 @@
     renderGraphView();
     document.addEventListener("input", () => { dirty = true; updatePreview(); });
     document.addEventListener("change", () => { dirty = true; updatePreview(); });
+    document.querySelectorAll("[data-mode-target]").forEach(button => button.addEventListener("click", () => setMode(button.dataset.modeTarget)));
+    el("saveLocalBtn").addEventListener("click", saveLocal);
+    el("loadLocalBtn").addEventListener("click", loadLocal);
     el("submitBtn").addEventListener("click", submitProfile);
     el("generateSummaryBtn").addEventListener("click", generateSummary);
+    el("copyShareableProfileBtn").addEventListener("click", () => { generateSummary(); copyText(shareableProfile(), "Copied shareable profile."); });
     el("generateAiBtn").addEventListener("click", generateAiContextOutput);
     el("generateArtBtn").addEventListener("click", generateArtPromptOutput);
     el("generateDialogueBtn").addEventListener("click", generateDialoguePromptOutput);
@@ -1888,6 +2116,9 @@
     el("downloadGameSummaryBtn").addEventListener("click", () => downloadText(`game-design-summary-${timestampSlug()}.md`, gameDesignSummary(), "text/markdown"));
     el("downloadArtPromptBtn").addEventListener("click", () => downloadText(`art-prompt-${timestampSlug()}.txt`, artPrompt(), "text/plain"));
     el("downloadDialoguePromptBtn").addEventListener("click", () => downloadText(`dialogue-prompt-${timestampSlug()}.txt`, dialoguePrompt(), "text/plain"));
+    el("downloadNpcSummaryBtn").addEventListener("click", () => downloadText(`npc-summary-${timestampSlug()}.md`, generateNpcSummary(), "text/markdown"));
+    el("downloadRelationshipSummaryBtn").addEventListener("click", () => downloadText(`relationship-summary-${timestampSlug()}.md`, generateRelationshipSummary(), "text/markdown"));
+    el("copyAllAgentContextBtn").addEventListener("click", () => copyText(allAgentContext(), "Copied all agent context."));
     el("downloadRelationshipsBtn").addEventListener("click", () => downloadText(`profile.relationships-${timestampSlug()}.json`, JSON.stringify(buildProfile().relationship_graph, null, 2), "application/json"));
     el("downloadAssetsBtn").addEventListener("click", () => downloadText(`profile.assets-${timestampSlug()}.json`, JSON.stringify(buildProfile().asset_library.assets, null, 2), "application/json"));
     el("downloadAssetManifestBtn").addEventListener("click", () => downloadText(`profile.asset-manifest-${timestampSlug()}.json`, JSON.stringify(assetManifest(), null, 2), "application/json"));
@@ -1904,6 +2135,7 @@
     el("downloadGraphProjectsBtn").addEventListener("click", () => downloadText(`graph.projects-${timestampSlug()}.json`, JSON.stringify(graphEntitiesByType("project"), null, 2), "application/json"));
     el("validateJsonBtn").addEventListener("click", () => {
       const warnings = validateProfile(buildProfile());
+      showValidationMessages(warnings);
       importedWarnings = warnings.length ? warnings : ["Profile validates against the app's required v3 checks."];
       el("migration_report").value = importedWarnings.join("\n");
       updatePreview();
@@ -1928,7 +2160,9 @@
     el("assetDropZone").addEventListener("dragleave", () => el("assetDropZone").classList.remove("dragging"));
     el("assetDropZone").addEventListener("drop", event => { event.preventDefault(); el("assetDropZone").classList.remove("dragging"); addUploadedAssets(event.dataTransfer.files); });
     el("importFile").addEventListener("change", handleImport);
-    el("resetBtn").addEventListener("click", resetForm);
+    el("importFileAgent").addEventListener("change", handleImport);
+    el("resetBtn").addEventListener("click", () => resetForm());
+    setMode("simple");
   </script>
 </body>
 </html>

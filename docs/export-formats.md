@@ -14,6 +14,7 @@ The static app can export the v3 profile in several forms:
 - `profile.visual-reference.md` - artist/image-generator reference sheet
 - `profile.art-reference.md` - art prompt and style-guide reference
 - `profile.sprite-reference.md` - sprite/pixel/token reference
+- `profile.agent-context-bundle.md` - available through Copy All Agent Context; combines shareable profile, AI context, game design notes, NPC/relationship summaries, visual references, asset manifest, and graph JSON
 - `graph.full.json` - full v4 foundation graph export with the v3 person profile embedded as `person_profile`
 - `graph.people.json` - person nodes from the graph
 - `graph.relationships.json` - first-class relationship entities
