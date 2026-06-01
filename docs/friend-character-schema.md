@@ -1,12 +1,12 @@
 # Legacy Friend Character Schema
 
-The old Friend Character Intake schema has been superseded by:
+The old Friend Character Intake schema and the intermediate 2.0 person profile schema have been superseded by:
 
 ```text
-kstreet.person_profile 2.0.0
+kstreet_person_profile.v3 3.0.0
 ```
 
-Use `docs/person-profile-schema.md` as the canonical schema documentation.
+Use `docs/person-profile-schema-v3.md` as the canonical schema documentation.
 
 ## Compatibility
 

@@ -60,6 +60,9 @@
     .status.ok { color: var(--ok); }
     .status.warn { color: var(--warn); }
     .warnings { color: var(--warn); font-size: .86rem; margin: 8px 0 0; }
+    .meter { display: grid; gap: 6px; margin-bottom: 10px; }
+    .meter-bar { height: 10px; border-radius: 999px; background: #dfe4df; overflow: hidden; }
+    .meter-fill { height: 100%; width: 0; background: var(--accent); transition: width .2s ease; }
     aside { position: sticky; top: 70px; padding: 14px; }
     pre { margin: 0; min-height: 460px; max-height: calc(100vh - 190px); overflow: auto; border-radius: 6px; padding: 12px; background: #17201f; color: #e8f5f1; font-size: .8rem; white-space: pre-wrap; word-break: break-word; }
     input[type="file"] { display: none; }
@@ -70,15 +73,19 @@
 <body>
   <header>
     <h1>K Street Person Profile Database</h1>
-    <p>Durable, project-agnostic profiles for character bibles, NPC simulation, dialogue, narrative engines, game mechanics, and AI generation. Schema <strong>2.0.0</strong>.</p>
+    <p>Canonical source-of-truth profiles for K Street projects, dialogue systems, NPC generation, art prompts, relationship simulations, narrative systems, and agent memory. Schema <strong>3.0.0</strong>.</p>
   </header>
 
   <main>
     <div>
       <div class="toolbar" aria-label="Primary actions">
         <button type="button" class="primary" id="submitBtn">Submit Descriptor</button>
-        <button type="button" id="generateSummaryBtn">Generate Summary From Fields</button>
+        <button type="button" id="generateSummaryBtn">Generate Character Summary</button>
         <button type="button" id="generateAiBtn">Generate AI Context</button>
+        <button type="button" id="generateArtBtn">Generate Art Prompt</button>
+        <button type="button" id="generateDialogueBtn">Generate Dialogue Prompt</button>
+        <button type="button" id="generateNpcBtn">Generate NPC Summary</button>
+        <button type="button" id="generateRelationshipBtn">Generate Relationship Summary</button>
         <button type="button" id="copyJsonBtn">Copy JSON</button>
         <button type="button" id="copyMarkdownBtn">Copy Markdown</button>
         <button type="button" id="downloadAllBtn">Download All</button>
@@ -99,7 +106,18 @@
           <button type="button" id="downloadGameSummaryBtn">Game Design Summary</button>
           <button type="button" id="downloadArtPromptBtn">Art Prompt</button>
           <button type="button" id="downloadDialoguePromptBtn">Dialogue Prompt</button>
+          <button type="button" id="downloadRelationshipsBtn">Relationships JSON</button>
+          <button type="button" id="validateJsonBtn">Validate JSON</button>
           <button type="button" id="copyShareLinkBtn">Copy Share Link</button>
+          <label class="full">Search fields
+            <input id="field_search" placeholder="Search labels, tooltips, or placeholders">
+          </label>
+          <label class="full">Schema version
+            <input id="schema_version_display" readonly value="3.0.0">
+          </label>
+          <label class="full">Migration report
+            <textarea id="migration_report" readonly></textarea>
+          </label>
           <label class="full">GitHub Pages base URL
             <input id="github_pages_base_url" placeholder="https://lonnie-tisdale.github.io/friend-character-intake">
           </label>
@@ -116,35 +134,57 @@
 
     <aside>
       <h2>Live JSON Preview</h2>
+      <div class="meter">
+        <strong id="completenessLabel">Completeness: 0%</strong>
+        <div class="meter-bar"><div class="meter-fill" id="completenessFill"></div></div>
+      </div>
       <div id="status" class="status">Ready.</div>
       <pre id="jsonPreview" aria-live="polite"></pre>
     </aside>
   </main>
 
   <script>
-    const SCHEMA_VERSION = "2.0.0";
+    const SCHEMA_VERSION = "3.0.0";
+    const SCHEMA_ID = "kstreet_person_profile.v3";
     const LEGACY_SCHEMA_VERSION = "friend_descriptor_intake.v2";
     const SOURCE = "K Street Person Profile Database";
     const SUBMISSION_ENDPOINT = "https://formspree.io/f/xredwazb";
 
     const FIELD_SECTIONS = [
       {
+        id: "consent",
+        title: "Consent",
+        note: "Permissions and safety limits. These fields control whether submitted profiles can be stored, fictionalized, simulated, or reused.",
+        fields: [
+          b("permission_to_store", "Permission to store this descriptor", "Required before keeping submissions."),
+          b("permission_to_fictionalize", "Permission to fictionalize", "Required before adapting into projects."),
+          b("permission_for_ai_dialogue", "Permission for AI dialogue", "Allows voice/dialogue simulation."),
+          b("permission_for_art_generation", "Permission for art generation", "Controls whether visual prompt fields can be reused."),
+          b("permission_for_cross_project_reuse", "Permission for cross-project reuse", "Useful for shared K Street profile databases."),
+          b("permission_for_relationship_simulation", "Permission for relationship simulation", "Allows graph and social model simulation."),
+          b("contact_for_questions", "Contact for questions", "Allows follow-up questions."),
+          l("sensitive_topics_to_avoid", "Sensitive topics to avoid", "Private topics that should not appear in generated content.", "family details\nmedical specifics"),
+          f("consent_notes", "Consent notes", "textarea", "Records usage limits, approvals, and review context.", "May be used as a fictionalized support character; avoid private family details.")
+        ]
+      },
+      {
         id: "identity",
         title: "Identity",
         note: "Basic person/profile identity. Contact information is private and should not be committed to public repos.",
         fields: [
           f("display_name", "Display name", "text", "Private review name or public-safe display name.", "Example: Jordan Rivera"),
+          f("real_name_optional", "Real name optional", "text", "Only collect if useful and approved. Keep private.", "Jordan Rivera"),
           f("optional_contact", "Optional contact", "text", "Private follow-up contact if the person permits clarification.", "name@email.com"),
-          f("in_world_name_or_nickname", "In-world name or nickname", "text", "Reusable character handle for fiction, games, and prompts.", "The Compass"),
+          f("in_world_name", "In-world name", "text", "Reusable character handle for fiction, games, and prompts.", "The Compass"),
+          l("nicknames", "Nicknames", "Alternate names, handles, or social aliases.", "Compass\nJR"),
           f("pronouns", "Pronouns", "text", "Supports respectful dialogue and profile generation.", "they/them"),
           f("age_range", "Age range", "text", "Keeps profiles useful without over-collecting precise personal data.", "30s"),
-          f("current_location_or_usual_setting", "Current location or usual setting", "textarea", "Where the person is usually imagined or encountered.", "Usually near a planning board, laptop open, coffee nearby."),
-          f("consent_notes", "Consent and use notes", "textarea", "Records usage limits, approvals, and review context.", "May be used as a fictionalized support character; avoid private family details."),
-          b("permission_to_store", "Permission to store this descriptor", "Required before keeping submissions."),
-          b("permission_to_use_as_fictional_character", "Permission to use as a fictionalized character", "Required before adapting into projects."),
-          b("permission_to_use_for_art_prompts", "Permission to use for art prompts", "Controls whether visual prompt fields can be reused."),
-          b("permission_to_reuse_across_projects", "Permission to reuse across projects", "Useful for shared K Street profile databases."),
-          b("permission_to_contact_for_clarification", "Permission to contact for clarification", "Allows follow-up questions.")
+          f("current_location", "Current location", "text", "Current public-safe location or usual region.", "Portland, Oregon"),
+          f("origin_location", "Origin location", "text", "Where they are from, if relevant and approved.", "Pacific Northwest"),
+          l("communities", "Communities", "Groups, scenes, or cultures they belong to.", "K Street\nParkour community"),
+          l("roles", "Roles", "Social or project roles.", "organizer\nmentor"),
+          l("professions", "Professions", "Jobs, callings, or work identities.", "coach\nresearcher"),
+          l("identity_tags", "Tags", "Searchable identity tags.", "strategist\ncommunity-builder")
         ]
       },
       {
@@ -152,12 +192,21 @@
         title: "Appearance",
         note: "Visual cues for art, prose, and casting without requiring public source images.",
         fields: [
-          f("visual_descriptors", "Visual descriptors", "textarea", "Recognition cues: silhouette, posture, facial cues, hair, presence.", "Alert eyes, practical haircut, memorable glasses, relaxed posture."),
-          f("clothing_style_props", "Clothing, style, and props", "textarea", "Useful for art prompts and character staging.", "Layered jacket, tidy sneakers, notebook, reliable pen."),
+          f("height_build", "Height / build", "text", "Broad physical read, not exact biometric detail.", "medium height, compact athletic build"),
+          f("hair", "Hair", "text", "Hair color, style, and silhouette cues.", "short dark hair, practical cut"),
+          f("eyes", "Eyes", "text", "Eye description for art/prose.", "alert, focused eyes"),
+          f("face_features", "Face features", "textarea", "Memorable facial features without over-indexing on appearance.", "expressive eyebrows, thoughtful resting face"),
+          f("skin_tone", "Skin tone", "text", "Optional visual descriptor for respectful art direction.", ""),
+          f("distinguishing_marks", "Distinguishing marks", "textarea", "Scars, tattoos, glasses, or other approved markers.", "memorable glasses"),
+          f("silhouette", "Silhouette", "textarea", "Shape language for quick recognition.", "upright, compact, practical, always ready to move"),
+          f("everyday_clothing", "Everyday clothing", "textarea", "Default wardrobe.", "Layered jacket, tidy sneakers, durable clothes."),
+          f("iconic_outfit", "Iconic outfit", "textarea", "The outfit they would be recognized in.", "Field jacket, notebook, reliable pen."),
+          f("accessories", "Accessories", "textarea", "Visual accessories.", "glasses, notebook, pen"),
+          f("carried_items", "Carried items", "textarea", "Props that can drive scenes or mechanics.", "phone, notebook, snacks, multitool"),
           f("default_expression", "Default expression", "text", "A fast visual anchor for illustration and NPC idle states.", "Listening carefully with one eyebrow raised."),
           f("movement_body_language", "Movement and body language", "textarea", "How the character occupies space and communicates nonverbally.", "Still when thinking; precise hand motions when explaining."),
-          f("source_image_notes", "Source image notes", "textarea", "Private references or folder notes. Do not put private images in public repos.", "Source Images/Person Name contains approved private references."),
-          f("art_prompt_summary", "Art prompt summary", "textarea", "Concise art-generation prompt derived from the profile.", "Grounded modern strategist, warm but analytical, practical layered clothing, notebook prop.")
+          f("image_prompt_notes", "Image prompt notes", "textarea", "Approved notes for visual generation.", "Grounded modern strategist, warm but analytical, practical layered clothing."),
+          f("negative_image_prompt_notes", "Negative image prompt notes", "textarea", "What art prompts should avoid.", "Do not exaggerate into villainy or caricature.")
         ]
       },
       {
@@ -165,26 +214,31 @@
         title: "Personality",
         note: "Stable traits, strengths, flaws, and recognizable habits.",
         fields: [
+          s("primary_social_energy", "Primary Social Energy", ["Warm Stabilizer", "Thoughtful Mentor", "Curious Guide", "Practical Fixer", "Chaotic Instigator", "Deadpan Commentator", "Magnetic Performer", "Quiet Observer", "Community Builder", "Explorer", "Storyteller", "Scholar", "Philosopher", "Connector", "Visionary", "Trusted Advisor", "Trickster Sage", "Reluctant Leader", "Investigator", "Catalyst"], "Primary recognizable social presence."),
+          s("secondary_social_energy", "Secondary Social Energy", ["Warm Stabilizer", "Thoughtful Mentor", "Curious Guide", "Practical Fixer", "Chaotic Instigator", "Deadpan Commentator", "Magnetic Performer", "Quiet Observer", "Community Builder", "Explorer", "Storyteller", "Scholar", "Philosopher", "Connector", "Visionary", "Trusted Advisor", "Trickster Sage", "Reluctant Leader", "Investigator", "Catalyst"], "Secondary social flavor."),
           l("personality_traits", "Personality traits", "Useful trait tags for filtering and generation.", "observant\nloyal\npragmatic"),
           l("custom_traits", "Custom traits", "Nuanced traits that standard lists miss.", "quietly theatrical when comfortable"),
           l("strengths", "Strengths", "Competencies that shape story and mechanics.", "pattern recognition\ngroup coordination"),
           l("flaws", "Flaws", "Limitations that create believable conflict.", "over-functions\nimpatient with vagueness"),
-          l("recurring_habits", "Recurring habits", "Small repeated actions that make the character recognizable.", "keeps lists\nremembers tiny preferences"),
-          l("temptations", "Temptations", "What pulls them off course.", "taking control too quickly\nsolving instead of asking")
+          f("temperament", "Temperament", "textarea", "Baseline emotional weather.", "calm, alert, quietly intense when focused"),
+          f("biggest_contradiction", "Biggest contradiction", "textarea", "The tension that makes them feel real.", "Wants to trust people but keeps preparing for them to drop the ball.")
         ]
       },
       {
-        id: "motivation_values",
-        title: "Motivation & Values",
+        id: "motivation",
+        title: "Motivation",
         note: "What the person optimizes for, protects, refuses, and is trying to become.",
         fields: [
-          l("ranked_core_values", "Ranked core values", "Ordered by priority. Include built-ins or custom values.", "Friendship\nTruth\nCuriosity\nService"),
-          f("custom_values", "Custom values", "textarea", "Values not covered by the standard list.", "craft, sovereignty, stewardship"),
+          l("ranked_values", "Ranked values", "Ordered by priority. Include built-ins or custom values.", "Friendship\nTruth\nCuriosity\nService"),
           f("core_motivation", "Core motivation", "textarea", "The deepest engine behind action.", "Make confusing situations survivable for the people they love."),
-          f("optimizes_for", "What they optimize for", "textarea", "Decision utility function in plain language.", "Clarity, group safety, and practical next steps."),
-          f("refuses_to_compromise", "What they refuse to compromise", "textarea", "Non-negotiables for character consistency.", "They will not betray a vulnerable ally for convenience."),
+          f("what_they_optimize_for", "What they optimize for", "textarea", "Decision utility function in plain language.", "Clarity, group safety, and practical next steps."),
+          f("what_they_refuse_to_compromise", "What they refuse to compromise", "textarea", "Non-negotiables for character consistency.", "They will not betray a vulnerable ally for convenience."),
           f("what_tempts_them", "What tempts them", "textarea", "Pressure points that create drama.", "Being needed, being right, having the answer first."),
-          f("trying_to_become", "What they are trying to become", "textarea", "Forward motion for growth arcs.", "Someone who trusts others enough to share the load.")
+          f("what_they_are_trying_to_become", "What they are trying to become", "textarea", "Forward motion for growth arcs.", "Someone who trusts others enough to share the load."),
+          f("greatest_need", "Greatest need", "textarea", "What they emotionally need even if they do not say it.", "Permission to not be useful every second."),
+          f("greatest_fear", "Greatest fear", "textarea", "Core fear that drives avoidance.", "Being useless when people are counting on them."),
+          f("moral_center", "Moral center", "textarea", "The ethical center of gravity.", "Care is practical, but people are never merely problems."),
+          f("shadow_desire", "Shadow desire", "textarea", "The desire that could become dangerous if unchecked.", "To control the room so no one can fail.")
         ]
       },
       {
@@ -192,28 +246,42 @@
         title: "Decision-Making",
         note: "How the profile chooses, fails, recovers, and handles risk.",
         fields: [
-          s("decision_style", "Decision style", ["research-first", "intuition-first", "consensus-seeking", "decisive", "cautious", "trial-and-error", "expert-guided"], "How they usually choose a path."),
+          s("decision_style", "Decision style", ["Research First", "Intuition First", "Consensus Seeking", "Decisive", "Cautious", "Trial And Error", "Expert Guided", "Emotion Driven", "Principle Driven", "Opportunistic"], "How they usually choose a path."),
+          s("risk_tolerance", "Risk tolerance", ["Low", "Medium", "High", "Variable"], "Risk appetite for story and mechanics."),
+          s("planning_horizon", "Planning horizon", ["Immediate", "Short Term", "Long Term", "Legacy"], "How far ahead they naturally think."),
           f("under_pressure_behavior", "Under pressure behavior", "textarea", "Default behavior when stakes rise.", "Gets quieter, prioritizes essentials, delegates cleanly."),
           f("common_blind_spot", "Common blind spot", "textarea", "What they often miss.", "Assumes everyone wants a solved problem more than emotional processing."),
           f("failure_mode", "Failure mode", "textarea", "How they break down or make mistakes.", "Takes over and becomes terse."),
           f("recovery_pattern", "Recovery pattern", "textarea", "How they return to balance.", "Apologizes with a concrete repair plan and revised boundaries."),
-          s("risk_tolerance", "Risk tolerance", ["low", "medium", "high", "variable"], "Risk appetite for story and mechanics."),
-          s("planning_horizon", "Planning horizon", ["immediate", "short-term", "long-term", "legacy"], "How far ahead they naturally think.")
+          f("what_makes_them_act", "What makes them act", "textarea", "The trigger that moves them from thought to action.", "A friend is at risk and no one owns the next step."),
+          f("what_makes_them_freeze", "What makes them freeze", "textarea", "The kind of uncertainty or fear that stalls them.", "Competing needs where every option hurts someone.")
         ]
       },
       {
-        id: "social_relationship_model",
-        title: "Social & Relationship Model",
+        id: "social_model",
+        title: "Social Model",
         note: "How the profile bonds, disagrees, cares, and fits into groups.",
         fields: [
-          s("group_role", "Group role", ["leader", "glue", "wildcard", "strategist", "mediator", "scout", "mentor", "fixer", "instigator", "observer"], "The role they naturally occupy in groups."),
-          s("friendship_style", "Friendship style", ["protector", "teacher", "teammate", "entertainer", "problem solver", "listener", "challenger", "nurturer"], "How they show up for friends."),
-          l("trust_building_factors", "Trust-building factors", "What increases trust.", "follow-through\nhonest constraints\nshared effort"),
-          l("trust_breaking_factors", "Trust-breaking factors", "What damages trust.", "performative loyalty\nneedless secrecy"),
+          s("group_role", "Group role", ["Leader", "Glue", "Wildcard", "Strategist", "Mediator", "Scout", "Mentor", "Fixer", "Instigator", "Observer", "Protector", "Entertainer", "Analyst"], "The role they naturally occupy in groups."),
+          s("friendship_style", "Friendship style", ["Protector", "Teacher", "Teammate", "Entertainer", "Problem Solver", "Listener", "Challenger", "Nurturer"], "How they show up for friends."),
           f("how_they_show_care", "How they show care", "textarea", "Care language for dialogue and relationship simulation.", "Makes the plan easier, remembers needs, checks on basics."),
-          f("how_they_handle_disagreement", "How they handle disagreement", "textarea", "Conflict handling inside relationships.", "Starts with reasons, then asks what outcome matters most."),
-          f("relationship_notes", "Relationship notes", "textarea", "Extra social-model context.", "Warm with competent people; guarded around chaos without accountability."),
-          rows("relationship_graph", "Relationship graph preparation", "related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | notes", "Alex | mentor | 8 | 2 | 7 | 6 | old collaborator")
+          f("how_they_receive_care", "How they receive care", "textarea", "How support gets through to them.", "Responds to concrete help and honest presence."),
+          f("how_they_ask_for_help", "How they ask for help", "textarea", "Whether and how they request support.", "Frames it as a logistical need before naming feelings."),
+          l("trust_builders", "Trust builders", "What increases trust.", "follow-through\nhonest constraints\nshared effort"),
+          l("trust_breakers", "Trust breakers", "What damages trust.", "performative loyalty\nneedless secrecy"),
+          f("disagreement_style", "Disagreement style", "textarea", "Conflict handling inside relationships.", "Starts with reasons, then asks what outcome matters most."),
+          f("apology_style", "Apology style", "textarea", "How they repair socially.", "Direct apology plus changed process."),
+          f("boundary_style", "Boundary style", "textarea", "How they set limits.", "Calm, firm, specific, with little appetite for debate."),
+          l("loyalty_triggers", "Loyalty triggers", "What makes them become deeply loyal.", "shared work\nprotecting someone vulnerable"),
+          l("betrayal_triggers", "Betrayal triggers", "What feels like betrayal.", "needless secrecy\nusing someone as a tool")
+        ]
+      },
+      {
+        id: "relationship_graph",
+        title: "Relationship Graph",
+        note: "Repeatable relationship entries for future graph and simulation systems.",
+        fields: [
+          rows("relationship_entries", "Relationship entries", "related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes", "Alex | mentor | 8 | 2 | 7 | 6 | warm respect | asks hard questions | old collaborator")
         ]
       },
       {
@@ -221,37 +289,39 @@
         title: "Knowledge Domains",
         note: "Repeatable expertise entries for dialogue, quest logic, and AI hallucination guardrails.",
         fields: [
-          rows("domains", "Knowledge domains", "domain name | expertise level | confidence | notes", "Parkour | expert | high confidence | founder-level historical knowledge")
+          rows("knowledge_domain_entries", "Knowledge domains", "domain | expertise level | confidence level | lived experience | public authority | notes | dialogue use", "Parkour | Expert | High | yes | founder-level historical knowledge | deep history | can explain origins and tradeoffs")
         ]
       },
       {
-        id: "humor_communication",
-        title: "Humor & Communication",
+        id: "humor_and_voice",
+        title: "Humor And Voice",
         note: "Dialogue voice, humor, preferred topics, and example quotes.",
         fields: [
-          l("humor_types", "Humor types", "One per line: dry, absurd, deadpan, satirical, self-deprecating, dark, playful, intellectual, chaotic.", "dry\ndeadpan\nintellectual"),
-          s("communication_mode", "Communication mode", ["teacher", "debater", "storyteller", "listener", "researcher", "diplomat", "comedian", "coach", "analyst", "philosopher"], "Primary speaking function."),
+          l("communication_modes", "Communication modes", "One per line.", "Teacher\nAnalyst\nPhilosopher"),
+          l("humor_types", "Humor types", "One per line.", "Dry\nDeadpan\nIntellectual"),
+          f("voice_rhythm", "Voice rhythm", "textarea", "Cadence and sentence shape.", "Measured, concise, then a soft punchline."),
           l("typical_phrases", "Typical phrases", "Lines or phrase patterns.", "Okay, three things.\nLet's separate facts from vibes."),
           l("vocabulary", "Vocabulary", "Words they reach for often.", "constraints\npattern\nsignal\nclean"),
           l("topics_they_bring_up", "Topics they bring up", "Conversation magnets.", "systems\nfood\nrisk\nwhy plans fail"),
           l("topics_they_avoid", "Topics they avoid", "Avoidance helps respectful generation.", "private family details\nmedical specifics"),
-          f("voice_speech_rhythm", "Voice and speech rhythm", "textarea", "Cadence and sentence shape.", "Measured, concise, then a soft punchline."),
-          f("dialogue_prompt_summary", "Dialogue prompt summary", "textarea", "LLM-ready voice instruction.", "Write concise, practical dialogue with dry humor and careful emotional reads."),
-          l("example_quotes", "Example quotes", "Representative lines for dialogue generation.", "We can panic after we know what the problem is.\nThat is not a plan; that is a weather event.")
+          l("example_quotes", "Example quotes", "Representative lines for dialogue generation.", "We can panic after we know what the problem is.\nThat is not a plan; that is a weather event."),
+          l("dialogue_dos", "Dialogue dos", "What generated dialogue should do.", "be concise\nmake practical emotional reads"),
+          l("dialogue_donts", "Dialogue don'ts", "What generated dialogue should avoid.", "do not make them cruel\ndo not over-explain obvious points")
         ]
       },
       {
-        id: "conflict_stress_response",
-        title: "Conflict & Stress Response",
+        id: "conflict_and_stress",
+        title: "Conflict And Stress",
         note: "How pressure changes behavior and what restores trust.",
         fields: [
-          l("when_challenged_tends_to", "When challenged, they tend to", "One per line: debate, withdraw, compromise, research, joke, take control, deflect, freeze.", "research\ndebate\ntake control"),
+          l("when_challenged", "When challenged", "One per line.", "Research\nDebate\nTake Control"),
           l("stress_signals", "Stress signals", "Observable stress tells.", "shorter sentences\nless eye contact\nmore lists"),
           l("escalation_triggers", "Escalation triggers", "What makes conflict worse.", "bad-faith arguments\navoidable risk to friends"),
-          l("de_escalation_methods", "De-escalation methods", "What helps them settle.", "clear facts\nfood\na concrete next step"),
-          f("apology_style", "Apology style", "textarea", "How they repair.", "Direct apology plus changed process."),
-          f("boundary_style", "Boundary style", "textarea", "How they set limits.", "Calm, firm, specific, with little appetite for debate."),
-          l("boundaries", "Do-not-cross boundaries", "Private guardrails for respectful adaptation.", "Do not portray as cruel\nAvoid jokes about private family details")
+          l("deescalation_methods", "Deescalation methods", "What helps them settle.", "clear facts\nfood\na concrete next step"),
+          l("conflict_strengths", "Conflict strengths", "What they do well in conflict.", "separates facts from panic\nnames the real decision"),
+          l("conflict_weaknesses", "Conflict weaknesses", "Where they struggle.", "can become terse\nmay over-control"),
+          f("repair_pattern", "Repair pattern", "textarea", "How they repair after conflict.", "Direct apology plus changed process."),
+          f("pressure_dialogue_style", "Pressure dialogue style", "textarea", "How their voice changes under stress.", "Shorter, more procedural, with fewer jokes.")
         ]
       },
       {
@@ -259,7 +329,7 @@
         title: "Signature Behaviors",
         note: "Repeatable behavior entries for recognition, comedy, and mechanics.",
         fields: [
-          rows("behaviors", "Signature behaviors", "behavior | context | comedic exaggeration potential | game-use notes", "Opens twenty browser tabs | when fact-checking | high | can trigger Research Spiral mechanic")
+          rows("signature_behavior_entries", "Signature behaviors", "behavior | context | frequency | comedic exaggeration potential | game-use notes | dialogue-use notes", "Opens twenty browser tabs | when fact-checking | Common | High | can trigger Research Spiral mechanic | mutters source comparisons")
         ]
       },
       {
@@ -268,14 +338,19 @@
         note: "Story functions for character bibles, arcs, themes, and project adaptation.",
         fields: [
           f("personal_quest", "Personal quest", "textarea", "What they would pursue in story terms.", "Prove care can be practical without becoming control."),
-          f("greatest_fear", "Greatest fear", "textarea", "Core fear that drives avoidance.", "Being useless when people are counting on them."),
-          f("recurring_internal_conflict", "Recurring internal conflict", "textarea", "Inner contradiction.", "Wants trust but keeps preparing for everyone to drop the ball."),
           f("growth_arc", "Growth arc", "textarea", "Change over time.", "Learns to delegate emotional and practical risk."),
+          f("recurring_internal_conflict", "Recurring internal conflict", "textarea", "Inner contradiction.", "Wants trust but keeps preparing for everyone to drop the ball."),
           f("shadow_version", "Shadow version", "textarea", "Unhealthy extreme.", "Controlling strategist who treats people like fragile systems."),
           f("best_self_version", "Best-self version", "textarea", "Aspirational extreme.", "A calm anchor who helps others become more capable."),
           f("running_joke", "Running joke", "textarea", "Recurring comic bit.", "Always has exactly the oddly specific tool needed."),
           l("symbolic_motifs", "Symbolic motifs", "Images, props, or symbols.", "compass\nchecklist\nwarm light in a messy room"),
-          l("character_themes", "Character themes", "Abstract themes.", "care as logistics\ntrust as shared labor")
+          l("character_themes", "Character themes", "Abstract themes.", "care as logistics\ntrust as shared labor"),
+          f("dramatic_question", "Dramatic question", "textarea", "The question their arc asks.", "Can care stay caring when it becomes logistics?"),
+          f("what_changes_them", "What changes them", "textarea", "Forces that actually move the character.", "Being trusted by competent allies."),
+          f("what_never_changes", "What never changes", "textarea", "The invariant core.", "They will notice who is being left unsupported."),
+          f("role_in_group_story", "Role in group story", "textarea", "Narrative function inside ensemble stories.", "The planner who turns emotional chaos into coordinated action."),
+          f("ideal_scene", "Ideal scene", "textarea", "Scene type where they shine.", "A crisis meeting where everyone leaves calmer and useful."),
+          f("nightmare_scene", "Nightmare scene", "textarea", "Scene type that stresses them.", "A betrayal where every fact arrives too late.")
         ]
       },
       {
@@ -284,34 +359,81 @@
         note: "Mechanics hooks for RPG, adventure, party, and simulation systems.",
         fields: [
           f("suggested_class_role", "Suggested class / role", "text", "System-neutral class or archetype.", "Planner / Support Lead"),
-          l("party_roles", "Party roles", "Multi-select style list.", "support\ntactician\nsocial stabilizer"),
+          l("potential_party_roles", "Potential party roles", "Multi-select style list.", "support\ntactician\nsocial stabilizer"),
           l("passive_abilities", "Passive abilities", "Always-on mechanics.", "reads the room\ndetects weak plans"),
           l("active_abilities", "Active abilities", "Triggered mechanics.", "turn confusion into three actionable steps"),
+          l("traversal_abilities", "Traversal abilities", "Movement/exploration mechanics.", "finds efficient routes through crowded systems"),
+          l("support_abilities", "Support abilities", "How they help allies mechanically.", "grant clarity bonus\nreduce panic"),
+          l("social_abilities", "Social abilities", "Social mechanics.", "lower room tension\nspot hidden disagreement"),
+          l("research_abilities", "Research abilities", "Knowledge and investigation mechanics.", "rapid source triage\npattern map"),
           l("weaknesses", "Weaknesses", "Mechanical or narrative vulnerabilities.", "overload from ambiguity\ncontrol spiral"),
           l("status_effects", "Status effects", "States this character causes or receives.", "Focused\nOverextended\nResearch Spiral"),
           l("special_dialogue_triggers", "Special dialogue triggers", "When unique lines should fire.", "someone skips a meal\na plan has no owner"),
-          l("traversal_abilities", "Traversal abilities", "Movement/exploration mechanics.", "finds efficient routes through crowded systems"),
-          l("support_abilities", "Support abilities", "How they help allies mechanically.", "grant clarity bonus\nreduce panic"),
-          l("failure_comedy_mechanics", "Failure / comedy mechanics", "How flaws become playable comedy.", "too many tabs obscure the obvious answer")
+          l("failure_comedy_mechanics", "Failure / comedy mechanics", "How flaws become playable comedy.", "too many tabs obscure the obvious answer"),
+          f("power_curve", "Power curve", "textarea", "How their utility scales over time.", "Starts as practical support, becomes strategic force multiplier."),
+          f("balance_notes", "Balance notes", "textarea", "How to keep mechanics fair.", "Strong support must require preparation or social context.")
         ]
       },
       {
-        id: "ai_generation_metadata",
-        title: "AI Generation Metadata",
+        id: "ai_generation",
+        title: "AI Generation",
         note: "Prompt-ready summaries, canonical descriptions, tags, flags, and misrepresentation guardrails.",
         fields: [
           f("canonical_short_description", "Canonical short description", "textarea", "One compact identity line.", "A grounded strategist with dry humor who turns chaos into practical steps."),
           f("canonical_long_description", "Canonical long description", "textarea", "Longer stable description for LLM context.", "A calm, observant support character driven by friendship, clarity, and practical care."),
+          f("art_prompt_summary", "Art prompt summary", "textarea", "LLM/image prompt summary.", "Grounded modern strategist, warm but analytical, practical layered clothing."),
           f("behavioral_prompt_summary", "Behavioral prompt summary", "textarea", "How AI should simulate behavior.", "Prioritize clarity, protect allies, ask useful questions, avoid needless drama."),
+          f("dialogue_prompt_summary", "Dialogue prompt summary", "textarea", "How AI should write their dialogue.", "Write concise, practical dialogue with dry humor and careful emotional reads."),
+          f("game_design_summary", "Game design summary", "textarea", "Concise game design translation.", "Support/tactician who converts chaos into clarity and coordination."),
           l("do_not_misrepresent", "Do-not-misrepresent list", "Guardrails for AI and adaptation.", "Do not make them cruel\nDo not reveal private contact information"),
-          l("tags", "Tags", "Search and generation tags.", "strategist\nanchor\ndry wit"),
-          l("project_usage_flags", "Project usage flags", "Allowed project targets.", "Oregon Fail\nWest Coast Crypto Cruise\nHTF Coder\nEmpirical Neoshamanism\nTao of Parkour\nGeneric NPC system"),
-          f("generated_summary", "Generated summary", "textarea", "Editable generated profile summary.", "")
+          l("sensitive_topics", "Sensitive topics", "Topics AI should handle cautiously or avoid.", "family details\nmedical specifics"),
+          l("safe_exaggerations", "Safe exaggerations", "Traits that can be heightened.", "opens too many research tabs\nhas a plan for snacks"),
+          l("unsafe_exaggerations", "Unsafe exaggerations", "Traits that should not be heightened.", "cruelty\nparanoia"),
+          l("prompt_tags", "Prompt tags", "Search and generation tags.", "strategist\nanchor\ndry wit"),
+          l("negative_prompt_tags", "Negative prompt tags", "Tags to avoid in generation.", "villain\ncaricature")
+        ]
+      },
+      {
+        id: "project_usage",
+        title: "Project Usage",
+        note: "Controls which projects may use the profile and how canonical it is.",
+        fields: [
+          l("approved_projects", "Approved projects", "One per line.", "Oregon Fail\nWest Coast Crypto Cruise\nHTF Coder\nK Street\nEmpirical Neoshamanism\nTao Of Parkour\nAI Dialogue Agent\nArt Generation\nGeneric NPC System\nInternal Testing"),
+          f("project_specific_notes", "Project-specific notes", "textarea", "Usage notes per project.", "Use generic NPC form unless explicitly approved for a named project."),
+          s("canon_level", "Canon level", ["Raw", "Semi Canon", "Canon", "Parody Only", "Private Reference Only"], "How authoritative the profile is.")
+        ]
+      },
+      {
+        id: "source_notes",
+        title: "Source Notes",
+        note: "Source provenance and review information.",
+        fields: [
+          l("source_images", "Source images", "Private image references or file paths.", "Source Images/Person Name/approved-reference.jpg"),
+          l("source_interviews", "Source interviews", "Interview notes, dates, or links.", "2026-06 intake conversation"),
+          f("source_notes", "Source notes", "textarea", "General provenance notes.", "Self-submitted public form plus later review."),
+          l("contributors", "Contributors", "People who contributed profile data.", "self-submitted"),
+          l("reviewers", "Reviewers", "People who reviewed the profile.", "K Street reviewer"),
+          f("last_reviewed", "Last reviewed", "text", "Review date.", "2026-06-01"),
+          s("accuracy_confidence", "Accuracy confidence", ["Low", "Medium", "High", "Unreviewed"], "Confidence in the profile accuracy."),
+          l("unresolved_questions", "Unresolved questions", "Open questions for later review.", "Confirm art prompt permission")
+        ]
+      },
+      {
+        id: "generated_content",
+        title: "Generated Content",
+        note: "Editable generated outputs. Buttons at the top can fill these from the structured fields.",
+        fields: [
+          f("character_summary", "Character summary", "textarea", "Generated high-level summary.", ""),
+          f("ai_context_output", "AI context", "textarea", "Generated AI context block.", ""),
+          f("art_prompt_output", "Art prompt", "textarea", "Generated art prompt.", ""),
+          f("dialogue_prompt_output", "Dialogue prompt", "textarea", "Generated dialogue prompt.", ""),
+          f("npc_summary", "NPC summary", "textarea", "Generated NPC/game-facing summary.", ""),
+          f("relationship_summary", "Relationship summary", "textarea", "Generated relationship model summary.", "")
         ]
       }
     ];
 
-    const DEFAULT_VALUE_ORDER = ["Truth", "Friendship", "Freedom", "Curiosity", "Mastery", "Security", "Family", "Status", "Creativity", "Justice", "Service", "Discovery", "Legacy", "Belonging"];
+    const DEFAULT_VALUE_ORDER = ["Truth", "Friendship", "Freedom", "Curiosity", "Mastery", "Security", "Family", "Status", "Creativity", "Justice", "Service", "Discovery", "Legacy", "Belonging", "Stability", "Beauty", "Power", "Peace", "Autonomy", "Loyalty"];
 
     function f(id, label, type, tip, placeholder) { return { id, label, type, tip, placeholder, max: type === "text" ? 220 : 1200 }; }
     function l(id, label, tip, placeholder) { return { id, label, type: "list", tip, placeholder, max: 1000 }; }
@@ -359,9 +481,9 @@
     }
     function rowKeys(id) {
       return {
-        relationship_graph: ["related_person", "relationship_type", "trust_level", "conflict_level", "history_level", "influence_level", "notes"],
-        domains: ["domain_name", "expertise_level", "confidence", "notes"],
-        behaviors: ["behavior", "context", "comedic_exaggeration_potential", "game_use_notes"]
+        relationship_entries: ["related_person", "relationship_type", "trust_level", "conflict_level", "history_level", "influence_level", "emotional_tone", "running_dynamic", "notes"],
+        knowledge_domain_entries: ["domain", "expertise_level", "confidence_level", "lived_experience", "public_authority", "notes", "dialogue_use"],
+        signature_behavior_entries: ["behavior", "context", "frequency", "comedic_exaggeration_potential", "game_use_notes", "dialogue_use_notes"]
       }[id] || ["value"];
     }
     function setStatus(message, type = "") {
@@ -381,7 +503,7 @@
           </div>
         </details>
       `).join("");
-      if (!el("ranked_core_values").value) el("ranked_core_values").value = DEFAULT_VALUE_ORDER.join("\n");
+      if (el("ranked_values") && !el("ranked_values").value) el("ranked_values").value = DEFAULT_VALUE_ORDER.join("\n");
       updateCounters();
     }
 
@@ -406,46 +528,42 @@
 
     function buildProfile() {
       const values = Object.fromEntries(flatFields.map(field => [field.id, fieldValue(field.id)]));
+      const profileId = slugify(values.display_name || values.in_world_name || values.real_name_optional);
+      const created = importedExtensions.created_at || nowIso();
       return {
         schema_version: SCHEMA_VERSION,
-        schema_name: "kstreet.person_profile",
-        metadata: {
-          created_at: importedExtensions.created_at || nowIso(),
-          updated_at: nowIso(),
-          source: SOURCE,
-          record_id: slugify(values.display_name || values.in_world_name_or_nickname),
-          migrated_from: importedExtensions.migrated_from || null
-        },
+        schema_id: SCHEMA_ID,
+        profile_id: profileId,
+        created_at: created,
+        updated_at: nowIso(),
         consent: {
           permission_to_store: values.permission_to_store,
-          permission_to_use_as_fictional_character: values.permission_to_use_as_fictional_character,
-          permission_to_use_for_art_prompts: values.permission_to_use_for_art_prompts,
-          permission_to_reuse_across_projects: values.permission_to_reuse_across_projects,
-          permission_to_contact_for_clarification: values.permission_to_contact_for_clarification,
-          notes: values.consent_notes
+          permission_to_fictionalize: values.permission_to_fictionalize,
+          permission_for_ai_dialogue: values.permission_for_ai_dialogue,
+          permission_for_art_generation: values.permission_for_art_generation,
+          permission_for_cross_project_reuse: values.permission_for_cross_project_reuse,
+          permission_for_relationship_simulation: values.permission_for_relationship_simulation,
+          contact_for_questions: values.contact_for_questions,
+          sensitive_topics_to_avoid: values.sensitive_topics_to_avoid,
+          consent_notes: values.consent_notes
         },
-        identity: pick(values, ["display_name", "optional_contact", "in_world_name_or_nickname", "pronouns", "age_range", "current_location_or_usual_setting"]),
-        appearance: pick(values, ["visual_descriptors", "clothing_style_props", "default_expression", "movement_body_language", "source_image_notes", "art_prompt_summary"]),
-        personality: pick(values, ["personality_traits", "custom_traits", "strengths", "flaws", "recurring_habits", "temptations"]),
-        motivation_values: pick(values, ["ranked_core_values", "custom_values", "core_motivation", "optimizes_for", "refuses_to_compromise", "what_tempts_them", "trying_to_become"]),
-        decision_making: pick(values, ["decision_style", "under_pressure_behavior", "common_blind_spot", "failure_mode", "recovery_pattern", "risk_tolerance", "planning_horizon"]),
-        social_relationship_model: pick(values, ["group_role", "friendship_style", "trust_building_factors", "trust_breaking_factors", "how_they_show_care", "how_they_handle_disagreement", "relationship_notes", "relationship_graph"]),
-        knowledge_domains: { domains: values.domains },
-        humor_communication: pick(values, ["humor_types", "communication_mode", "typical_phrases", "vocabulary", "topics_they_bring_up", "topics_they_avoid", "voice_speech_rhythm", "dialogue_prompt_summary", "example_quotes"]),
-        conflict_stress_response: pick(values, ["when_challenged_tends_to", "stress_signals", "escalation_triggers", "de_escalation_methods", "apology_style", "boundary_style", "boundaries"]),
-        signature_behaviors: { behaviors: values.behaviors },
-        narrative_engine: pick(values, ["personal_quest", "greatest_fear", "recurring_internal_conflict", "growth_arc", "shadow_version", "best_self_version", "running_joke", "symbolic_motifs", "character_themes"]),
-        game_mechanics: pick(values, ["suggested_class_role", "party_roles", "passive_abilities", "active_abilities", "weaknesses", "status_effects", "special_dialogue_triggers", "traversal_abilities", "support_abilities", "failure_comedy_mechanics"]),
-        ai_generation_metadata: pick(values, ["canonical_short_description", "canonical_long_description", "behavioral_prompt_summary", "do_not_misrepresent", "tags", "project_usage_flags", "generated_summary"]),
-        exports: {
-          supported: ["full_json", "compact_json", "markdown_profile", "ai_context_markdown", "game_design_summary", "art_prompt", "dialogue_prompt"]
-        },
-        privacy: {
-          contains_private_contact_info: Boolean(values.optional_contact),
-          contains_boundaries: values.boundaries.length > 0,
-          public_repo_safe: !values.optional_contact && values.boundaries.length === 0,
-          review_status: "raw"
-        },
+        identity: pick(values, ["display_name", "real_name_optional", "in_world_name", "nicknames", "pronouns", "age_range", "current_location", "origin_location", "communities", "roles", "professions", "identity_tags"]),
+        appearance: pick(values, ["height_build", "hair", "eyes", "face_features", "skin_tone", "distinguishing_marks", "silhouette", "everyday_clothing", "iconic_outfit", "accessories", "carried_items", "default_expression", "movement_body_language", "image_prompt_notes", "negative_image_prompt_notes"]),
+        personality: pick(values, ["primary_social_energy", "secondary_social_energy", "personality_traits", "custom_traits", "strengths", "flaws", "temperament", "biggest_contradiction"]),
+        motivation: pick(values, ["core_motivation", "ranked_values", "what_they_optimize_for", "what_they_refuse_to_compromise", "what_tempts_them", "what_they_are_trying_to_become", "greatest_need", "greatest_fear", "moral_center", "shadow_desire"]),
+        decision_making: pick(values, ["decision_style", "risk_tolerance", "planning_horizon", "under_pressure_behavior", "common_blind_spot", "failure_mode", "recovery_pattern", "what_makes_them_act", "what_makes_them_freeze"]),
+        social_model: pick(values, ["group_role", "friendship_style", "how_they_show_care", "how_they_receive_care", "how_they_ask_for_help", "trust_builders", "trust_breakers", "disagreement_style", "apology_style", "boundary_style", "loyalty_triggers", "betrayal_triggers"]),
+        relationship_graph: values.relationship_entries,
+        knowledge_domains: values.knowledge_domain_entries,
+        humor_and_voice: pick(values, ["communication_modes", "humor_types", "voice_rhythm", "typical_phrases", "vocabulary", "topics_they_bring_up", "topics_they_avoid", "example_quotes", "dialogue_dos", "dialogue_donts"]),
+        conflict_and_stress: pick(values, ["when_challenged", "stress_signals", "escalation_triggers", "deescalation_methods", "conflict_strengths", "conflict_weaknesses", "repair_pattern", "pressure_dialogue_style"]),
+        signature_behaviors: values.signature_behavior_entries,
+        narrative_engine: pick(values, ["personal_quest", "growth_arc", "recurring_internal_conflict", "shadow_version", "best_self_version", "running_joke", "symbolic_motifs", "character_themes", "dramatic_question", "what_changes_them", "what_never_changes", "role_in_group_story", "ideal_scene", "nightmare_scene"]),
+        game_mechanics: pick(values, ["suggested_class_role", "potential_party_roles", "passive_abilities", "active_abilities", "traversal_abilities", "support_abilities", "social_abilities", "research_abilities", "weaknesses", "status_effects", "special_dialogue_triggers", "failure_comedy_mechanics", "power_curve", "balance_notes"]),
+        ai_generation: pick(values, ["canonical_short_description", "canonical_long_description", "art_prompt_summary", "dialogue_prompt_summary", "behavioral_prompt_summary", "game_design_summary", "do_not_misrepresent", "sensitive_topics", "safe_exaggerations", "unsafe_exaggerations", "prompt_tags", "negative_prompt_tags"]),
+        project_usage: pick(values, ["approved_projects", "project_specific_notes", "canon_level"]),
+        source_notes: pick(values, ["source_images", "source_interviews", "source_notes", "contributors", "reviewers", "last_reviewed", "accuracy_confidence", "unresolved_questions"]),
+        generated_content: pick(values, ["character_summary", "ai_context_output", "art_prompt_output", "dialogue_prompt_output", "npc_summary", "relationship_summary"]),
         extensions: importedExtensions.unknown_fields || {}
       };
     }
@@ -464,9 +582,21 @@
     }
 
     function updatePreview() {
-      el("jsonPreview").textContent = JSON.stringify(buildProfile(), null, 2);
+      const profile = buildProfile();
+      el("jsonPreview").textContent = JSON.stringify(profile, null, 2);
       el("warnings").textContent = importedWarnings.join(" ");
+      updateCompleteness(profile);
       updateCounters();
+    }
+    function updateCompleteness(profile = buildProfile()) {
+      const scored = flatFields.filter(field => !["boolean"].includes(field.type));
+      const filled = scored.filter(field => {
+        const value = fieldValue(field.id);
+        return Array.isArray(value) ? value.length > 0 : Boolean(value);
+      }).length;
+      const score = scored.length ? Math.round((filled / scored.length) * 100) : 0;
+      el("completenessLabel").textContent = `Completeness: ${score}%`;
+      el("completenessFill").style.width = `${score}%`;
     }
     function updateCounters() {
       document.querySelectorAll("textarea[maxlength]").forEach(area => {
@@ -477,33 +607,95 @@
 
     function generateSummary() {
       const p = buildProfile();
-      const name = p.identity.in_world_name_or_nickname || p.identity.display_name || "This profile";
-      const values = p.motivation_values.ranked_core_values.slice(0, 3).join(", ");
-      const role = p.game_mechanics.suggested_class_role || p.social_relationship_model.group_role;
+      const name = p.identity.in_world_name || p.identity.display_name || "This profile";
+      const values = p.motivation.ranked_values.slice(0, 3).join(", ");
+      const role = p.game_mechanics.suggested_class_role || p.social_model.group_role;
       const traits = p.personality.personality_traits.slice(0, 3).join(", ");
       const line = [
-        `${name} is ${p.ai_generation_metadata.canonical_short_description || p.motivation_values.core_motivation || "a reusable character profile"}.`,
+        `${name} is ${p.ai_generation.canonical_short_description || p.motivation.core_motivation || "a reusable person profile"}.`,
         values ? `They prioritize ${values}.` : "",
         traits ? `They read as ${traits}.` : "",
         role ? `Their functional role is ${role}.` : "",
         p.narrative_engine.growth_arc ? `Their growth arc: ${p.narrative_engine.growth_arc}` : ""
       ].filter(Boolean).join(" ");
-      setField("generated_summary", line);
-      setField("canonical_short_description", p.ai_generation_metadata.canonical_short_description || line);
+      setField("character_summary", line);
+      setField("canonical_short_description", p.ai_generation.canonical_short_description || line);
       dirty = true;
       updatePreview();
       setStatus("Generated summary from fields.", "ok");
     }
 
+    function generateAiContextOutput() {
+      const text = aiContext();
+      setField("ai_context_output", text);
+      dirty = true;
+      updatePreview();
+      setStatus("Generated AI context.", "ok");
+      return text;
+    }
+
+    function generateArtPromptOutput() {
+      const text = artPrompt();
+      setField("art_prompt_output", text);
+      dirty = true;
+      updatePreview();
+      setStatus("Generated art prompt.", "ok");
+      return text;
+    }
+
+    function generateDialoguePromptOutput() {
+      const text = dialoguePrompt();
+      setField("dialogue_prompt_output", text);
+      dirty = true;
+      updatePreview();
+      setStatus("Generated dialogue prompt.", "ok");
+      return text;
+    }
+
+    function generateNpcSummary() {
+      const p = buildProfile();
+      const text = [
+        `${p.identity.in_world_name || p.identity.display_name || "Unnamed NPC"}: ${p.ai_generation.canonical_short_description || p.generated_content.character_summary || "Reusable NPC profile."}`,
+        `Role: ${p.game_mechanics.suggested_class_role || p.social_model.group_role || "unspecified"}.`,
+        `Motivation: ${p.motivation.core_motivation || "unspecified"}.`,
+        `Voice: ${p.humor_and_voice.voice_rhythm || "unspecified"}.`,
+        `Mechanic hooks: ${p.game_mechanics.passive_abilities.concat(p.game_mechanics.active_abilities).slice(0, 5).join("; ") || "unspecified"}.`
+      ].join("\n");
+      setField("npc_summary", text);
+      dirty = true;
+      updatePreview();
+      setStatus("Generated NPC summary.", "ok");
+      return text;
+    }
+
+    function generateRelationshipSummary() {
+      const p = buildProfile();
+      const text = [
+        `Group role: ${p.social_model.group_role || "unspecified"}.`,
+        `Friendship style: ${p.social_model.friendship_style || "unspecified"}.`,
+        `Shows care: ${p.social_model.how_they_show_care || "unspecified"}.`,
+        `Trust builders: ${p.social_model.trust_builders.join("; ") || "unspecified"}.`,
+        `Trust breakers: ${p.social_model.trust_breakers.join("; ") || "unspecified"}.`,
+        `Relationship entries: ${p.relationship_graph.length}.`
+      ].join("\n");
+      setField("relationship_summary", text);
+      dirty = true;
+      updatePreview();
+      setStatus("Generated relationship summary.", "ok");
+      return text;
+    }
+
     function markdownProfile(profile = buildProfile()) {
-      const lines = ["# Character Profile", "", `Schema version: ${profile.schema_version}`, `Record ID: ${profile.metadata.record_id}`, `Updated: ${profile.metadata.updated_at}`, ""];
+      const lines = ["# Character Profile", "", `Schema version: ${profile.schema_version}`, `Schema ID: ${profile.schema_id}`, `Profile ID: ${profile.profile_id}`, `Updated: ${profile.updated_at}`, ""];
       const sectionMap = [
         ["Identity", profile.identity], ["Appearance", profile.appearance], ["Personality", profile.personality],
-        ["Motivation & Values", profile.motivation_values], ["Decision-Making", profile.decision_making],
-        ["Social & Relationship Model", profile.social_relationship_model], ["Knowledge Domains", profile.knowledge_domains],
-        ["Humor & Communication", profile.humor_communication], ["Conflict & Stress Response", profile.conflict_stress_response],
+        ["Motivation", profile.motivation], ["Decision-Making", profile.decision_making],
+        ["Social Model", profile.social_model], ["Relationship Graph", profile.relationship_graph],
+        ["Knowledge Domains", profile.knowledge_domains],
+        ["Humor And Voice", profile.humor_and_voice], ["Conflict And Stress", profile.conflict_and_stress],
         ["Signature Behaviors", profile.signature_behaviors], ["Narrative Engine", profile.narrative_engine],
-        ["Game Mechanics", profile.game_mechanics], ["AI Generation Metadata", profile.ai_generation_metadata]
+        ["Game Mechanics", profile.game_mechanics], ["AI Generation", profile.ai_generation],
+        ["Project Usage", profile.project_usage], ["Source Notes", profile.source_notes], ["Generated Content", profile.generated_content]
       ];
       sectionMap.forEach(([title, data]) => {
         lines.push(`## ${title}`, "");
@@ -532,10 +724,10 @@
         "Use this as a durable, project-agnostic person/character profile. Respect consent, privacy, do-not-misrepresent fields, boundaries, and project usage flags.",
         "",
         "## Canonical Description",
-        profile.ai_generation_metadata.canonical_long_description || profile.ai_generation_metadata.generated_summary || profile.ai_generation_metadata.canonical_short_description || "_Not provided._",
+        profile.ai_generation.canonical_long_description || profile.generated_content.character_summary || profile.ai_generation.canonical_short_description || "_Not provided._",
         "",
         "## Behavioral Prompt",
-        profile.ai_generation_metadata.behavioral_prompt_summary || "_Not provided._",
+        profile.ai_generation.behavioral_prompt_summary || "_Not provided._",
         "",
         "## Dialogue Prompt",
         dialoguePrompt(profile),
@@ -548,8 +740,9 @@
     function gameDesignSummary(profile = buildProfile()) {
       return [
         "# Game Design Summary", "",
+        profile.ai_generation.game_design_summary || "",
         `Role: ${profile.game_mechanics.suggested_class_role || "_Not provided._"}`,
-        `Party roles: ${profile.game_mechanics.party_roles.join(", ") || "_Not provided._"}`,
+        `Party roles: ${profile.game_mechanics.potential_party_roles.join(", ") || "_Not provided._"}`,
         "", "## Passive Abilities", formatMarkdownValue(profile.game_mechanics.passive_abilities),
         "", "## Active Abilities", formatMarkdownValue(profile.game_mechanics.active_abilities),
         "", "## Weaknesses", formatMarkdownValue(profile.game_mechanics.weaknesses),
@@ -559,22 +752,24 @@
     }
     function artPrompt(profile = buildProfile()) {
       return [
-        profile.appearance.art_prompt_summary,
-        profile.appearance.visual_descriptors,
-        profile.appearance.clothing_style_props,
+        profile.ai_generation.art_prompt_summary,
+        profile.appearance.image_prompt_notes,
+        profile.appearance.everyday_clothing,
+        profile.appearance.iconic_outfit,
         `Default expression: ${profile.appearance.default_expression}`,
         `Body language: ${profile.appearance.movement_body_language}`,
-        `Do not misrepresent: ${profile.ai_generation_metadata.do_not_misrepresent.join("; ")}`
+        `Negative prompt notes: ${profile.appearance.negative_image_prompt_notes}`,
+        `Do not misrepresent: ${profile.ai_generation.do_not_misrepresent.join("; ")}`
       ].filter(Boolean).join("\n");
     }
     function dialoguePrompt(profile = buildProfile()) {
       return [
-        profile.humor_communication.dialogue_prompt_summary,
-        `Communication mode: ${profile.humor_communication.communication_mode}`,
-        `Speech rhythm: ${profile.humor_communication.voice_speech_rhythm}`,
-        `Humor: ${profile.humor_communication.humor_types.join(", ")}`,
-        `Typical phrases: ${profile.humor_communication.typical_phrases.join("; ")}`,
-        `Avoid topics: ${profile.humor_communication.topics_they_avoid.join("; ")}`
+        profile.ai_generation.dialogue_prompt_summary,
+        `Communication modes: ${profile.humor_and_voice.communication_modes.join(", ")}`,
+        `Speech rhythm: ${profile.humor_and_voice.voice_rhythm}`,
+        `Humor: ${profile.humor_and_voice.humor_types.join(", ")}`,
+        `Typical phrases: ${profile.humor_and_voice.typical_phrases.join("; ")}`,
+        `Avoid topics: ${profile.humor_and_voice.topics_they_avoid.join("; ")}`
       ].filter(Boolean).join("\n");
     }
 
@@ -594,16 +789,17 @@
       const profile = buildProfile();
       const schema = await fetch("schema/friend_descriptor_schema.json").then(r => r.ok ? r.text() : "{}").catch(() => "{}");
       const files = [
-        ["full-profile.json", JSON.stringify(profile, null, 2)],
-        ["compact-profile.json", JSON.stringify(compactProfile(profile), null, 2)],
+        ["profile.full.json", JSON.stringify(profile, null, 2)],
+        ["profile.compact.json", JSON.stringify(compactProfile(profile), null, 2)],
         ["profile.md", markdownProfile(profile)],
-        ["ai-context.md", aiContext(profile)],
-        ["game-design-summary.md", gameDesignSummary(profile)],
-        ["art-prompt.txt", artPrompt(profile)],
-        ["dialogue-prompt.txt", dialoguePrompt(profile)],
+        ["profile.ai-context.md", aiContext(profile)],
+        ["profile.game-design.md", gameDesignSummary(profile)],
+        ["profile.art-prompt.md", artPrompt(profile)],
+        ["profile.dialogue-prompt.md", dialoguePrompt(profile)],
+        ["profile.relationships.json", JSON.stringify(profile.relationship_graph, null, 2)],
         ["schema.json", schema]
       ];
-      downloadText(`${profile.metadata.record_id || "character"}-profile-package-${timestampSlug()}.zip`, makeZip(files), "application/zip");
+      downloadText(`${profile.profile_id || "character"}-profile-package-${timestampSlug()}.zip`, makeZip(files), "application/zip");
       dirty = false;
     }
 
@@ -637,10 +833,10 @@
 
     function validateProfile(profile) {
       const warnings = [];
-      if (!profile.schema_version) warnings.push("Missing schema_version; defaulted to 2.0.0.");
+      if (!profile.schema_version) warnings.push("Missing schema_version; defaulted to 3.0.0.");
       if (!profile.identity?.display_name) warnings.push("Missing display name.");
       if (!profile.consent?.permission_to_store) warnings.push("Permission to store is not checked.");
-      if (!profile.consent?.permission_to_use_as_fictional_character) warnings.push("Permission to use as fictional character is not checked.");
+      if (!profile.consent?.permission_to_fictionalize) warnings.push("Permission to fictionalize is not checked.");
       return warnings;
     }
 
@@ -652,34 +848,42 @@
       if (source.schema_version === SCHEMA_VERSION) {
         flattenModern(source, set);
       } else {
-        importedWarnings.push(`Imported ${source.schema_version || source.schema || "legacy"} and migrated safely to 2.0.0.`);
+        importedWarnings.push(`Imported ${source.schema_version || source.schema || "legacy"} and migrated safely to 3.0.0.`);
         flattenLegacy(source, set);
       }
-      const knownTop = new Set(["schema_version", "schema_name", "metadata", "consent", "identity", "appearance", "personality", "motivation_values", "decision_making", "social_relationship_model", "knowledge_domains", "humor_communication", "conflict_stress_response", "signature_behaviors", "narrative_engine", "game_mechanics", "ai_generation_metadata", "privacy", "exports", "generated", "character_core", "voice_and_behavior", "narrative_design"]);
+      const knownTop = new Set(["schema_version", "schema_id", "schema_name", "profile_id", "created_at", "updated_at", "metadata", "consent", "identity", "appearance", "personality", "motivation", "motivation_values", "decision_making", "social_model", "social_relationship_model", "relationship_graph", "knowledge_domains", "humor_and_voice", "humor_communication", "conflict_and_stress", "conflict_stress_response", "signature_behaviors", "narrative_engine", "game_mechanics", "ai_generation", "ai_generation_metadata", "project_usage", "source_notes", "generated_content", "privacy", "exports", "generated", "character_core", "voice_and_behavior", "narrative_design", "extensions"]);
       importedExtensions.unknown_fields = Object.fromEntries(Object.entries(source).filter(([key]) => !knownTop.has(key)));
       flatFields.forEach(field => {
         setField(field.id, set[field.id] ?? defaultForField(field));
       });
       const profile = buildProfile();
       importedWarnings.push(...validateProfile(profile));
+      el("migration_report").value = importedWarnings.join("\n") || "Imported profile without warnings.";
       updatePreview();
       dirty = false;
       setStatus("Imported and migrated profile.", "ok");
     }
     function defaultForField(field) {
-      if (field.id === "ranked_core_values") return DEFAULT_VALUE_ORDER;
+      if (field.id === "ranked_values") return DEFAULT_VALUE_ORDER;
       if (field.type === "boolean") return false;
       if (field.type === "list" || field.type === "rows") return [];
       if (field.type === "select") return field.options[0];
       return "";
     }
     function flattenModern(source, set) {
-      Object.assign(set, source.identity, source.appearance, source.personality, source.motivation_values, source.decision_making, source.social_relationship_model, source.humor_communication, source.conflict_stress_response, source.narrative_engine, source.game_mechanics, source.ai_generation_metadata);
-      set.domains = source.knowledge_domains?.domains || [];
-      set.behaviors = source.signature_behaviors?.behaviors || [];
-      set.consent_notes = source.consent?.notes || source.consent?.permission_notes || "";
-      ["permission_to_store", "permission_to_use_as_fictional_character", "permission_to_use_for_art_prompts", "permission_to_reuse_across_projects", "permission_to_contact_for_clarification"].forEach(key => set[key] = source.consent?.[key] || false);
-      importedExtensions.created_at = source.metadata?.created_at;
+      Object.assign(set, source.identity, source.appearance, source.personality, source.motivation, source.motivation_values, source.decision_making, source.social_model, source.social_relationship_model, source.humor_and_voice, source.humor_communication, source.conflict_and_stress, source.conflict_stress_response, source.narrative_engine, source.game_mechanics, source.ai_generation, source.ai_generation_metadata, source.project_usage, source.source_notes, source.generated_content);
+      set.relationship_entries = source.relationship_graph || source.social_relationship_model?.relationship_graph || [];
+      set.knowledge_domain_entries = Array.isArray(source.knowledge_domains) ? source.knowledge_domains : (source.knowledge_domains?.domains || []);
+      set.signature_behavior_entries = Array.isArray(source.signature_behaviors) ? source.signature_behaviors : (source.signature_behaviors?.behaviors || []);
+      set.consent_notes = source.consent?.consent_notes || source.consent?.notes || source.consent?.permission_notes || "";
+      set.permission_to_store = source.consent?.permission_to_store || false;
+      set.permission_to_fictionalize = source.consent?.permission_to_fictionalize || source.consent?.permission_to_use_as_fictional_character || false;
+      set.permission_for_ai_dialogue = source.consent?.permission_for_ai_dialogue || false;
+      set.permission_for_art_generation = source.consent?.permission_for_art_generation || source.consent?.permission_to_use_for_art_prompts || false;
+      set.permission_for_cross_project_reuse = source.consent?.permission_for_cross_project_reuse || source.consent?.permission_to_reuse_across_projects || false;
+      set.permission_for_relationship_simulation = source.consent?.permission_for_relationship_simulation || false;
+      set.contact_for_questions = source.consent?.contact_for_questions || source.consent?.permission_to_contact_for_clarification || false;
+      importedExtensions.created_at = source.created_at || source.metadata?.created_at;
     }
     function flattenLegacy(source, set) {
       const id = source.identity || {};
@@ -692,42 +896,48 @@
       const consent = source.consent || {};
       Object.assign(set, {
         display_name: id.display_name || source.display_name || source.name || "",
+        real_name_optional: source.real_name_optional || "",
         optional_contact: id.optional_contact || source.contact || "",
-        in_world_name_or_nickname: id.in_world_name_or_nickname || source.nickname || "",
+        in_world_name: id.in_world_name || id.in_world_name_or_nickname || source.nickname || "",
+        nicknames: source.nicknames || [],
         pronouns: id.pronouns || source.pronouns || "",
         age_range: id.age_range || "",
-        current_location_or_usual_setting: id.current_location_or_usual_setting || source.location || "",
+        current_location: id.current_location || id.current_location_or_usual_setting || source.location || "",
         consent_notes: consent.permission_notes || "",
-        visual_descriptors: app.visual_descriptors || source.visual_descriptors || "",
-        clothing_style_props: app.clothing_style_props || source.clothing || "",
+        image_prompt_notes: app.image_prompt_notes || app.visual_descriptors || source.visual_descriptors || "",
+        everyday_clothing: app.everyday_clothing || app.clothing_style_props || source.clothing || "",
         default_expression: app.default_expression || "",
         movement_body_language: app.movement_body_language || source.body_language || "",
-        source_image_notes: app.source_image_notes || "",
+        source_images: app.source_image_notes ? [app.source_image_notes] : [],
         personality_traits: pers.personality_traits || source.traits || [],
         custom_traits: pers.custom_traits || [],
         strengths: pers.strengths || [],
         flaws: pers.flaws || [],
-        recurring_habits: voice.recurring_habits || source.habits || [],
-        temptations: pers.temptations || [],
-        ranked_core_values: core.core_motivations || source.motivations || DEFAULT_VALUE_ORDER,
+        ranked_values: core.core_motivations || source.motivations || DEFAULT_VALUE_ORDER,
         core_motivation: core.one_sentence_summary || source.summary || "",
+        what_tempts_them: Array.isArray(pers.temptations) ? pers.temptations.join("\n") : "",
         under_pressure_behavior: voice.behavior_under_pressure || "",
         how_they_show_care: voice.how_they_help_friends_allies || "",
-        voice_speech_rhythm: voice.voice_speech_rhythm || "",
+        voice_rhythm: voice.voice_speech_rhythm || "",
         dialogue_prompt_summary: voice.communication_style || "",
-        boundaries: pers.boundaries || [],
-        behaviors: (voice.signature_behaviors || []).map(behavior => ({ behavior, context: "", comedic_exaggeration_potential: "", game_use_notes: "" })),
+        sensitive_topics_to_avoid: pers.boundaries || [],
+        signature_behavior_entries: (voice.signature_behaviors || []).map(behavior => ({ behavior, context: "", frequency: "", comedic_exaggeration_potential: "", game_use_notes: "", dialogue_use_notes: "" })),
         growth_arc: narrative.growth_arc || "",
         suggested_class_role: narrative.suggested_class_role || source.role || "",
-        party_roles: narrative.potential_party_roles || [],
+        potential_party_roles: narrative.potential_party_roles || [],
         active_abilities: narrative.mechanics_hooks || [],
-        tags: narrative.character_tags || source.tags || [],
-        generated_summary: generated.character_summary || "",
+        prompt_tags: narrative.character_tags || source.tags || [],
+        approved_projects: source.project_usage_flags || [],
+        character_summary: generated.character_summary || "",
         canonical_short_description: core.one_sentence_summary || source.summary || "",
         art_prompt_summary: app.visual_descriptors || "",
         behavioral_prompt_summary: voice.communication_style || ""
       });
-      ["permission_to_store", "permission_to_use_as_fictional_character", "permission_to_use_for_art_prompts", "permission_to_reuse_across_projects", "permission_to_contact_for_clarification"].forEach(key => set[key] = consent[key] || false);
+      set.permission_to_store = consent.permission_to_store || false;
+      set.permission_to_fictionalize = consent.permission_to_fictionalize || consent.permission_to_use_as_fictional_character || false;
+      set.permission_for_art_generation = consent.permission_for_art_generation || consent.permission_to_use_for_art_prompts || false;
+      set.permission_for_cross_project_reuse = consent.permission_for_cross_project_reuse || consent.permission_to_reuse_across_projects || false;
+      set.contact_for_questions = consent.contact_for_questions || consent.permission_to_contact_for_clarification || false;
     }
 
     async function submitProfile() {
@@ -739,8 +949,9 @@
         return;
       }
       const payload = {
-        subject: `Person profile submission: ${profile.identity.display_name || profile.identity.in_world_name_or_nickname}`,
+        subject: `Person profile submission: ${profile.identity.display_name || profile.identity.in_world_name}`,
         schema_version: SCHEMA_VERSION,
+        schema_id: SCHEMA_ID,
         submitted_at: nowIso(),
         display_name: profile.identity.display_name,
         optional_contact: profile.identity.optional_contact,
@@ -780,13 +991,28 @@
       flatFields.forEach(field => setField(field.id, defaultForField(field)));
       importedExtensions = {};
       importedWarnings = [];
+      el("migration_report").value = "";
       dirty = false;
       updatePreview();
       setStatus("Form reset.", "ok");
     }
+    function filterFields(query) {
+      const needle = query.trim().toLowerCase();
+      document.querySelectorAll("#profileForm details").forEach(section => {
+        if (!needle) {
+          section.style.display = "";
+          section.open = section.open;
+          return;
+        }
+        const text = section.textContent.toLowerCase();
+        const match = text.includes(needle);
+        section.style.display = match ? "" : "none";
+        if (match) section.open = true;
+      });
+    }
     function shareLink() {
       const base = el("github_pages_base_url").value.trim().replace(/\/+$/, "") || "https://lonnie-tisdale.github.io/friend-character-intake";
-      const link = `${base}/exports/${slugify(buildProfile().metadata.record_id)}-${timestampSlug()}.json`;
+      const link = `${base}/exports/${slugify(buildProfile().profile_id)}-${timestampSlug()}.json`;
       el("latest_share_link").value = link;
       return link;
     }
@@ -803,7 +1029,11 @@
     document.addEventListener("change", () => { dirty = true; updatePreview(); });
     el("submitBtn").addEventListener("click", submitProfile);
     el("generateSummaryBtn").addEventListener("click", generateSummary);
-    el("generateAiBtn").addEventListener("click", () => copyText(aiContext(), "Generated and copied AI context markdown."));
+    el("generateAiBtn").addEventListener("click", generateAiContextOutput);
+    el("generateArtBtn").addEventListener("click", generateArtPromptOutput);
+    el("generateDialogueBtn").addEventListener("click", generateDialoguePromptOutput);
+    el("generateNpcBtn").addEventListener("click", generateNpcSummary);
+    el("generateRelationshipBtn").addEventListener("click", generateRelationshipSummary);
     el("copyJsonBtn").addEventListener("click", () => copyText(JSON.stringify(buildProfile(), null, 2), "Copied full JSON."));
     el("copyMarkdownBtn").addEventListener("click", () => copyText(markdownProfile(), "Copied markdown profile."));
     el("downloadAllBtn").addEventListener("click", downloadAll);
@@ -814,7 +1044,16 @@
     el("downloadGameSummaryBtn").addEventListener("click", () => downloadText(`game-design-summary-${timestampSlug()}.md`, gameDesignSummary(), "text/markdown"));
     el("downloadArtPromptBtn").addEventListener("click", () => downloadText(`art-prompt-${timestampSlug()}.txt`, artPrompt(), "text/plain"));
     el("downloadDialoguePromptBtn").addEventListener("click", () => downloadText(`dialogue-prompt-${timestampSlug()}.txt`, dialoguePrompt(), "text/plain"));
+    el("downloadRelationshipsBtn").addEventListener("click", () => downloadText(`profile.relationships-${timestampSlug()}.json`, JSON.stringify(buildProfile().relationship_graph, null, 2), "application/json"));
+    el("validateJsonBtn").addEventListener("click", () => {
+      const warnings = validateProfile(buildProfile());
+      importedWarnings = warnings.length ? warnings : ["Profile validates against the app's required v3 checks."];
+      el("migration_report").value = importedWarnings.join("\n");
+      updatePreview();
+      setStatus(warnings.length ? "Validation completed with warnings." : "Validation passed.", warnings.length ? "warn" : "ok");
+    });
     el("copyShareLinkBtn").addEventListener("click", () => copyText(shareLink(), "Copied generated share link."));
+    el("field_search").addEventListener("input", event => filterFields(event.target.value));
     el("importFile").addEventListener("change", handleImport);
     el("resetBtn").addEventListener("click", resetForm);
   </script>

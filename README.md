@@ -2,7 +2,7 @@
 
 A static, project-agnostic profile database for collecting structured descriptors from real people so they can be adapted into consistent fictional and game characters across K Street projects.
 
-The current schema is `kstreet.person_profile` version `2.0.0`.
+The current schema is `kstreet_person_profile.v3` version `3.0.0`.
 
 ## What This Is For
 
@@ -23,7 +23,9 @@ It can support:
 - `index.html` - static profile form, live JSON preview, import/export, sharing, compatibility checks, generated summaries, and Formspree submission
 - `schema/friend_descriptor_schema.json` - versioned JSON Schema
 - `docs/friend-character-schema.md` - schema field guide
-- `docs/person-profile-schema.md` - `2.0.0` person profile schema guide, migration notes, and export instructions
+- `docs/person-profile-schema-v3.md` - canonical v3 person profile schema guide
+- `docs/export-formats.md` - export file descriptions
+- `docs/import-migration.md` - import, validation, and migration notes
 - `docs/workflow.md` - recommended K Street cloud-drive workflow
 - `examples/example-descriptor-intake.json` - safe example record
 
@@ -38,7 +40,7 @@ Open `index.html` in a browser. No server or backend is required.
 Use the buttons at the top of the form to:
 
 - Submit the descriptor to a configured intake endpoint
-- Generate a summary from fields
+- Generate a character summary, AI context, art prompt, dialogue prompt, NPC summary, and relationship summary
 - Generate AI context
 - Copy JSON or Markdown
 - Share a portable JSON snapshot
@@ -110,28 +112,32 @@ The submission payload includes:
 - art prompt
 - dialogue prompt
 
-## Schema 2.0.0 Sections
+## Schema 3.0.0 Sections
 
 The form is organized into collapsible sections:
 
 - Identity
 - Appearance
 - Personality
-- Motivation & Values
+- Motivation
 - Decision-Making
-- Social & Relationship Model
+- Social Model
+- Relationship Graph
 - Knowledge Domains
-- Humor & Communication
-- Conflict & Stress Response
+- Humor And Voice
+- Conflict And Stress
 - Signature Behaviors
 - Narrative Engine
 - Game Mechanics
-- AI Generation Metadata
+- AI Generation
+- Project Usage
+- Source Notes
+- Generated Content
 - Export / Import
 
 ## Migration
 
-The app imports `2.0.0` records directly and attempts to migrate older `friend_descriptor_intake.v2` and v1-style flat records. Missing new fields default safely. Unknown imported fields are preserved under `extensions`.
+The app imports `3.0.0` records directly and attempts to migrate `2.0.0`, `friend_descriptor_intake.v2`, and v1-style flat records. Missing new fields default safely. Unknown imported fields are preserved under `extensions`.
 
 ## Sharing With ChatGPT and Other AI Systems
 
