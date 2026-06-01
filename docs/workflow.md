@@ -21,6 +21,27 @@ K Street Character Descriptor Tool/
     Future Project Name/
 ```
 
+## Review Dashboard Workflow
+
+Use `review.html` for a non-database review pass:
+
+1. Download JSON submissions from Formspree or email.
+2. Open the review dashboard from the public GitHub Pages site or local repo.
+3. Import one or more JSON files.
+4. Review consent, source image notes, project approvals, and private fields.
+5. Mark each record as `raw`, `reviewed`, or `approved`.
+6. Export the review JSON/Markdown or approved package.
+7. Store exports in the private drive:
+
+```text
+Submitted Descriptors/
+  Raw/
+  Reviewed/
+  Approved for Use/
+```
+
+The review dashboard stores its working queue only in the current browser when you click `Save Review Queue Locally`. It does not write to GitHub, Formspree, or a backend.
+
 ## Recommended Workflow
 
 1. Publish or share the static `index.html` form.
@@ -59,4 +80,3 @@ For each project import, keep a note of:
 - Date imported
 - What fields were transformed or omitted
 - Whether boundaries were checked before use
-

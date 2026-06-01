@@ -50,7 +50,7 @@ Unknown imported fields must be preserved under `extensions`.
 UX-facing additions that remain JSON-portable:
 
 - `identity.short_bio` - friendly intake bio for nontechnical submitters
-- `social_model.relationship_to_lonnie_kstreet` - plain-language relationship/project context
+- `social_model.relationship_to_kstreet_circle` - plain-language K Street/project/community relationship context
 - `project_usage.project_relevance_notes` - why the profile matters to projects
 - `asset_library.assets[].linked_entity_id`
 - `asset_library.assets[].linked_project`

@@ -21,6 +21,7 @@ It can support:
 ## Files
 
 - `index.html` - static profile form, live JSON preview, import/export, sharing, compatibility checks, generated summaries, and Formspree submission
+- `review.html` - private/local-first review dashboard for Raw -> Reviewed -> Approved descriptor workflow
 - `schema/friend_descriptor_schema.json` - versioned JSON Schema
 - `docs/friend-character-schema.md` - schema field guide
 - `docs/person-profile-schema-v3.md` - canonical v3 person profile schema guide
@@ -63,6 +64,15 @@ Use the buttons at the top of the form to:
 - Export the current record as JSON
 - Import an older or current JSON record
 - Reset the form
+
+Reviewer workflow:
+
+1. Open `review.html`.
+2. Import downloaded Formspree/profile JSON files.
+3. Select each submission and set status to `raw`, `reviewed`, or `approved`.
+4. Add reviewer notes, confidence level, canon level, and consent status.
+5. Download review JSON/Markdown or an approved package.
+6. Store exported packages in the private K Street cloud drive, not the public repo.
 
 The JSON preview updates live as fields change. The app warns before closing when there are unsaved changes.
 
@@ -171,7 +181,7 @@ Supported entity types are `person`, `relationship`, `organization`, `location`,
 
 Existing v3 exports automatically become `entity_type: "person"` on import. Unknown fields are still preserved under `extensions`.
 
-Recent UX/schema additions include `identity.short_bio`, `social_model.relationship_to_lonnie_kstreet`, `project_usage.project_relevance_notes`, per-asset `linked_entity_id` / `linked_project`, and relationship metadata for confidence, canon, and consent.
+Recent UX/schema additions include `identity.short_bio`, `social_model.relationship_to_kstreet_circle` for K Street/project/community relationship context, `project_usage.project_relevance_notes`, per-asset `linked_entity_id` / `linked_project`, and relationship metadata for confidence, canon, and consent.
 
 ## Migration
 
