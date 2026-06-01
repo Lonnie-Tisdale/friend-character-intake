@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Friend Character Intake</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f4ee;
+  --panel: #fffdf7;
+  --ink: #1f2528;
+  --muted: #667073;
+  --line: #cfc8b8;
+  --accent: #0f766e;
+  --accent-ink: #ffffff;
+  --field: #ffffff;
+  --danger: #9f1239;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #171a1c;
+    --panel: #22272a;
+    --ink: #f1f4f2;
+    --muted: #aab3b0;
+    --line: #3d4646;
+    --field: #15191b;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+main {
+  width: min(1040px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 48px;
+}
+
+header {
+  display: grid;
+  gap: 12px;
+  padding: 24px 0;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(2rem, 6vw, 4.8rem);
+  line-height: .96;
+  letter-spacing: 0;
+  max-width: 920px;
+}
+
+.intro {
+  color: var(--muted);
+  max-width: 780px;
+  font-size: 1.05rem;
+}
+
+form {
+  display: grid;
+  gap: 16px;
+}
+
+section {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+}
+
+section > h2 {
+  font-size: 1.15rem;
+  margin-bottom: 12px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.grid.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+label,
+fieldset {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+}
+
+fieldset {
+  border: 0;
+  padding: 0;
+}
+
+legend {
+  padding: 0;
+  font-weight: 700;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: .88rem;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--field);
+  color: var(--ink);
+  padding: 10px;
+  font: inherit;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 92px;
+}
+
+.checks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 16px;
+}
+
+.checks label,
+.inline {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+}
+
+.checks input,
+.inline input {
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  min-height: 18px;
+  margin-top: 3px;
+}
+
+.actions {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
+  border-top: 1px solid var(--line);
+  padding: 14px 0;
+  backdrop-filter: blur(8px);
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+button {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--field);
+  color: var(--ink);
+  padding: 10px 14px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button.primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+button:hover {
+  filter: brightness(.97);
+}
+
+.required {
+  color: var(--danger);
+}
+
+output {
+  color: var(--muted);
+  min-height: 24px;
+}
+
+pre {
+  overflow: auto;
+  max-height: 360px;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--field);
+  white-space: pre-wrap;
+}
+
+@media (max-width: 760px) {
+  main {
+    width: min(100% - 20px, 1040px);
+  }
+
+  .grid,
+  .grid.three,
+  .checks {
+    grid-template-columns: 1fr;
+  }
+
+  section {
+    padding: 14px;
+  }
+}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Friend Character Intake</h1>
+    <p class="intro">Fill this out with what feels accurate, comfortable, and useful. The goal is to combine written descriptors with source images so each friend can become a consistent character reference for this game and future projects.</p>
+  </header>
+
+  <form id="intakeForm">
+    <section>
+      <h2>Consent and Use</h2>
+      <div class="grid">
+        <label class="full inline">
+          <input type="checkbox" name="consent.use_as_character_reference" required>
+          <span>I am comfortable with these descriptors being used as character reference material for private game development and related creative projects. <span class="required">*</span></span>
+        </label>
+        <label class="full inline">
+          <input type="checkbox" name="consent.combine_with_images">
+          <span>I am comfortable with these descriptors being paired with photos or image references I provide or approve.</span>
+        </label>
+        <label class="full inline">
+          <input type="checkbox" name="consent.contact_for_clarification">
+          <span>You can contact me later if a descriptor needs clarification.</span>
+        </label>
+        <label>
+          Display name <span class="required">*</span>
+          <input name="identity.display_name" required autocomplete="name">
+        </label>
+        <label>
+          Preferred contact
+          <input name="identity.contact" autocomplete="email" placeholder="Email, Discord, phone, etc.">
+        </label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Core Identity</h2>
+      <div class="grid">
+        <label>
+          In-game name or nickname
+          <input name="identity.game_name">
+        </label>
+        <label>
+          Pronouns
+          <input name="identity.pronouns" placeholder="Optional">
+        </label>
+        <label>
+          Current city or usual setting
+          <input name="identity.location">
+        </label>
+        <label>
+          Age range
+          <select name="identity.age_range">
+            <option value="">Prefer not to say</option>
+            <option>20s</option>
+            <option>30s</option>
+            <option>40s</option>
+            <option>50s</option>
+            <option>60s+</option>
+          </select>
+        </label>
+        <label class="full">
+          One-sentence character summary
+          <textarea name="identity.summary" placeholder="Example: A hyper-prepared market guy with firefighter reflexes and passport avoidance issues."></textarea>
+        </label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Visual Descriptors</h2>
+      <div class="grid three">
+        <label>
+          Height / build
+          <input name="appearance.height_build" placeholder="Tall, compact, broad, lanky, etc.">
+        </label>
+        <label>
+          Hair
+          <input name="appearance.hair" placeholder="Color, length, style, facial hair">
+        </label>
+        <label>
+          Eyes / brows
+          <input name="appearance.eyes">
+        </label>
+        <label>
+          Face shape / features
+          <input name="appearance.face">
+        </label>
+        <label>
+          Skin tone / complexion
+          <input name="appearance.complexion">
+        </label>
+        <label>
+          Distinguishing marks
+          <input name="appearance.distinguishing_marks" placeholder="Scars, tattoos, glasses, etc.">
+        </label>
+        <label class="full">
+          Overall silhouette
+          <textarea name="appearance.silhouette" placeholder="What would make you recognizable from across the room?"></textarea>
+        </label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Style and Props</h2>
+      <div class="grid">
+        <label>
+          Everyday clothing
+          <textarea name="style.everyday_clothing" placeholder="Default outfit, shoes, colors, textures, layers"></textarea>
+        </label>
+        <label>
+          Iconic outfit
+          <textarea name="style.iconic_outfit" placeholder="The look people would instantly associate with you"></textarea>
+        </label>
+        <label>
+          Accessories
+          <input name="style.accessories" placeholder="Hat, sunglasses, bag, jewelry, watch">
+        </label>
+        <label>
+          Carried items or props
+          <input name="style.props" placeholder="Camera, laptop, canteen, fanny pack, etc.">
+        </label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Expression and Movement</h2>
+      <div class="grid">
+        <label>
+          Default facial expression
+          <input name="presence.default_expression" placeholder="Smirk, deadpan, warm, suspicious, etc.">
+        </label>
+        <label>
+          How you stand or move
+          <input name="presence.posture_movement" placeholder="Loose, precise, restless, grounded, theatrical">
+        </label>
+        <label>
+          Voice or speech rhythm
+          <input name="presence.voice" placeholder="Fast, dry, calm, broadcaster, chaotic, etc.">
+        </label>
+        <label>
+          Social energy
+          <select name="presence.social_energy">
+            <option value="">Choose one</option>
+            <option>Quiet observer</option>
+            <option>Warm stabilizer</option>
+            <option>Chaotic instigator</option>
+            <option>Deadpan commentator</option>
+            <option>Practical fixer</option>
+            <option>Magnetic performer</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Personality Anchors</h2>
+      <fieldset>
+        <legend>Pick up to six that fit</legend>
+        <p class="hint">These become quick tags for writing scenes, dialogue, mechanics, and image prompts.</p>
+        <div class="checks" data-max="6">
+          <label><input type="checkbox" name="personality.traits" value="Funny">Funny</label>
+          <label><input type="checkbox" name="personality.traits" value="Sarcastic">Sarcastic</label>
+          <label><input type="checkbox" name="personality.traits" value="Warm">Warm</label>
+          <label><input type="checkbox" name="personality.traits" value="Stoic">Stoic</label>
+          <label><input type="checkbox" name="personality.traits" value="Prepared">Prepared</label>
+          <label><input type="checkbox" name="personality.traits" value="Impulsive">Impulsive</label>
+          <label><input type="checkbox" name="personality.traits" value="Cynical">Cynical</label>
+          <label><input type="checkbox" name="personality.traits" value="Optimistic">Optimistic</label>
+          <label><input type="checkbox" name="personality.traits" value="Mystical">Mystical</label>
+          <label><input type="checkbox" name="personality.traits" value="Technical">Technical</label>
+          <label><input type="checkbox" name="personality.traits" value="Practical">Practical</label>
+          <label><input type="checkbox" name="personality.traits" value="Dramatic">Dramatic</label>
+        </div>
+      </fieldset>
+      <div class="grid" style="margin-top: 14px;">
+        <label>
+          Custom traits
+          <input name="personality.custom_traits" placeholder="Comma-separated">
+        </label>
+        <label>
+          Biggest contradiction
+          <input name="personality.contradiction" placeholder="Example: deeply cautious but addicted to risky trades">
+        </label>
+        <label class="full">
+          Things the character version should never get wrong
+          <textarea name="personality.never_get_wrong"></textarea>
+        </label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Game Use</h2>
+      <div class="grid">
+        <label>
+          Suggested class / role
+          <input name="game.role" placeholder="Street Photographer, Security Expert, Burner DJ, etc.">
+        </label>
+        <label>
+          Mechanics hooks
+          <input name="game.mechanics" placeholder="Comma-separated abilities, perks, flaws, events">
+        </label>
+        <label>
+          Comedic exaggeration level
+          <select name="game.exaggeration_level">
+            <option>Affectionate and mild</option>
+            <option selected>Noticeably heightened</option>
+            <option>Absurd but recognizable</option>
+            <option>Please keep it grounded</option>
+          </select>
+        </label>
+        <label>
+          Boundaries
+          <input name="game.boundaries" placeholder="Topics, jokes, or visual details to avoid">
+        </label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Source Images</h2>
+      <div class="grid">
+        <label class="full">
+          Image files or links
+          <textarea name="source_images.references" placeholder="Paste filenames, cloud links, or notes like: front portrait, side profile, full-body casual outfit."></textarea>
+        </label>
+        <label>
+          Best image for face reference
+          <input name="source_images.best_face_reference">
+        </label>
+        <label>
+          Best image for outfit/body reference
+          <input name="source_images.best_full_body_reference">
+        </label>
+        <label class="full">
+          Image notes
+          <textarea name="source_images.notes" placeholder="Mention old photos, lighting issues, outdated hairstyles, or which details are still accurate."></textarea>
+        </label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Review</h2>
+      <pre id="preview">{}</pre>
+    </section>
+
+    <div class="actions">
+      <output id="status">Ready.</output>
+      <div class="button-row">
+        <button type="button" id="copyJson">Copy JSON</button>
+        <button type="button" id="downloadJson" class="primary">Download JSON</button>
+        <button type="reset">Clear</button>
+      </div>
+    </div>
+  </form>
+</main>
+
+<script>
+const form = document.querySelector("#intakeForm");
+const preview = document.querySelector("#preview");
+const status = document.querySelector("#status");
+
+function setNested(target, path, value) {
+  const parts = path.split(".");
+  let cursor = target;
+  parts.slice(0, -1).forEach((part) => {
+    cursor[part] = cursor[part] || {};
+    cursor = cursor[part];
+  });
+  cursor[parts[parts.length - 1]] = value;
+}
+
+function splitList(value) {
+  return value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function slugify(value) {
+  return (value || "friend")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "")
+    .slice(0, 60) || "friend";
+}
+
+function formToRecord() {
+  const record = {
+    schema: "friend_descriptor_intake.v1",
+    submitted_at: new Date().toISOString()
+  };
+  const data = new FormData(form);
+
+  for (const [name, value] of data.entries()) {
+    if (name === "personality.traits") continue;
+    if (value === "") continue;
+    const normalized = name.startsWith("consent.")
+      ? true
+      : ["personality.custom_traits", "game.mechanics"].includes(name)
+      ? splitList(value)
+      : value;
+    setNested(record, name, normalized);
+  }
+
+  const traits = [...form.querySelectorAll('input[name="personality.traits"]:checked')]
+    .map((input) => input.value);
+  if (traits.length) setNested(record, "personality.traits", traits);
+
+  record.character_id = slugify(record.identity?.game_name || record.identity?.display_name);
+  return record;
+}
+
+function refreshPreview() {
+  preview.textContent = JSON.stringify(formToRecord(), null, 2);
+}
+
+function download(filename, content) {
+  const blob = new Blob([content], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
+form.addEventListener("input", refreshPreview);
+form.addEventListener("reset", () => {
+  setTimeout(() => {
+    refreshPreview();
+    status.textContent = "Cleared.";
+  });
+});
+
+document.querySelector("#copyJson").addEventListener("click", async () => {
+  const text = JSON.stringify(formToRecord(), null, 2);
+  await navigator.clipboard.writeText(text);
+  status.textContent = "JSON copied.";
+});
+
+document.querySelector("#downloadJson").addEventListener("click", () => {
+  if (!form.reportValidity()) return;
+  const record = formToRecord();
+  download(`${record.character_id}-descriptor-intake.json`, JSON.stringify(record, null, 2));
+  status.textContent = "JSON downloaded.";
+});
+
+document.querySelectorAll("[data-max]").forEach((group) => {
+  group.addEventListener("change", () => {
+    const max = Number(group.dataset.max);
+    const checked = [...group.querySelectorAll("input:checked")];
+    if (checked.length > max) {
+      checked.at(-1).checked = false;
+      status.textContent = `Pick up to ${max} traits.`;
+    }
+    refreshPreview();
+  });
+});
+
+refreshPreview();
+</script>
+</body>
+</html>
