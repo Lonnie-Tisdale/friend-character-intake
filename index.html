@@ -1,0 +1,1136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>K Street Character Descriptor Intake Tool</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f5f1;
+      --panel: #ffffff;
+      --ink: #202124;
+      --muted: #62666d;
+      --line: #d8d5cd;
+      --accent: #1d6f6f;
+      --accent-strong: #144f52;
+      --warn: #9a4f00;
+      --ok: #1f7a3b;
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.45;
+    }
+
+    header {
+      background: #24302f;
+      color: #fff;
+      padding: 22px clamp(16px, 4vw, 40px);
+      border-bottom: 5px solid var(--accent);
+    }
+
+    header h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.45rem, 2.2vw, 2.2rem);
+      letter-spacing: 0;
+    }
+
+    header p {
+      margin: 0;
+      max-width: 920px;
+      color: #e7ece9;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(360px, 0.62fr);
+      gap: 18px;
+      padding: 18px clamp(12px, 3vw, 32px) 32px;
+      align-items: start;
+    }
+
+    .toolbar, section, aside {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      margin-bottom: 14px;
+    }
+
+    button, .file-button {
+      border: 1px solid #9ebdbc;
+      background: #e8f2f1;
+      color: var(--accent-strong);
+      border-radius: 6px;
+      min-height: 40px;
+      padding: 8px 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+      outline: 3px solid #f1c95b;
+      outline-offset: 2px;
+    }
+
+    section {
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    section h2, aside h2 {
+      margin: 0 0 12px;
+      font-size: 1.05rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    label {
+      display: grid;
+      gap: 5px;
+      font-weight: 700;
+      color: #282a2d;
+    }
+
+    label.full, .full { grid-column: 1 / -1; }
+    .hint {
+      color: var(--muted);
+      font-weight: 500;
+      font-size: 0.82rem;
+    }
+
+    .tip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.15rem;
+      height: 1.15rem;
+      border-radius: 50%;
+      background: #e1ecea;
+      color: var(--accent-strong);
+      font-size: 0.78rem;
+      margin-left: 4px;
+      cursor: help;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid #bfc5c3;
+      border-radius: 6px;
+      padding: 9px 10px;
+      font: inherit;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-weight: 650;
+    }
+
+    .check-row input {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      flex: 0 0 auto;
+    }
+
+    .counter {
+      text-align: right;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    details {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+      padding: 12px 16px 16px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    aside {
+      position: sticky;
+      top: 72px;
+      padding: 14px;
+    }
+
+    pre {
+      margin: 0;
+      min-height: 420px;
+      max-height: calc(100vh - 220px);
+      overflow: auto;
+      border-radius: 6px;
+      padding: 12px;
+      background: #17201f;
+      color: #e8f5f1;
+      font-size: 0.82rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .status {
+      min-height: 24px;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .status.ok { color: var(--ok); }
+    .status.warn { color: var(--warn); }
+
+    input[type="file"] { display: none; }
+
+    @media (max-width: 980px) {
+      main { grid-template-columns: 1fr; }
+      aside { position: static; }
+      pre { max-height: 560px; }
+    }
+
+    @media (max-width: 640px) {
+      .grid { grid-template-columns: 1fr; }
+      .toolbar { position: static; }
+      button, .file-button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>K Street Character Descriptor Intake Tool</h1>
+    <p>Universal intake for reusable fictional and game character descriptors. Schema: <strong>friend_descriptor_intake.v2</strong></p>
+  </header>
+
+  <main>
+    <div>
+      <div class="toolbar" aria-label="Form actions">
+        <button type="button" class="primary" id="submitBtn">Submit Descriptor</button>
+        <button type="button" class="primary" id="summaryBtn">Generate Summary</button>
+        <button type="button" id="shareBtn">Share Character</button>
+        <button type="button" id="copyContextBtn">Copy AI Context</button>
+        <button type="button" id="publishBtn">Publish Snapshot</button>
+        <button type="button" id="copyLinkBtn">Copy Share Link</button>
+        <button type="button" id="chatgptBtn">Export for ChatGPT</button>
+        <button type="button" id="downloadEverythingBtn">Download Everything</button>
+        <button type="button" id="exportBtn">Export JSON</button>
+        <label class="file-button" for="importFile">Import JSON</label>
+        <input id="importFile" type="file" accept="application/json,.json">
+        <button type="button" id="resetBtn">Reset</button>
+      </div>
+
+      <form id="descriptorForm">
+        <section>
+          <h2>Consent and Use Permissions</h2>
+          <div class="grid">
+            <label class="check-row"><input type="checkbox" id="permission_to_store"> Permission to store this descriptor</label>
+            <label class="check-row"><input type="checkbox" id="permission_to_use_as_fictional_character"> Permission to use as a fictional character</label>
+            <label class="check-row"><input type="checkbox" id="permission_to_use_for_art_prompts"> Permission to use for art prompts</label>
+            <label class="check-row"><input type="checkbox" id="permission_to_reuse_across_projects"> Permission to reuse across projects</label>
+            <label class="check-row"><input type="checkbox" id="permission_to_contact_for_clarification"> Permission to contact for clarification</label>
+            <label class="full">Permission notes <span class="tip" title="Captures limits, approvals, and context that should follow the descriptor.">?</span>
+              <textarea id="permission_notes" maxlength="900"></textarea>
+              <span class="counter"></span>
+            </label>
+          </div>
+        </section>
+
+        <section>
+          <h2>Identity</h2>
+          <div class="grid">
+            <label>Display name <span class="tip" title="Used for private file naming and review. Keep public copies anonymized unless approved.">?</span>
+              <input id="display_name" autocomplete="name">
+            </label>
+            <label>Optional contact <span class="tip" title="Private only. Helps reviewers clarify details with permission.">?</span>
+              <input id="optional_contact" autocomplete="email">
+            </label>
+            <label>In-world name or nickname
+              <input id="in_world_name_or_nickname">
+            </label>
+            <label>Pronouns
+              <input id="pronouns">
+            </label>
+            <label>Current location or usual setting
+              <input id="current_location_or_usual_setting">
+            </label>
+            <label>Age range
+              <input id="age_range" placeholder="20s, 30s, elder, unknown, etc.">
+            </label>
+          </div>
+        </section>
+
+        <section>
+          <h2>Character Core</h2>
+          <div class="grid">
+            <label class="full">One-sentence character summary <span class="tip" title="The fast reusable version of who this person becomes as a character.">?</span>
+              <textarea id="one_sentence_summary" maxlength="280"></textarea>
+              <span class="counter"></span>
+            </label>
+            <label>Primary social energy
+              <input id="primary_social_energy" placeholder="Grounding, chaotic, magnetic, analytical...">
+            </label>
+            <label>Secondary social energy
+              <input id="secondary_social_energy" placeholder="Protective, dryly funny, competitive...">
+            </label>
+            <label class="full">Core motivations <span class="hint">One per line or comma-separated</span>
+              <textarea id="core_motivations" maxlength="800"></textarea>
+              <span class="counter"></span>
+            </label>
+          </div>
+        </section>
+
+        <section>
+          <h2>Appearance and Presence</h2>
+          <div class="grid">
+            <label class="full">Visual descriptors <span class="tip" title="Recognition cues for art, casting, and prose without needing private images.">?</span>
+              <textarea id="visual_descriptors" maxlength="1100"></textarea>
+              <span class="counter"></span>
+            </label>
+            <label class="full">Clothing, style, and props
+              <textarea id="clothing_style_props" maxlength="900"></textarea>
+              <span class="counter"></span>
+            </label>
+            <label>Default expression
+              <input id="default_expression">
+            </label>
+            <label>Movement and body language
+              <input id="movement_body_language">
+            </label>
+          </div>
+        </section>
+
+        <section>
+          <h2>Voice and Behavior</h2>
+          <div class="grid">
+            <label class="full">Voice and speech rhythm <span class="tip" title="Useful for dialogue generation and NPC simulation.">?</span>
+              <textarea id="voice_speech_rhythm" maxlength="900"></textarea>
+              <span class="counter"></span>
+            </label>
+            <label class="full">Signature behaviors <span class="hint">One per line or comma-separated</span>
+              <textarea id="signature_behaviors" maxlength="900"></textarea>
+              <span class="counter"></span>
+            </label>
+            <label class="full">Communication style
+              <textarea id="communication_style" maxlength="900"></textarea>
+              <span class="counter"></span>
+            </label>
+          </div>
+        </section>
+
+        <section>
+          <h2>Personality and Playability</h2>
+          <div class="grid">
+            <label>Personality traits <span class="hint">List</span>
+              <textarea id="personality_traits" maxlength="700"></textarea>
+              <span class="counter"></span>
+            </label>
+            <label>Custom traits <span class="hint">List</span>
+              <textarea id="custom_traits" maxlength="700"></textarea>
+              <span class="counter"></span>
+            </label>
+            <label>Strengths <span class="hint">List</span>
+              <textarea id="strengths" maxlength="700"></textarea>
+              <span class="counter"></span>
+            </label>
+            <label>Flaws <span class="hint">List</span>
+              <textarea id="flaws" maxlength="700"></textarea>
+              <span class="counter"></span>
+            </label>
+            <label>Character tags <span class="hint">List</span>
+              <textarea id="character_tags" maxlength="700"></textarea>
+              <span class="counter"></span>
+            </label>
+            <label>Suggested class or role
+              <textarea id="suggested_class_role" maxlength="500"></textarea>
+              <span class="counter"></span>
+            </label>
+          </div>
+        </section>
+
+        <details>
+          <summary>Advanced Adaptation Fields</summary>
+          <div class="grid">
+            <label>Mechanics hooks <span class="hint">List</span>
+              <textarea id="mechanics_hooks" maxlength="900"></textarea>
+              <span class="counter"></span>
+            </label>
+            <label>Potential party roles <span class="hint">List</span>
+              <textarea id="potential_party_roles" maxlength="700"></textarea>
+              <span class="counter"></span>
+            </label>
+            <label>Comedic / exaggeration level
+              <select id="comedic_exaggeration_level">
+                <option value="grounded">grounded</option>
+                <option value="none">none</option>
+                <option value="heightened">heightened</option>
+                <option value="cartoonish">cartoonish</option>
+                <option value="mythic">mythic</option>
+              </select>
+            </label>
+            <label>Review status
+              <select id="review_status">
+                <option value="raw">raw</option>
+                <option value="reviewed">reviewed</option>
+                <option value="approved_for_use">approved_for_use</option>
+              </select>
+            </label>
+            <label class="full">Boundaries <span class="tip" title="Private guardrails for respectful adaptation. Review before any project import.">?</span>
+              <textarea id="boundaries" maxlength="1000"></textarea>
+              <span class="counter"></span>
+            </label>
+            <label>Behavior under pressure
+              <textarea id="behavior_under_pressure" maxlength="900"></textarea>
+              <span class="counter"></span>
+            </label>
+            <label>How they help friends / allies
+              <textarea id="how_they_help_friends_allies" maxlength="900"></textarea>
+              <span class="counter"></span>
+            </label>
+            <label>Temptations <span class="hint">List</span>
+              <textarea id="temptations" maxlength="700"></textarea>
+              <span class="counter"></span>
+            </label>
+            <label>Recurring habits <span class="hint">List</span>
+              <textarea id="recurring_habits" maxlength="700"></textarea>
+              <span class="counter"></span>
+            </label>
+            <label class="full">Growth arc
+              <textarea id="growth_arc" maxlength="900"></textarea>
+              <span class="counter"></span>
+            </label>
+            <label class="full">Source image notes
+              <textarea id="source_image_notes" maxlength="900"></textarea>
+              <span class="counter"></span>
+            </label>
+          </div>
+        </details>
+
+        <section>
+          <h2>Generated Character Summary</h2>
+          <label class="full">Editable generated summary
+            <textarea id="character_summary" maxlength="1200"></textarea>
+            <span class="counter"></span>
+          </label>
+        </section>
+
+        <section>
+          <h2>Sharing and Publishing</h2>
+          <div class="grid">
+            <label class="full">Submission status
+              <input id="submission_status" readonly>
+            </label>
+            <label class="check-row full"><input type="checkbox" id="github_pages_enabled"> GitHub Pages compatible export path</label>
+            <label>GitHub Pages base URL <span class="tip" title="Used to generate a pasteable share URL after snapshot export. Example: https://owner.github.io/friend-character-intake">?</span>
+              <input id="github_pages_base_url" placeholder="https://owner.github.io/friend-character-intake">
+            </label>
+            <label>Publish folder
+              <select id="publish_folder">
+                <option value="exports">exports/</option>
+                <option value="docs/exports">docs/exports/</option>
+                <option value="public/exports">public/exports/</option>
+              </select>
+            </label>
+            <label class="full">Latest share link
+              <input id="latest_share_link" readonly placeholder="Publish or enter a GitHub Pages base URL to generate a link.">
+            </label>
+            <p class="hint full">This tool does not expose localhost. It creates portable read-only JSON and Markdown snapshots for GitHub Pages, GitHub raw files, Gists, or direct file upload into AI systems.</p>
+          </div>
+        </section>
+      </form>
+    </div>
+
+    <aside>
+      <h2>Live JSON Preview</h2>
+      <div id="status" class="status">Ready.</div>
+      <pre id="jsonPreview" aria-live="polite"></pre>
+    </aside>
+  </main>
+
+  <script>
+    const SCHEMA_VERSION = "friend_descriptor_intake.v2";
+    const SOURCE = "K Street Character Descriptor Intake Tool";
+    const SUBMISSION_ENDPOINT = "https://formspree.io/f/xredwazb";
+    const SUBMISSION_ENDPOINT_HELP = "Configure SUBMISSION_ENDPOINT near the top of index.html with a Formspree, Getform, Basin, or private intake URL.";
+    const textIds = [
+      "permission_notes", "display_name", "optional_contact", "in_world_name_or_nickname",
+      "pronouns", "current_location_or_usual_setting", "age_range", "one_sentence_summary",
+      "primary_social_energy", "secondary_social_energy", "core_motivations", "visual_descriptors",
+      "clothing_style_props", "default_expression", "movement_body_language", "voice_speech_rhythm",
+      "signature_behaviors", "communication_style", "personality_traits", "custom_traits",
+      "strengths", "flaws", "character_tags", "suggested_class_role", "mechanics_hooks",
+      "potential_party_roles", "boundaries", "behavior_under_pressure", "how_they_help_friends_allies",
+      "temptations", "recurring_habits", "growth_arc", "source_image_notes", "character_summary",
+      "github_pages_base_url", "latest_share_link", "submission_status"
+    ];
+    const checkboxIds = [
+      "permission_to_store", "permission_to_use_as_fictional_character", "permission_to_use_for_art_prompts",
+      "permission_to_reuse_across_projects", "permission_to_contact_for_clarification",
+      "github_pages_enabled"
+    ];
+    const listIds = [
+      "core_motivations", "signature_behaviors", "personality_traits", "custom_traits",
+      "strengths", "flaws", "character_tags", "mechanics_hooks", "potential_party_roles",
+      "boundaries", "temptations", "recurring_habits"
+    ];
+    const createdAt = new Date().toISOString();
+
+    function el(id) { return document.getElementById(id); }
+    function value(id) { return el(id).value.trim(); }
+    function listValue(id) {
+      return value(id).split(/\n|,/).map(item => item.trim()).filter(Boolean);
+    }
+    function setStatus(message, kind = "") {
+      const status = el("status");
+      status.textContent = message;
+      status.className = `status ${kind}`;
+    }
+    function slugify(input) {
+      return (input || "descriptor").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 64) || "descriptor";
+    }
+
+    function snapshotTimestamp(date = new Date()) {
+      return date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
+    }
+
+    function readableTimestamp(date = new Date()) {
+      return date.toISOString();
+    }
+
+    function buildRecord() {
+      const now = new Date().toISOString();
+      const displayName = value("display_name");
+      return {
+        schema_version: SCHEMA_VERSION,
+        metadata: {
+          created_at: createdAt,
+          updated_at: now,
+          source: SOURCE,
+          record_id: slugify(displayName || value("in_world_name_or_nickname"))
+        },
+        consent: {
+          permission_to_store: el("permission_to_store").checked,
+          permission_to_use_as_fictional_character: el("permission_to_use_as_fictional_character").checked,
+          permission_to_use_for_art_prompts: el("permission_to_use_for_art_prompts").checked,
+          permission_to_reuse_across_projects: el("permission_to_reuse_across_projects").checked,
+          permission_to_contact_for_clarification: el("permission_to_contact_for_clarification").checked,
+          permission_notes: value("permission_notes")
+        },
+        identity: {
+          display_name: displayName,
+          optional_contact: value("optional_contact"),
+          in_world_name_or_nickname: value("in_world_name_or_nickname"),
+          pronouns: value("pronouns"),
+          current_location_or_usual_setting: value("current_location_or_usual_setting"),
+          age_range: value("age_range")
+        },
+        character_core: {
+          one_sentence_summary: value("one_sentence_summary"),
+          primary_social_energy: value("primary_social_energy"),
+          secondary_social_energy: value("secondary_social_energy"),
+          core_motivations: listValue("core_motivations")
+        },
+        appearance: {
+          visual_descriptors: value("visual_descriptors"),
+          clothing_style_props: value("clothing_style_props"),
+          default_expression: value("default_expression"),
+          movement_body_language: value("movement_body_language"),
+          source_image_notes: value("source_image_notes")
+        },
+        voice_and_behavior: {
+          voice_speech_rhythm: value("voice_speech_rhythm"),
+          signature_behaviors: listValue("signature_behaviors"),
+          communication_style: value("communication_style"),
+          behavior_under_pressure: value("behavior_under_pressure"),
+          how_they_help_friends_allies: value("how_they_help_friends_allies"),
+          recurring_habits: listValue("recurring_habits")
+        },
+        personality: {
+          personality_traits: listValue("personality_traits"),
+          custom_traits: listValue("custom_traits"),
+          strengths: listValue("strengths"),
+          flaws: listValue("flaws"),
+          temptations: listValue("temptations"),
+          boundaries: listValue("boundaries")
+        },
+        narrative_design: {
+          character_tags: listValue("character_tags"),
+          suggested_class_role: value("suggested_class_role"),
+          mechanics_hooks: listValue("mechanics_hooks"),
+          potential_party_roles: listValue("potential_party_roles"),
+          comedic_exaggeration_level: value("comedic_exaggeration_level"),
+          growth_arc: value("growth_arc")
+        },
+        generated: {
+          character_summary: value("character_summary")
+        },
+        privacy: {
+          contains_private_contact_info: Boolean(value("optional_contact")),
+          contains_boundaries: listValue("boundaries").length > 0,
+          public_repo_safe: !value("optional_contact") && listValue("boundaries").length === 0,
+          review_status: value("review_status")
+        }
+      };
+    }
+
+    function updateCounters() {
+      document.querySelectorAll("textarea[maxlength]").forEach(area => {
+        const counter = area.parentElement.querySelector(".counter");
+        if (counter) counter.textContent = `${area.value.length}/${area.maxLength}`;
+      });
+    }
+
+    function updatePreview() {
+      el("jsonPreview").textContent = JSON.stringify(buildRecord(), null, 2);
+      updateCounters();
+    }
+
+    function flattenRecordForMarkdown(record) {
+      return [
+        ["Schema Version", record.schema_version],
+        ["Display Name", record.identity.display_name],
+        ["In-World Name or Nickname", record.identity.in_world_name_or_nickname],
+        ["Pronouns", record.identity.pronouns],
+        ["Age Range", record.identity.age_range],
+        ["Current Location or Usual Setting", record.identity.current_location_or_usual_setting],
+        ["One-Sentence Summary", record.character_core.one_sentence_summary],
+        ["Primary Social Energy", record.character_core.primary_social_energy],
+        ["Secondary Social Energy", record.character_core.secondary_social_energy],
+        ["Core Motivations", record.character_core.core_motivations],
+        ["Visual Descriptors", record.appearance.visual_descriptors],
+        ["Clothing, Style, and Props", record.appearance.clothing_style_props],
+        ["Default Expression", record.appearance.default_expression],
+        ["Movement and Body Language", record.appearance.movement_body_language],
+        ["Voice and Speech Rhythm", record.voice_and_behavior.voice_speech_rhythm],
+        ["Signature Behaviors", record.voice_and_behavior.signature_behaviors],
+        ["Communication Style", record.voice_and_behavior.communication_style],
+        ["Behavior Under Pressure", record.voice_and_behavior.behavior_under_pressure],
+        ["How They Help Friends / Allies", record.voice_and_behavior.how_they_help_friends_allies],
+        ["Recurring Habits", record.voice_and_behavior.recurring_habits],
+        ["Personality Traits", record.personality.personality_traits],
+        ["Custom Traits", record.personality.custom_traits],
+        ["Strengths", record.personality.strengths],
+        ["Flaws", record.personality.flaws],
+        ["Temptations", record.personality.temptations],
+        ["Boundaries", record.personality.boundaries],
+        ["Character Tags", record.narrative_design.character_tags],
+        ["Suggested Class / Role", record.narrative_design.suggested_class_role],
+        ["Mechanics Hooks", record.narrative_design.mechanics_hooks],
+        ["Potential Party Roles", record.narrative_design.potential_party_roles],
+        ["Comedic Exaggeration Level", record.narrative_design.comedic_exaggeration_level],
+        ["Growth Arc", record.narrative_design.growth_arc],
+        ["Source Image Notes", record.appearance.source_image_notes],
+        ["Generated Character Summary", record.generated.character_summary]
+      ];
+    }
+
+    function formatMarkdownValue(value) {
+      if (Array.isArray(value)) return value.length ? value.map(item => `- ${item}`).join("\n") : "_Not provided._";
+      return value ? String(value) : "_Not provided._";
+    }
+
+    function buildCharacterMarkdown(record = buildRecord(), options = {}) {
+      const lines = [
+        "# Character Profile",
+        "",
+        "> Portable read-only character descriptor snapshot for AI analysis. Treat private contact details, boundaries, and source image notes as sensitive unless explicitly approved.",
+        "",
+        "## Snapshot Metadata",
+        "",
+        `- Schema version: ${record.schema_version}`,
+        `- Created at: ${record.metadata.created_at}`,
+        `- Updated at: ${record.metadata.updated_at}`,
+        `- Snapshot generated at: ${options.snapshot_created_at || readableTimestamp()}`,
+        `- Review status: ${record.privacy.review_status}`,
+        `- Public repo safe: ${record.privacy.public_repo_safe}`,
+        "",
+        "## Consent",
+        "",
+        `- Store descriptor: ${record.consent.permission_to_store}`,
+        `- Use as fictional character: ${record.consent.permission_to_use_as_fictional_character}`,
+        `- Use for art prompts: ${record.consent.permission_to_use_for_art_prompts}`,
+        `- Reuse across projects: ${record.consent.permission_to_reuse_across_projects}`,
+        `- Contact for clarification: ${record.consent.permission_to_contact_for_clarification}`,
+        `- Permission notes: ${record.consent.permission_notes || "_Not provided._"}`,
+        "",
+        "## Descriptor Data",
+        ""
+      ];
+      flattenRecordForMarkdown(record).forEach(([label, value]) => {
+        lines.push(`### ${label}`, "", formatMarkdownValue(value), "");
+      });
+      lines.push("## Raw JSON", "", "```json", JSON.stringify(record, null, 2), "```", "");
+      return lines.join("\n");
+    }
+
+    function buildAiContext(record = buildRecord()) {
+      return [
+        "# AI Character Context",
+        "",
+        "Use this as a structured, project-agnostic character descriptor. Preserve consent, privacy, and boundaries. Do not assume localhost access; all relevant data is included below.",
+        "",
+        buildCharacterMarkdown(record)
+      ].join("\n");
+    }
+
+    function buildSnapshot() {
+      const record = buildRecord();
+      const created = readableTimestamp();
+      return {
+        schema_version: SCHEMA_VERSION,
+        snapshot_kind: "read_only_character_descriptor_snapshot",
+        snapshot_created_at: created,
+        read_only_snapshot: true,
+        source_tool: SOURCE,
+        image_references: {
+          source_image_notes: record.appearance.source_image_notes,
+          external_files_included: false
+        },
+        record
+      };
+    }
+
+    function snapshotFileSet() {
+      const stamp = snapshotTimestamp();
+      const snapshot = buildSnapshot();
+      const jsonName = `character-${stamp}.json`;
+      const mdName = `character-${stamp}.md`;
+      const markdown = buildCharacterMarkdown(snapshot.record, { snapshot_created_at: snapshot.snapshot_created_at });
+      return {
+        stamp,
+        snapshot,
+        jsonName,
+        mdName,
+        jsonText: JSON.stringify(snapshot, null, 2),
+        mdText: markdown
+      };
+    }
+
+    function downloadText(filename, text, type) {
+      const blob = new Blob([text], { type });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    function generateSummary() {
+      const name = value("in_world_name_or_nickname") || value("display_name") || "This character";
+      const core = value("one_sentence_summary");
+      const energy = [value("primary_social_energy"), value("secondary_social_energy")].filter(Boolean).join(" and ");
+      const motivations = listValue("core_motivations").slice(0, 3).join(", ");
+      const traits = listValue("personality_traits").slice(0, 3).join(", ");
+      const pressure = value("behavior_under_pressure");
+      const parts = [
+        `${name}${core ? ` is ${core.replace(/\.$/, "")}` : " is a recognizable character built from lived social patterns"}.`,
+        energy ? `Their social energy is ${energy}.` : "",
+        motivations ? `They are driven by ${motivations}.` : "",
+        traits ? `They read as ${traits}.` : "",
+        pressure ? `Under pressure, ${pressure.charAt(0).toLowerCase()}${pressure.slice(1).replace(/\.$/, "")}.` : ""
+      ].filter(Boolean);
+      el("character_summary").value = parts.join(" ");
+      setStatus("Generated character summary.", "ok");
+      updatePreview();
+    }
+
+    function downloadJson() {
+      const record = buildRecord();
+      downloadText(`${slugify(record.identity.display_name || record.identity.in_world_name_or_nickname)}-${SCHEMA_VERSION}.json`, JSON.stringify(record, null, 2), "application/json");
+      setStatus("Exported valid JSON.", "ok");
+    }
+
+    async function copyText(text, successMessage) {
+      await navigator.clipboard.writeText(text);
+      setStatus(successMessage, "ok");
+    }
+
+    function getPublishFolder() {
+      if (el("github_pages_enabled").checked && el("publish_folder").value === "exports") return "docs/exports";
+      return el("publish_folder").value;
+    }
+
+    function buildShareUrl(fileName) {
+      const base = value("github_pages_base_url").replace(/\/+$/, "");
+      if (!base) return "";
+      const folder = getPublishFolder().replace(/^docs\//, "").replace(/^public\//, "");
+      return `${base}/${folder}/${fileName}`;
+    }
+
+    function setLatestShareLink(fileName) {
+      const url = buildShareUrl(fileName);
+      el("latest_share_link").value = url;
+      return url;
+    }
+
+    async function shareCharacter() {
+      const files = snapshotFileSet();
+      await copyText(files.jsonText, "Copied portable character JSON snapshot.");
+    }
+
+    async function copyAiContext() {
+      await copyText(buildAiContext(), "Copied AI context markdown.");
+    }
+
+    async function copyShareLink() {
+      const link = value("latest_share_link") || setLatestShareLink(snapshotFileSet().jsonName);
+      if (!link) {
+        setStatus("Add a GitHub Pages base URL first, then copy the generated share link.", "warn");
+        return;
+      }
+      await copyText(link, "Copied share link.");
+    }
+
+    async function publishSnapshot() {
+      const files = snapshotFileSet();
+      const folderPath = getPublishFolder();
+      const link = setLatestShareLink(files.jsonName);
+      if (window.showDirectoryPicker) {
+        try {
+          const root = await window.showDirectoryPicker({ mode: "readwrite" });
+          let current = root;
+          for (const part of folderPath.split("/").filter(Boolean)) {
+            current = await current.getDirectoryHandle(part, { create: true });
+          }
+          for (const file of [
+            [files.jsonName, files.jsonText, "application/json"],
+            [files.mdName, files.mdText, "text/markdown"]
+          ]) {
+            const handle = await current.getFileHandle(file[0], { create: true });
+            const writable = await handle.createWritable();
+            await writable.write(new Blob([file[1]], { type: file[2] }));
+            await writable.close();
+          }
+          setStatus(`Published read-only snapshot files to ${folderPath}/.${link ? " Share link generated." : ""}`, "ok");
+          return;
+        } catch (error) {
+          setStatus(`Folder write canceled or unavailable. Downloading snapshot files instead.`, "warn");
+        }
+      }
+      downloadText(`${folderPath}/${files.jsonName}`.replace(/\//g, "-"), files.jsonText, "application/json");
+      downloadText(`${folderPath}/${files.mdName}`.replace(/\//g, "-"), files.mdText, "text/markdown");
+      setStatus(`Downloaded snapshot files. Place them under ${folderPath}/ in the repo to publish.${link ? " Share link generated." : ""}`, "ok");
+    }
+
+    function exportForChatGPT() {
+      const stamp = snapshotTimestamp();
+      downloadText(`character-profile-${stamp}.md`, buildCharacterMarkdown(), "text/markdown");
+      setStatus("Exported ChatGPT-ready character profile markdown.", "ok");
+    }
+
+    async function schemaText() {
+      try {
+        const response = await fetch("schema/friend_descriptor_schema.json");
+        if (response.ok) return await response.text();
+      } catch (error) {}
+      return JSON.stringify({
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "title": "K Street Friend Descriptor Intake",
+        "schema_version": SCHEMA_VERSION,
+        "note": "Open schema/friend_descriptor_schema.json for the canonical schema."
+      }, null, 2);
+    }
+
+    function crc32(bytes) {
+      let table = crc32.table;
+      if (!table) {
+        table = crc32.table = Array.from({ length: 256 }, (_, n) => {
+          let c = n;
+          for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+          return c >>> 0;
+        });
+      }
+      let crc = -1;
+      for (const byte of bytes) crc = (crc >>> 8) ^ table[(crc ^ byte) & 0xff];
+      return (crc ^ -1) >>> 0;
+    }
+
+    function u16(value) { return [value & 255, (value >>> 8) & 255]; }
+    function u32(value) { return [value & 255, (value >>> 8) & 255, (value >>> 16) & 255, (value >>> 24) & 255]; }
+
+    function makeZip(files) {
+      const encoder = new TextEncoder();
+      const localParts = [];
+      const centralParts = [];
+      let offset = 0;
+      files.forEach(file => {
+        const name = encoder.encode(file.name);
+        const data = encoder.encode(file.text);
+        const crc = crc32(data);
+        const local = new Uint8Array([
+          ...u32(0x04034b50), ...u16(20), ...u16(0), ...u16(0), ...u16(0), ...u16(0),
+          ...u32(crc), ...u32(data.length), ...u32(data.length), ...u16(name.length), ...u16(0),
+          ...name, ...data
+        ]);
+        const central = new Uint8Array([
+          ...u32(0x02014b50), ...u16(20), ...u16(20), ...u16(0), ...u16(0), ...u16(0), ...u16(0),
+          ...u32(crc), ...u32(data.length), ...u32(data.length), ...u16(name.length), ...u16(0), ...u16(0),
+          ...u16(0), ...u16(0), ...u32(0), ...u32(offset), ...name
+        ]);
+        localParts.push(local);
+        centralParts.push(central);
+        offset += local.length;
+      });
+      const centralSize = centralParts.reduce((sum, part) => sum + part.length, 0);
+      const end = new Uint8Array([
+        ...u32(0x06054b50), ...u16(0), ...u16(0), ...u16(files.length), ...u16(files.length),
+        ...u32(centralSize), ...u32(offset), ...u16(0)
+      ]);
+      return new Blob([...localParts, ...centralParts, end], { type: "application/zip" });
+    }
+
+    async function downloadEverything() {
+      const snapshot = buildSnapshot();
+      const schema = await schemaText();
+      const zip = makeZip([
+        { name: "character.json", text: JSON.stringify(snapshot, null, 2) },
+        { name: "character.md", text: buildCharacterMarkdown(snapshot.record, { snapshot_created_at: snapshot.snapshot_created_at }) },
+        { name: "schema.json", text: schema }
+      ]);
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(zip);
+      link.download = `character-share-package-${snapshotTimestamp()}.zip`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+      setStatus("Downloaded character.json, character.md, and schema.json as a zip package.", "ok");
+    }
+
+    function validateForSubmission(record) {
+      const missing = [];
+      if (!record.consent.permission_to_store) missing.push("permission to store");
+      if (!record.consent.permission_to_use_as_fictional_character) missing.push("permission to use as a fictional character");
+      if (!record.identity.display_name) missing.push("display name");
+      if (!record.character_core.one_sentence_summary) missing.push("one-sentence character summary");
+      return missing;
+    }
+
+    async function submitDescriptor() {
+      const snapshot = buildSnapshot();
+      const record = snapshot.record;
+      const missing = validateForSubmission(record);
+      if (missing.length) {
+        setStatus(`Before submitting, add: ${missing.join(", ")}.`, "warn");
+        el("submission_status").value = "Needs required submission fields.";
+        return;
+      }
+      if (!SUBMISSION_ENDPOINT) {
+        el("submission_status").value = "Submission endpoint is not configured. Downloading package instead.";
+        setStatus(`${SUBMISSION_ENDPOINT_HELP} Downloading the descriptor package now.`, "warn");
+        await downloadEverything();
+        return;
+      }
+      const payload = {
+        subject: `Character descriptor submission: ${record.identity.display_name || record.identity.in_world_name_or_nickname || "Unnamed"}`,
+        schema_version: SCHEMA_VERSION,
+        submitted_at: readableTimestamp(),
+        display_name: record.identity.display_name,
+        in_world_name_or_nickname: record.identity.in_world_name_or_nickname,
+        optional_contact: record.identity.optional_contact,
+        consent_summary: record.consent,
+        character_json: JSON.stringify(snapshot, null, 2),
+        character_markdown: buildCharacterMarkdown(record, { snapshot_created_at: snapshot.snapshot_created_at })
+      };
+      try {
+        const response = await fetch(SUBMISSION_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error(`Submission service returned ${response.status}`);
+        el("submission_status").value = "Submitted successfully.";
+        setStatus("Descriptor submitted successfully.", "ok");
+      } catch (error) {
+        el("submission_status").value = "Submit failed. Downloaded backup package.";
+        setStatus(`Submit failed: ${error.message}. Downloading a backup package.`, "warn");
+        await downloadEverything();
+      }
+    }
+
+    function normalizeArray(value) {
+      if (Array.isArray(value)) return value;
+      if (typeof value === "string") return value.split(/\n|,/).map(item => item.trim()).filter(Boolean);
+      return [];
+    }
+
+    function first(...values) {
+      return values.find(value => value !== undefined && value !== null && value !== "") || "";
+    }
+
+    function normalizeImport(input) {
+      if (input.schema_version === SCHEMA_VERSION) return input;
+      const legacy = input || {};
+      const normalized = {
+        schema_version: SCHEMA_VERSION,
+        metadata: {
+          created_at: first(legacy.created_at, legacy.metadata?.created_at, new Date().toISOString()),
+          updated_at: new Date().toISOString(),
+          source: SOURCE,
+          record_id: slugify(first(legacy.display_name, legacy.name, legacy.nickname, legacy.identity?.display_name)),
+          imported_from_schema_version: first(legacy.schema_version, "unknown")
+        },
+        consent: {
+          permission_to_store: Boolean(first(legacy.permission_to_store, legacy.consent?.permission_to_store, false)),
+          permission_to_use_as_fictional_character: Boolean(first(legacy.permission_to_use_as_fictional_character, legacy.consent?.permission_to_use_as_fictional_character, false)),
+          permission_to_use_for_art_prompts: Boolean(first(legacy.permission_to_use_for_art_prompts, legacy.consent?.permission_to_use_for_art_prompts, false)),
+          permission_to_reuse_across_projects: Boolean(first(legacy.permission_to_reuse_across_projects, legacy.consent?.permission_to_reuse_across_projects, false)),
+          permission_to_contact_for_clarification: Boolean(first(legacy.permission_to_contact_for_clarification, legacy.consent?.permission_to_contact_for_clarification, false)),
+          permission_notes: first(legacy.permission_notes, legacy.consent?.permission_notes)
+        },
+        identity: {
+          display_name: first(legacy.display_name, legacy.name, legacy.identity?.display_name),
+          optional_contact: first(legacy.optional_contact, legacy.contact, legacy.identity?.optional_contact),
+          in_world_name_or_nickname: first(legacy.in_world_name_or_nickname, legacy.nickname, legacy.identity?.in_world_name_or_nickname),
+          pronouns: first(legacy.pronouns, legacy.identity?.pronouns),
+          current_location_or_usual_setting: first(legacy.current_location_or_usual_setting, legacy.location, legacy.identity?.current_location_or_usual_setting),
+          age_range: first(legacy.age_range, legacy.identity?.age_range)
+        },
+        character_core: {
+          one_sentence_summary: first(legacy.one_sentence_summary, legacy.summary, legacy.character_core?.one_sentence_summary),
+          primary_social_energy: first(legacy.primary_social_energy, legacy.character_core?.primary_social_energy),
+          secondary_social_energy: first(legacy.secondary_social_energy, legacy.character_core?.secondary_social_energy),
+          core_motivations: normalizeArray(first(legacy.core_motivations, legacy.motivations, legacy.character_core?.core_motivations))
+        },
+        appearance: {
+          visual_descriptors: first(legacy.visual_descriptors, legacy.appearance?.visual_descriptors),
+          clothing_style_props: first(legacy.clothing_style_props, legacy.clothing, legacy.appearance?.clothing_style_props),
+          default_expression: first(legacy.default_expression, legacy.appearance?.default_expression),
+          movement_body_language: first(legacy.movement_body_language, legacy.body_language, legacy.appearance?.movement_body_language),
+          source_image_notes: first(legacy.source_image_notes, legacy.appearance?.source_image_notes)
+        },
+        voice_and_behavior: {
+          voice_speech_rhythm: first(legacy.voice_speech_rhythm, legacy.voice, legacy.voice_and_behavior?.voice_speech_rhythm),
+          signature_behaviors: normalizeArray(first(legacy.signature_behaviors, legacy.behaviors, legacy.voice_and_behavior?.signature_behaviors)),
+          communication_style: first(legacy.communication_style, legacy.voice_and_behavior?.communication_style),
+          behavior_under_pressure: first(legacy.behavior_under_pressure, legacy.voice_and_behavior?.behavior_under_pressure),
+          how_they_help_friends_allies: first(legacy.how_they_help_friends_allies, legacy.helps_friends, legacy.voice_and_behavior?.how_they_help_friends_allies),
+          recurring_habits: normalizeArray(first(legacy.recurring_habits, legacy.habits, legacy.voice_and_behavior?.recurring_habits))
+        },
+        personality: {
+          personality_traits: normalizeArray(first(legacy.personality_traits, legacy.traits, legacy.personality?.personality_traits)),
+          custom_traits: normalizeArray(first(legacy.custom_traits, legacy.personality?.custom_traits)),
+          strengths: normalizeArray(first(legacy.strengths, legacy.personality?.strengths)),
+          flaws: normalizeArray(first(legacy.flaws, legacy.personality?.flaws)),
+          temptations: normalizeArray(first(legacy.temptations, legacy.personality?.temptations)),
+          boundaries: normalizeArray(first(legacy.boundaries, legacy.personality?.boundaries))
+        },
+        narrative_design: {
+          character_tags: normalizeArray(first(legacy.character_tags, legacy.tags, legacy.narrative_design?.character_tags)),
+          suggested_class_role: first(legacy.suggested_class_role, legacy.role, legacy.narrative_design?.suggested_class_role),
+          mechanics_hooks: normalizeArray(first(legacy.mechanics_hooks, legacy.narrative_design?.mechanics_hooks)),
+          potential_party_roles: normalizeArray(first(legacy.potential_party_roles, legacy.party_roles, legacy.narrative_design?.potential_party_roles)),
+          comedic_exaggeration_level: first(legacy.comedic_exaggeration_level, legacy.narrative_design?.comedic_exaggeration_level, "grounded"),
+          growth_arc: first(legacy.growth_arc, legacy.narrative_design?.growth_arc)
+        },
+        generated: {
+          character_summary: first(legacy.character_summary, legacy.generated?.character_summary)
+        },
+        privacy: {
+          contains_private_contact_info: Boolean(first(legacy.optional_contact, legacy.contact)),
+          contains_boundaries: normalizeArray(first(legacy.boundaries, legacy.personality?.boundaries)).length > 0,
+          public_repo_safe: false,
+          review_status: first(legacy.review_status, legacy.privacy?.review_status, "raw")
+        },
+        _legacy_unmapped: legacy
+      };
+      return normalized;
+    }
+
+    function setText(id, value) {
+      if (el(id)) el(id).value = Array.isArray(value) ? value.join("\n") : (value || "");
+    }
+
+    function loadRecord(record) {
+      const data = normalizeImport(record);
+      checkboxIds.forEach(id => { el(id).checked = Boolean(data.consent?.[id]); });
+      setText("permission_notes", data.consent?.permission_notes);
+      Object.entries(data.identity || {}).forEach(([key, val]) => setText(key, val));
+      Object.entries(data.character_core || {}).forEach(([key, val]) => setText(key, val));
+      Object.entries(data.appearance || {}).forEach(([key, val]) => setText(key, val));
+      Object.entries(data.voice_and_behavior || {}).forEach(([key, val]) => setText(key, val));
+      Object.entries(data.personality || {}).forEach(([key, val]) => setText(key, val));
+      Object.entries(data.narrative_design || {}).forEach(([key, val]) => setText(key, val));
+      setText("character_summary", data.generated?.character_summary);
+      if (data.narrative_design?.comedic_exaggeration_level) el("comedic_exaggeration_level").value = data.narrative_design.comedic_exaggeration_level;
+      if (data.privacy?.review_status) el("review_status").value = data.privacy.review_status;
+      const compatibility = record.schema_version === SCHEMA_VERSION ? "Imported v2 record." : `Imported legacy record and mapped it to ${SCHEMA_VERSION}.`;
+      setStatus(compatibility, "ok");
+      updatePreview();
+    }
+
+    function importFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          loadRecord(JSON.parse(reader.result));
+        } catch (error) {
+          setStatus(`Import failed: ${error.message}`, "warn");
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = "";
+    }
+
+    function resetForm() {
+      el("descriptorForm").reset();
+      setStatus("Form reset.", "ok");
+      updatePreview();
+    }
+
+    document.addEventListener("input", updatePreview);
+    document.addEventListener("change", updatePreview);
+    el("submitBtn").addEventListener("click", submitDescriptor);
+    el("summaryBtn").addEventListener("click", generateSummary);
+    el("shareBtn").addEventListener("click", shareCharacter);
+    el("copyContextBtn").addEventListener("click", copyAiContext);
+    el("publishBtn").addEventListener("click", publishSnapshot);
+    el("copyLinkBtn").addEventListener("click", copyShareLink);
+    el("chatgptBtn").addEventListener("click", exportForChatGPT);
+    el("downloadEverythingBtn").addEventListener("click", downloadEverything);
+    el("exportBtn").addEventListener("click", downloadJson);
+    el("importFile").addEventListener("change", importFile);
+    el("resetBtn").addEventListener("click", resetForm);
+    updatePreview();
+  </script>
+</body>
+</html>

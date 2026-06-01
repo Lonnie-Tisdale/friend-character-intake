@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kstreet.local/schemas/friend_descriptor_intake.v2.json",
+  "title": "K Street Friend Descriptor Intake",
+  "description": "Project-agnostic descriptor record for turning a real person into a consistent fictional or game character.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "metadata",
+    "consent",
+    "identity",
+    "character_core",
+    "appearance",
+    "voice_and_behavior",
+    "personality",
+    "narrative_design",
+    "privacy"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "const": "friend_descriptor_intake.v2"
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["created_at", "updated_at", "source"],
+      "additionalProperties": true,
+      "properties": {
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" },
+        "source": { "type": "string" },
+        "record_id": { "type": "string" },
+        "imported_from_schema_version": { "type": "string" }
+      }
+    },
+    "consent": {
+      "type": "object",
+      "required": ["permission_to_store", "permission_to_use_as_fictional_character", "permission_notes"],
+      "additionalProperties": true,
+      "properties": {
+        "permission_to_store": { "type": "boolean" },
+        "permission_to_use_as_fictional_character": { "type": "boolean" },
+        "permission_to_use_for_art_prompts": { "type": "boolean" },
+        "permission_to_reuse_across_projects": { "type": "boolean" },
+        "permission_to_contact_for_clarification": { "type": "boolean" },
+        "permission_notes": { "type": "string" }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "required": ["display_name", "in_world_name_or_nickname", "pronouns"],
+      "additionalProperties": true,
+      "properties": {
+        "display_name": { "type": "string" },
+        "optional_contact": { "type": "string" },
+        "in_world_name_or_nickname": { "type": "string" },
+        "pronouns": { "type": "string" },
+        "current_location_or_usual_setting": { "type": "string" },
+        "age_range": { "type": "string" }
+      }
+    },
+    "character_core": {
+      "type": "object",
+      "required": ["one_sentence_summary", "primary_social_energy", "secondary_social_energy", "core_motivations"],
+      "additionalProperties": true,
+      "properties": {
+        "one_sentence_summary": { "type": "string" },
+        "primary_social_energy": { "type": "string" },
+        "secondary_social_energy": { "type": "string" },
+        "core_motivations": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "appearance": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "visual_descriptors": { "type": "string" },
+        "clothing_style_props": { "type": "string" },
+        "default_expression": { "type": "string" },
+        "movement_body_language": { "type": "string" },
+        "source_image_notes": { "type": "string" }
+      }
+    },
+    "voice_and_behavior": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "voice_speech_rhythm": { "type": "string" },
+        "signature_behaviors": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "communication_style": { "type": "string" },
+        "behavior_under_pressure": { "type": "string" },
+        "how_they_help_friends_allies": { "type": "string" },
+        "recurring_habits": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "personality": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "personality_traits": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "custom_traits": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "strengths": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "flaws": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "temptations": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "boundaries": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "narrative_design": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "character_tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "suggested_class_role": { "type": "string" },
+        "mechanics_hooks": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "potential_party_roles": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "comedic_exaggeration_level": {
+          "type": "string",
+          "enum": ["none", "grounded", "heightened", "cartoonish", "mythic"]
+        },
+        "growth_arc": { "type": "string" }
+      }
+    },
+    "generated": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "character_summary": { "type": "string" }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "required": ["contains_private_contact_info", "contains_boundaries", "public_repo_safe"],
+      "additionalProperties": true,
+      "properties": {
+        "contains_private_contact_info": { "type": "boolean" },
+        "contains_boundaries": { "type": "boolean" },
+        "public_repo_safe": { "type": "boolean" },
+        "review_status": {
+          "type": "string",
+          "enum": ["raw", "reviewed", "approved_for_use"]
+        }
+      }
+    }
+  }
+}

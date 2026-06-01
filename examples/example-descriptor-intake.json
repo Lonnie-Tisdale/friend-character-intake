@@ -1,0 +1,71 @@
+{
+  "schema_version": "friend_descriptor_intake.v2",
+  "metadata": {
+    "created_at": "2026-06-01T00:00:00.000Z",
+    "updated_at": "2026-06-01T00:00:00.000Z",
+    "source": "K Street Character Descriptor Intake Tool",
+    "record_id": "example-descriptor"
+  },
+  "consent": {
+    "permission_to_store": true,
+    "permission_to_use_as_fictional_character": true,
+    "permission_to_use_for_art_prompts": false,
+    "permission_to_reuse_across_projects": true,
+    "permission_to_contact_for_clarification": false,
+    "permission_notes": "Example record only. Do not treat as a real submission."
+  },
+  "identity": {
+    "display_name": "Example Person",
+    "optional_contact": "",
+    "in_world_name_or_nickname": "The Compass",
+    "pronouns": "they/them",
+    "current_location_or_usual_setting": "Usually near the planning board, coffee in hand.",
+    "age_range": "30s"
+  },
+  "character_core": {
+    "one_sentence_summary": "A calm strategist who can turn scattered people into a working plan.",
+    "primary_social_energy": "Grounding",
+    "secondary_social_energy": "Dryly funny",
+    "core_motivations": ["protect the group", "make the plan make sense", "avoid needless drama"]
+  },
+  "appearance": {
+    "visual_descriptors": "Relaxed posture, alert eyes, practical haircut, memorable glasses.",
+    "clothing_style_props": "Layered jacket, tidy sneakers, notebook, reliable pen.",
+    "default_expression": "Listening carefully with one eyebrow slightly raised.",
+    "movement_body_language": "Still when thinking, precise hand motions when explaining.",
+    "source_image_notes": "Keep references private unless separately approved."
+  },
+  "voice_and_behavior": {
+    "voice_speech_rhythm": "Measured, concise, with a soft punchline after the serious point.",
+    "signature_behaviors": ["summarizes chaos into three steps", "checks whether everyone has eaten"],
+    "communication_style": "Direct, warm, practical, low-drama.",
+    "behavior_under_pressure": "Gets quieter, prioritizes essentials, delegates cleanly.",
+    "how_they_help_friends_allies": "Finds the missing piece and gives people jobs they can actually do.",
+    "recurring_habits": ["keeps lists", "notices exits", "remembers tiny preferences"]
+  },
+  "personality": {
+    "personality_traits": ["observant", "loyal", "pragmatic"],
+    "custom_traits": ["quietly theatrical when comfortable"],
+    "strengths": ["pattern recognition", "group coordination", "emotional steadiness"],
+    "flaws": ["over-functions", "hides their own needs", "can become impatient with vagueness"],
+    "temptations": ["taking control too quickly", "solving instead of asking"],
+    "boundaries": ["Do not portray as cruel", "Avoid jokes about private family details"]
+  },
+  "narrative_design": {
+    "character_tags": ["strategist", "anchor", "dry wit"],
+    "suggested_class_role": "Planner / Support Lead",
+    "mechanics_hooks": ["turn confusion into a bonus action", "spot weak points in a plan"],
+    "potential_party_roles": ["support", "tactician", "social stabilizer"],
+    "comedic_exaggeration_level": "heightened",
+    "growth_arc": "Learns to let other people carry weight instead of quietly carrying all of it."
+  },
+  "generated": {
+    "character_summary": "The Compass is a grounded, dryly funny planner whose calm presence turns confusion into action."
+  },
+  "privacy": {
+    "contains_private_contact_info": false,
+    "contains_boundaries": true,
+    "public_repo_safe": true,
+    "review_status": "raw"
+  }
+}
