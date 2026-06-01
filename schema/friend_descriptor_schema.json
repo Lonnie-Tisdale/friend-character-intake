@@ -13,6 +13,7 @@
     "consent",
     "identity",
     "appearance",
+    "asset_library",
     "personality",
     "motivation",
     "decision_making",
@@ -40,6 +41,29 @@
     "consent": { "$ref": "#/$defs/object" },
     "identity": { "$ref": "#/$defs/object" },
     "appearance": { "$ref": "#/$defs/object" },
+    "asset_library": {
+      "type": "object",
+      "required": ["primary_reference_asset_id", "primary_portrait_asset_id", "primary_sprite_asset_id", "primary_model_asset_id", "assets", "asset_groups", "style_guides"],
+      "properties": {
+        "primary_reference_asset_id": { "type": "string" },
+        "primary_portrait_asset_id": { "type": "string" },
+        "primary_sprite_asset_id": { "type": "string" },
+        "primary_model_asset_id": { "type": "string" },
+        "assets": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/asset" }
+        },
+        "asset_groups": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/asset_group" }
+        },
+        "style_guides": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/style_guide" }
+        }
+      },
+      "additionalProperties": true
+    },
     "personality": { "$ref": "#/$defs/object" },
     "motivation": { "$ref": "#/$defs/object" },
     "decision_making": { "$ref": "#/$defs/object" },
@@ -112,6 +136,58 @@
         "comedic_exaggeration_potential": { "type": "string" },
         "game_use_notes": { "type": "string" },
         "dialogue_use_notes": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "asset": {
+      "type": "object",
+      "properties": {
+        "asset_id": { "type": "string" },
+        "asset_type": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "file_name": { "type": "string" },
+        "file_extension": { "type": "string" },
+        "file_size": { "type": "string" },
+        "url": { "type": "string" },
+        "local_path": { "type": "string" },
+        "thumbnail_url": { "type": "string" },
+        "date_added": { "type": "string" },
+        "last_modified": { "type": "string" },
+        "source": { "type": "string" },
+        "creator": { "type": "string" },
+        "copyright_holder": { "type": "string" },
+        "license_type": { "type": "string" },
+        "consent_status": { "type": "string" },
+        "canon_level": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "associated_projects": { "type": "array", "items": { "type": "string" } },
+        "use_cases": { "type": "array", "items": { "type": "string" } },
+        "do_not_use_for": { "type": "array", "items": { "type": "string" } },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "asset_group": {
+      "type": "object",
+      "properties": {
+        "group_id": { "type": "string" },
+        "group_name": { "type": "string" },
+        "description": { "type": "string" },
+        "asset_ids": { "type": "array", "items": { "type": "string" } },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "style_guide": {
+      "type": "object",
+      "properties": {
+        "guide_name": { "type": "string" },
+        "description": { "type": "string" },
+        "asset_ids": { "type": "array", "items": { "type": "string" } },
+        "prompt_notes": { "type": "string" },
+        "negative_prompt_notes": { "type": "string" }
       },
       "additionalProperties": true
     }

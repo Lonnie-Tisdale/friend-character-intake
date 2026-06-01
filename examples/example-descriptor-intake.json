@@ -46,6 +46,63 @@
     "image_prompt_notes": "grounded modern strategist, warm but analytical",
     "negative_image_prompt_notes": "avoid caricature or villain framing"
   },
+  "asset_library": {
+    "primary_reference_asset_id": "asset_example_face_reference",
+    "primary_portrait_asset_id": "asset_example_portrait",
+    "primary_sprite_asset_id": "asset_example_sprite",
+    "primary_model_asset_id": "",
+    "primary_face_reference_asset_id": "asset_example_face_reference",
+    "primary_body_reference_asset_id": "",
+    "primary_outfit_reference_asset_id": "",
+    "primary_token_asset_id": "",
+    "primary_voice_reference_asset_id": "",
+    "assets": [
+      {
+        "asset_id": "asset_example_face_reference",
+        "asset_type": "reference_photo",
+        "title": "Current Face Reference",
+        "description": "Approved private face reference metadata.",
+        "file_name": "example-face-reference.jpg",
+        "file_extension": "jpg",
+        "file_size": "example only",
+        "url": "",
+        "local_path": "Source Images/Example Person/example-face-reference.jpg",
+        "thumbnail_url": "",
+        "date_added": "2026-06-01",
+        "last_modified": "2026-06-01",
+        "source": "example",
+        "creator": "Example Person",
+        "copyright_holder": "Example Person",
+        "license_type": "private",
+        "consent_status": "private_only",
+        "canon_level": "primary_reference",
+        "tags": ["face", "current", "portrait"],
+        "associated_projects": ["Internal Testing"],
+        "use_cases": ["portrait_generation", "art_generation"],
+        "do_not_use_for": ["marketing"],
+        "notes": "Example metadata only; no real image included."
+      }
+    ],
+    "asset_groups": [
+      {
+        "group_id": "group_example_face",
+        "group_name": "Example Face References",
+        "description": "Approved face reference metadata.",
+        "asset_ids": ["asset_example_face_reference"],
+        "tags": ["face"],
+        "notes": "Private source files stay outside the public repo."
+      }
+    ],
+    "style_guides": [
+      {
+        "guide_name": "Retro JRPG Style",
+        "description": "Example 32-bit RPG interpretation.",
+        "asset_ids": ["asset_example_sprite"],
+        "prompt_notes": "Readable silhouette, expressive idle pose.",
+        "negative_prompt_notes": "Avoid photorealism."
+      }
+    ]
+  },
   "personality": {
     "primary_social_energy": "Practical Fixer",
     "secondary_social_energy": "Deadpan Commentator",

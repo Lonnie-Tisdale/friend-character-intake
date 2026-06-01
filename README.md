@@ -26,6 +26,9 @@ It can support:
 - `docs/person-profile-schema-v3.md` - canonical v3 person profile schema guide
 - `docs/export-formats.md` - export file descriptions
 - `docs/import-migration.md` - import, validation, and migration notes
+- `docs/asset-library-schema.md` - asset library object and asset metadata schema
+- `docs/asset-management-guide.md` - static asset management workflow
+- `docs/visual-reference-workflow.md` - artist/image/sprite reference workflow
 - `docs/workflow.md` - recommended K Street cloud-drive workflow
 - `examples/example-descriptor-intake.json` - safe example record
 
@@ -41,6 +44,7 @@ Use the buttons at the top of the form to:
 
 - Submit the descriptor to a configured intake endpoint
 - Generate a character summary, AI context, art prompt, dialogue prompt, NPC summary, and relationship summary
+- Manage a canonical asset library with gallery/table views, uploads-to-metadata, filters, bulk tagging/editing/delete, preview, and visual reference generation
 - Generate AI context
 - Copy JSON or Markdown
 - Share a portable JSON snapshot
@@ -118,6 +122,7 @@ The form is organized into collapsible sections:
 
 - Identity
 - Appearance
+- Asset Library
 - Personality
 - Motivation
 - Decision-Making

@@ -23,6 +23,7 @@ Appearance is intentionally a small part of the schema. The durable profile is m
 - `consent`
 - `identity`
 - `appearance`
+- `asset_library`
 - `personality`
 - `motivation`
 - `decision_making`
@@ -41,6 +42,8 @@ Appearance is intentionally a small part of the schema. The durable profile is m
 - `extensions`
 
 Unknown imported fields must be preserved under `extensions`.
+
+See `docs/asset-library-schema.md` for the asset library object, asset types, canon levels, consent status values, groups, and style guides.
 
 ## Repeatable Entries
 
@@ -86,4 +89,3 @@ Signature behaviors become objects with:
 ## Default Value List
 
 Truth, Friendship, Freedom, Curiosity, Mastery, Security, Family, Status, Creativity, Justice, Service, Discovery, Legacy, Belonging, Stability, Beauty, Power, Peace, Autonomy, Loyalty.
-

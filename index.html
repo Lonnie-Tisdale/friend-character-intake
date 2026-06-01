@@ -63,6 +63,17 @@
     .meter { display: grid; gap: 6px; margin-bottom: 10px; }
     .meter-bar { height: 10px; border-radius: 999px; background: #dfe4df; overflow: hidden; }
     .meter-fill { height: 100%; width: 0; background: var(--accent); transition: width .2s ease; }
+    .asset-tools { display: grid; gap: 12px; }
+    .drop-zone { border: 2px dashed #9dbdbc; border-radius: var(--radius); padding: 16px; background: #f6fbfa; color: var(--accent-dark); font-weight: 750; text-align: center; }
+    .drop-zone.dragging { background: #e5f3f1; border-color: var(--accent); }
+    .asset-view { display: grid; gap: 10px; }
+    .asset-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .asset-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 10px; background: #fff; cursor: pointer; min-height: 120px; }
+    .asset-thumb { aspect-ratio: 4 / 3; border-radius: 6px; background: #edf0ed; display: grid; place-items: center; color: var(--muted); font-size: .82rem; overflow: hidden; margin-bottom: 8px; }
+    .asset-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .asset-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+    .asset-table th, .asset-table td { border-bottom: 1px solid var(--line); padding: 7px; text-align: left; vertical-align: top; }
+    .asset-preview { border: 1px solid var(--line); border-radius: var(--radius); padding: 10px; background: #fbfbf9; min-height: 90px; }
     aside { position: sticky; top: 70px; padding: 14px; }
     pre { margin: 0; min-height: 460px; max-height: calc(100vh - 190px); overflow: auto; border-radius: 6px; padding: 12px; background: #17201f; color: #e8f5f1; font-size: .8rem; white-space: pre-wrap; word-break: break-word; }
     input[type="file"] { display: none; }
@@ -86,6 +97,7 @@
         <button type="button" id="generateDialogueBtn">Generate Dialogue Prompt</button>
         <button type="button" id="generateNpcBtn">Generate NPC Summary</button>
         <button type="button" id="generateRelationshipBtn">Generate Relationship Summary</button>
+        <button type="button" id="generateVisualRefBtn">Generate Visual Reference Sheet</button>
         <button type="button" id="copyJsonBtn">Copy JSON</button>
         <button type="button" id="copyMarkdownBtn">Copy Markdown</button>
         <button type="button" id="downloadAllBtn">Download All</button>
@@ -95,6 +107,51 @@
       </div>
 
       <form id="profileForm"></form>
+
+      <section class="export-panel" id="asset-manager">
+        <h2>Asset Library Manager</h2>
+        <div class="asset-tools">
+          <div id="assetDropZone" class="drop-zone">Drag files here or choose files to add asset metadata</div>
+          <label class="file-button" for="assetUpload">Choose Asset Files</label>
+          <input id="assetUpload" type="file" multiple>
+          <div class="grid">
+            <label>Asset search
+              <input id="asset_search" placeholder="Search assets, tags, creators, notes">
+            </label>
+            <label>Filter by type
+              <select id="asset_filter_type"><option value="">All types</option></select>
+            </label>
+            <label>Filter by canon
+              <select id="asset_filter_canon"><option value="">All canon levels</option></select>
+            </label>
+            <label>Filter by consent
+              <select id="asset_filter_consent"><option value="">All consent statuses</option></select>
+            </label>
+            <label>Filter by project
+              <input id="asset_filter_project" placeholder="K Street, Oregon Fail, etc.">
+            </label>
+            <label>Filter by tag
+              <input id="asset_filter_tag" placeholder="face, sprite, historical">
+            </label>
+            <label>Filter by creator
+              <input id="asset_filter_creator" placeholder="creator name">
+            </label>
+            <label>Filter by date
+              <input id="asset_filter_date" placeholder="YYYY-MM or YYYY-MM-DD">
+            </label>
+          </div>
+          <div class="toolbar" aria-label="Asset actions">
+            <button type="button" id="assetGalleryBtn">Gallery View</button>
+            <button type="button" id="assetTableBtn">Table View</button>
+            <button type="button" id="bulkTagBtn">Bulk Tag All Filtered</button>
+            <button type="button" id="bulkEditBtn">Bulk Set Consent/Canon</button>
+            <button type="button" class="warning" id="bulkDeleteBtn">Bulk Delete Filtered</button>
+          </div>
+          <div id="assetGallery" class="asset-gallery"></div>
+          <div id="assetTableWrap"></div>
+          <div id="assetPreview" class="asset-preview">Select an asset to preview metadata.</div>
+        </div>
+      </section>
 
       <section class="export-panel" id="export-import">
         <h2>Export / Import</h2>
@@ -107,6 +164,11 @@
           <button type="button" id="downloadArtPromptBtn">Art Prompt</button>
           <button type="button" id="downloadDialoguePromptBtn">Dialogue Prompt</button>
           <button type="button" id="downloadRelationshipsBtn">Relationships JSON</button>
+          <button type="button" id="downloadAssetsBtn">Assets JSON</button>
+          <button type="button" id="downloadAssetManifestBtn">Asset Manifest</button>
+          <button type="button" id="downloadVisualRefBtn">Visual Reference</button>
+          <button type="button" id="downloadArtRefBtn">Art Reference</button>
+          <button type="button" id="downloadSpriteRefBtn">Sprite Reference</button>
           <button type="button" id="validateJsonBtn">Validate JSON</button>
           <button type="button" id="copyShareLinkBtn">Copy Share Link</button>
           <label class="full">Search fields
@@ -149,6 +211,10 @@
     const LEGACY_SCHEMA_VERSION = "friend_descriptor_intake.v2";
     const SOURCE = "K Street Person Profile Database";
     const SUBMISSION_ENDPOINT = "https://formspree.io/f/xredwazb";
+    const ASSET_TYPES = ["reference_photo", "portrait", "character_art", "sprite", "sprite_sheet", "pixel_art", "token", "concept_art", "ui_graphic", "logo", "symbol", "icon", "animation", "video", "voice_reference", "audio_clip", "music_reference", "document", "pdf", "3d_model", "texture", "moodboard", "screenshot", "historical_reference", "other"];
+    const ASSET_CANON_LEVELS = ["primary_reference", "secondary_reference", "historical_reference", "current_reference", "legacy_reference", "semi_canon", "canon", "noncanon", "prototype", "deprecated"];
+    const ASSET_CONSENT_STATUSES = ["approved", "limited_use", "private_only", "internal_only", "do_not_use", "unknown"];
+    const ASSET_USE_CASES = ["portrait_generation", "art_generation", "sprite_generation", "npc_generation", "dialogue_generation", "relationship_system", "historical_reference", "worldbuilding", "animation_reference", "voice_reference", "3d_model_reference", "marketing", "documentation"];
 
     const FIELD_SECTIONS = [
       {
@@ -207,6 +273,26 @@
           f("movement_body_language", "Movement and body language", "textarea", "How the character occupies space and communicates nonverbally.", "Still when thinking; precise hand motions when explaining."),
           f("image_prompt_notes", "Image prompt notes", "textarea", "Approved notes for visual generation.", "Grounded modern strategist, warm but analytical, practical layered clothing."),
           f("negative_image_prompt_notes", "Negative image prompt notes", "textarea", "What art prompts should avoid.", "Do not exaggerate into villainy or caricature.")
+        ]
+      },
+      {
+        id: "asset_library",
+        title: "Asset Library",
+        note: "Canonical visual, audio, document, model, and reference asset hub for this profile. Static mode stores metadata and links, not private binary files.",
+        fields: [
+          f("primary_reference_asset_id", "Primary reference asset ID", "text", "Main overall reference asset.", "asset_20260601_reference_photo"),
+          f("primary_portrait_asset_id", "Primary portrait asset ID", "text", "Main portrait or face reference.", "asset_20260601_portrait"),
+          f("primary_sprite_asset_id", "Primary sprite asset ID", "text", "Main sprite or token reference.", "asset_20260601_sprite"),
+          f("primary_model_asset_id", "Primary model asset ID", "text", "Main 3D/model reference.", "asset_20260601_model"),
+          f("primary_face_reference_asset_id", "Primary face reference asset ID", "text", "Quick link for face reference.", ""),
+          f("primary_body_reference_asset_id", "Primary body reference asset ID", "text", "Quick link for body reference.", ""),
+          f("primary_outfit_reference_asset_id", "Primary outfit reference asset ID", "text", "Quick link for outfit reference.", ""),
+          f("primary_token_asset_id", "Primary token asset ID", "text", "Quick link for token reference.", ""),
+          f("primary_voice_reference_asset_id", "Primary voice reference asset ID", "text", "Quick link for voice reference.", ""),
+          rows("asset_entries", "Assets", "asset_id | asset_type | title | description | file_name | file_extension | file_size | url | local_path | thumbnail_url | date_added | last_modified | source | creator | copyright_holder | license_type | consent_status | canon_level | tags comma-list | associated_projects comma-list | use_cases comma-list | do_not_use_for comma-list | notes", "asset_001 | reference_photo | Current face reference | approved current face photo | face.jpg | jpg | 2.4 MB | https://... | Source Images/Name/face.jpg | https://... | 2026-06-01 | 2026-06-01 | self-submitted | Lonnie | Lonnie | private | approved | primary_reference | face,current,portrait | K Street,Generic NPC System | portrait_generation,art_generation | marketing | private source image"),
+          rows("asset_group_entries", "Asset groups", "group_id | group_name | description | asset_ids comma-list | tags comma-list | notes", "group_face | Lonnie Face References | approved face references | asset_001,asset_002 | face,current | use for portraits"),
+          rows("style_guide_entries", "Style guides", "guide_name | description | asset_ids comma-list | prompt_notes | negative_prompt_notes", "Retro JRPG Style | 32-bit RPG interpretation | asset_003 | bold readable sprite silhouette | avoid modern photo-realism"),
+          f("visual_reference_sheet", "Visual reference sheet", "textarea", "Generated artist/image model reference summary.", "")
         ]
       },
       {
@@ -434,6 +520,7 @@
     ];
 
     const DEFAULT_VALUE_ORDER = ["Truth", "Friendship", "Freedom", "Curiosity", "Mastery", "Security", "Family", "Status", "Creativity", "Justice", "Service", "Discovery", "Legacy", "Belonging", "Stability", "Beauty", "Power", "Peace", "Autonomy", "Loyalty"];
+    const assetObjectKeys = ["asset_id", "asset_type", "title", "description", "file_name", "file_extension", "file_size", "url", "local_path", "thumbnail_url", "date_added", "last_modified", "source", "creator", "copyright_holder", "license_type", "consent_status", "canon_level", "tags", "associated_projects", "use_cases", "do_not_use_for", "notes"];
 
     function f(id, label, type, tip, placeholder) { return { id, label, type, tip, placeholder, max: type === "text" ? 220 : 1200 }; }
     function l(id, label, tip, placeholder) { return { id, label, type: "list", tip, placeholder, max: 1000 }; }
@@ -454,12 +541,13 @@
     function parseRows(value, keys) {
       return (value || "").split(/\n/).map(row => row.trim()).filter(Boolean).map(row => {
         const cells = row.split("|").map(cell => cell.trim());
-        return Object.fromEntries(keys.map((key, index) => [key, cells[index] || ""]));
+        return Object.fromEntries(keys.map((key, index) => [key, listLikeRowKeys.has(key) ? splitList(cells[index] || "") : (cells[index] || "")]));
       });
     }
+    const listLikeRowKeys = new Set(["tags", "associated_projects", "use_cases", "do_not_use_for", "asset_ids"]);
     function rowsToText(rows, keys) {
       if (!Array.isArray(rows)) return "";
-      return rows.map(row => keys.map(key => row?.[key] || "").join(" | ")).join("\n");
+      return rows.map(row => keys.map(key => Array.isArray(row?.[key]) ? row[key].join(",") : (row?.[key] || "")).join(" | ")).join("\n");
     }
     function fieldValue(id) {
       const field = fieldsById[id];
@@ -483,7 +571,10 @@
       return {
         relationship_entries: ["related_person", "relationship_type", "trust_level", "conflict_level", "history_level", "influence_level", "emotional_tone", "running_dynamic", "notes"],
         knowledge_domain_entries: ["domain", "expertise_level", "confidence_level", "lived_experience", "public_authority", "notes", "dialogue_use"],
-        signature_behavior_entries: ["behavior", "context", "frequency", "comedic_exaggeration_potential", "game_use_notes", "dialogue_use_notes"]
+        signature_behavior_entries: ["behavior", "context", "frequency", "comedic_exaggeration_potential", "game_use_notes", "dialogue_use_notes"],
+        asset_entries: assetObjectKeys,
+        asset_group_entries: ["group_id", "group_name", "description", "asset_ids", "tags", "notes"],
+        style_guide_entries: ["guide_name", "description", "asset_ids", "prompt_notes", "negative_prompt_notes"]
       }[id] || ["value"];
     }
     function setStatus(message, type = "") {
@@ -549,6 +640,21 @@
         },
         identity: pick(values, ["display_name", "real_name_optional", "in_world_name", "nicknames", "pronouns", "age_range", "current_location", "origin_location", "communities", "roles", "professions", "identity_tags"]),
         appearance: pick(values, ["height_build", "hair", "eyes", "face_features", "skin_tone", "distinguishing_marks", "silhouette", "everyday_clothing", "iconic_outfit", "accessories", "carried_items", "default_expression", "movement_body_language", "image_prompt_notes", "negative_image_prompt_notes"]),
+        asset_library: {
+          primary_reference_asset_id: values.primary_reference_asset_id,
+          primary_portrait_asset_id: values.primary_portrait_asset_id,
+          primary_sprite_asset_id: values.primary_sprite_asset_id,
+          primary_model_asset_id: values.primary_model_asset_id,
+          primary_face_reference_asset_id: values.primary_face_reference_asset_id,
+          primary_body_reference_asset_id: values.primary_body_reference_asset_id,
+          primary_outfit_reference_asset_id: values.primary_outfit_reference_asset_id,
+          primary_token_asset_id: values.primary_token_asset_id,
+          primary_voice_reference_asset_id: values.primary_voice_reference_asset_id,
+          assets: values.asset_entries,
+          asset_groups: values.asset_group_entries,
+          style_guides: values.style_guide_entries,
+          visual_reference_sheet: values.visual_reference_sheet
+        },
         personality: pick(values, ["primary_social_energy", "secondary_social_energy", "personality_traits", "custom_traits", "strengths", "flaws", "temperament", "biggest_contradiction"]),
         motivation: pick(values, ["core_motivation", "ranked_values", "what_they_optimize_for", "what_they_refuse_to_compromise", "what_tempts_them", "what_they_are_trying_to_become", "greatest_need", "greatest_fear", "moral_center", "shadow_desire"]),
         decision_making: pick(values, ["decision_style", "risk_tolerance", "planning_horizon", "under_pressure_behavior", "common_blind_spot", "failure_mode", "recovery_pattern", "what_makes_them_act", "what_makes_them_freeze"]),
@@ -685,10 +791,21 @@
       return text;
     }
 
+    function generateVisualReferenceSheet() {
+      const text = visualReferenceSheet();
+      setField("visual_reference_sheet", text);
+      dirty = true;
+      updatePreview();
+      renderAssetLibrary();
+      setStatus("Generated visual reference sheet.", "ok");
+      return text;
+    }
+
     function markdownProfile(profile = buildProfile()) {
       const lines = ["# Character Profile", "", `Schema version: ${profile.schema_version}`, `Schema ID: ${profile.schema_id}`, `Profile ID: ${profile.profile_id}`, `Updated: ${profile.updated_at}`, ""];
       const sectionMap = [
         ["Identity", profile.identity], ["Appearance", profile.appearance], ["Personality", profile.personality],
+        ["Asset Library", profile.asset_library],
         ["Motivation", profile.motivation], ["Decision-Making", profile.decision_making],
         ["Social Model", profile.social_model], ["Relationship Graph", profile.relationship_graph],
         ["Knowledge Domains", profile.knowledge_domains],
@@ -773,6 +890,121 @@
       ].filter(Boolean).join("\n");
     }
 
+    function selectedPrimaryAssets(profile = buildProfile()) {
+      const ids = [
+        profile.asset_library.primary_reference_asset_id,
+        profile.asset_library.primary_portrait_asset_id,
+        profile.asset_library.primary_sprite_asset_id,
+        profile.asset_library.primary_model_asset_id,
+        profile.asset_library.primary_face_reference_asset_id,
+        profile.asset_library.primary_body_reference_asset_id,
+        profile.asset_library.primary_outfit_reference_asset_id,
+        profile.asset_library.primary_token_asset_id,
+        profile.asset_library.primary_voice_reference_asset_id
+      ].filter(Boolean);
+      return profile.asset_library.assets.filter(asset => ids.includes(asset.asset_id));
+    }
+
+    function assetManifest(profile = buildProfile()) {
+      return {
+        schema_version: profile.schema_version,
+        schema_id: profile.schema_id,
+        profile_id: profile.profile_id,
+        generated_at: nowIso(),
+        primary_asset_ids: {
+          reference: profile.asset_library.primary_reference_asset_id,
+          portrait: profile.asset_library.primary_portrait_asset_id,
+          sprite: profile.asset_library.primary_sprite_asset_id,
+          model: profile.asset_library.primary_model_asset_id,
+          face: profile.asset_library.primary_face_reference_asset_id,
+          body: profile.asset_library.primary_body_reference_asset_id,
+          outfit: profile.asset_library.primary_outfit_reference_asset_id,
+          token: profile.asset_library.primary_token_asset_id,
+          voice: profile.asset_library.primary_voice_reference_asset_id
+        },
+        asset_count: profile.asset_library.assets.length,
+        group_count: profile.asset_library.asset_groups.length,
+        style_guide_count: profile.asset_library.style_guides.length,
+        assets: profile.asset_library.assets.map(asset => ({
+          asset_id: asset.asset_id,
+          asset_type: asset.asset_type,
+          title: asset.title,
+          file_name: asset.file_name,
+          url: asset.url,
+          local_path: asset.local_path,
+          consent_status: asset.consent_status,
+          canon_level: asset.canon_level,
+          tags: asset.tags,
+          associated_projects: asset.associated_projects,
+          use_cases: asset.use_cases
+        }))
+      };
+    }
+
+    function visualReferenceSheet(profile = buildProfile()) {
+      const primary = selectedPrimaryAssets(profile);
+      return [
+        "# Visual Reference Sheet",
+        "",
+        `Profile: ${profile.identity.display_name || profile.identity.in_world_name || profile.profile_id}`,
+        "",
+        "## Appearance",
+        formatMarkdownValue(profile.appearance),
+        "",
+        "## Clothing And Posture",
+        `Everyday clothing: ${profile.appearance.everyday_clothing || "_Not provided._"}`,
+        `Iconic outfit: ${profile.appearance.iconic_outfit || "_Not provided._"}`,
+        `Posture/body language: ${profile.appearance.movement_body_language || "_Not provided._"}`,
+        `Expression: ${profile.appearance.default_expression || "_Not provided._"}`,
+        "",
+        "## Visual Motifs And Symbols",
+        formatMarkdownValue(profile.narrative_engine.symbolic_motifs.concat(profile.appearance.accessories ? [profile.appearance.accessories] : [])),
+        "",
+        "## Primary Assets",
+        formatMarkdownValue(primary),
+        "",
+        "## All Associated Assets",
+        formatMarkdownValue(profile.asset_library.assets)
+      ].join("\n");
+    }
+
+    function artReference(profile = buildProfile()) {
+      return [
+        "# Art Reference",
+        "",
+        profile.ai_generation.art_prompt_summary || profile.appearance.image_prompt_notes || "",
+        "",
+        "## Positive Notes",
+        profile.appearance.image_prompt_notes || "_Not provided._",
+        "",
+        "## Negative Notes",
+        profile.appearance.negative_image_prompt_notes || profile.ai_generation.negative_prompt_tags.join(", ") || "_Not provided._",
+        "",
+        "## Style Guides",
+        formatMarkdownValue(profile.asset_library.style_guides),
+        "",
+        "## Approved Art Assets",
+        formatMarkdownValue(profile.asset_library.assets.filter(asset => ["portrait", "character_art", "concept_art", "reference_photo"].includes(asset.asset_type)))
+      ].join("\n");
+    }
+
+    function spriteReference(profile = buildProfile()) {
+      return [
+        "# Sprite Reference",
+        "",
+        `Profile: ${profile.identity.in_world_name || profile.identity.display_name || profile.profile_id}`,
+        "",
+        "## Sprite Prompt",
+        `Create readable sprite/pixel art using silhouette: ${profile.appearance.silhouette || "_not provided_"}. Outfit: ${profile.appearance.iconic_outfit || profile.appearance.everyday_clothing || "_not provided_"}. Expression: ${profile.appearance.default_expression || "_not provided_"}.`,
+        "",
+        "## Sprite Assets",
+        formatMarkdownValue(profile.asset_library.assets.filter(asset => ["sprite", "sprite_sheet", "pixel_art", "token"].includes(asset.asset_type))),
+        "",
+        "## Do Not Use",
+        formatMarkdownValue(profile.asset_library.assets.flatMap(asset => asset.do_not_use_for || []))
+      ].join("\n");
+    }
+
     async function copyText(text, message) {
       await navigator.clipboard.writeText(text);
       setStatus(message, "ok");
@@ -784,6 +1016,131 @@
       link.download = name;
       link.click();
       URL.revokeObjectURL(link.href);
+    }
+
+    function addUploadedAssets(files) {
+      const existing = fieldValue("asset_entries");
+      const added = Array.from(files).map(file => {
+        const extension = file.name.includes(".") ? file.name.split(".").pop().toLowerCase() : "";
+        const type = inferAssetType(file, extension);
+        const id = `asset_${timestampSlug()}_${slugify(file.name).slice(0, 32)}`;
+        return {
+          asset_id: id,
+          asset_type: type,
+          title: file.name.replace(/\.[^.]+$/, ""),
+          description: "Uploaded metadata captured in static browser mode. Store the actual file in private/cloud/GitHub/CDN storage and add a stable URL or local path.",
+          file_name: file.name,
+          file_extension: extension,
+          file_size: `${file.size} bytes`,
+          url: "",
+          local_path: "",
+          thumbnail_url: file.type.startsWith("image/") ? URL.createObjectURL(file) : "",
+          date_added: nowIso().slice(0, 10),
+          last_modified: file.lastModified ? new Date(file.lastModified).toISOString().slice(0, 10) : "",
+          source: "browser upload metadata",
+          creator: "",
+          copyright_holder: "",
+          license_type: "",
+          consent_status: "unknown",
+          canon_level: "prototype",
+          tags: [],
+          associated_projects: [],
+          use_cases: [],
+          do_not_use_for: [],
+          notes: "Binary file is not embedded in the JSON export."
+        };
+      });
+      setField("asset_entries", existing.concat(added));
+      dirty = true;
+      updatePreview();
+      renderAssetLibrary();
+      setStatus(`Added ${added.length} asset metadata record${added.length === 1 ? "" : "s"}.`, "ok");
+    }
+
+    function inferAssetType(file, extension) {
+      if (file.type.startsWith("image/")) return extension === "gif" ? "animation" : "reference_photo";
+      if (file.type.startsWith("audio/")) return "audio_clip";
+      if (file.type.startsWith("video/")) return "video";
+      if (extension === "pdf") return "pdf";
+      if (["glb", "gltf", "obj", "fbx", "blend"].includes(extension)) return "3d_model";
+      if (["txt", "doc", "docx", "md"].includes(extension)) return "document";
+      return "other";
+    }
+
+    function filteredAssets() {
+      const profile = buildProfile();
+      const q = el("asset_search").value.trim().toLowerCase();
+      const type = el("asset_filter_type").value;
+      const canon = el("asset_filter_canon").value;
+      const consent = el("asset_filter_consent").value;
+      const project = el("asset_filter_project").value.trim().toLowerCase();
+      const tag = el("asset_filter_tag").value.trim().toLowerCase();
+      const creator = el("asset_filter_creator").value.trim().toLowerCase();
+      const date = el("asset_filter_date").value.trim();
+      return profile.asset_library.assets.filter(asset => {
+        const haystack = JSON.stringify(asset).toLowerCase();
+        return (!q || haystack.includes(q)) &&
+          (!type || asset.asset_type === type) &&
+          (!canon || asset.canon_level === canon) &&
+          (!consent || asset.consent_status === consent) &&
+          (!project || asset.associated_projects.join(" ").toLowerCase().includes(project)) &&
+          (!tag || asset.tags.join(" ").toLowerCase().includes(tag)) &&
+          (!creator || String(asset.creator || "").toLowerCase().includes(creator)) &&
+          (!date || String(asset.date_added || "").includes(date) || String(asset.last_modified || "").includes(date));
+      });
+    }
+
+    function renderAssetLibrary(mode = renderAssetLibrary.mode || "gallery") {
+      renderAssetLibrary.mode = mode;
+      const assets = filteredAssets();
+      const gallery = el("assetGallery");
+      const table = el("assetTableWrap");
+      gallery.style.display = mode === "gallery" ? "grid" : "none";
+      table.style.display = mode === "table" ? "block" : "none";
+      gallery.innerHTML = assets.map(asset => `
+        <div class="asset-card" data-asset-id="${escapeHtml(asset.asset_id)}">
+          <div class="asset-thumb">${asset.thumbnail_url ? `<img src="${escapeHtml(asset.thumbnail_url)}" alt="">` : escapeHtml(asset.asset_type || "asset")}</div>
+          <strong>${escapeHtml(asset.title || asset.file_name || asset.asset_id)}</strong>
+          <div class="hint">${escapeHtml(asset.asset_type)} · ${escapeHtml(asset.canon_level)} · ${escapeHtml(asset.consent_status)}</div>
+        </div>
+      `).join("") || "<p class='hint'>No assets match the current filters.</p>";
+      table.innerHTML = `<table class="asset-table"><thead><tr><th>ID</th><th>Type</th><th>Title</th><th>Canon</th><th>Consent</th><th>Tags</th></tr></thead><tbody>${assets.map(asset => `
+        <tr data-asset-id="${escapeHtml(asset.asset_id)}"><td>${escapeHtml(asset.asset_id)}</td><td>${escapeHtml(asset.asset_type)}</td><td>${escapeHtml(asset.title)}</td><td>${escapeHtml(asset.canon_level)}</td><td>${escapeHtml(asset.consent_status)}</td><td>${escapeHtml((asset.tags || []).join(", "))}</td></tr>
+      `).join("")}</tbody></table>`;
+      document.querySelectorAll("[data-asset-id]").forEach(node => node.addEventListener("click", () => previewAsset(node.getAttribute("data-asset-id"))));
+    }
+
+    function previewAsset(assetId) {
+      const asset = buildProfile().asset_library.assets.find(item => item.asset_id === assetId);
+      el("assetPreview").innerHTML = asset ? `<strong>${escapeHtml(asset.title || asset.asset_id)}</strong><pre>${escapeHtml(JSON.stringify(asset, null, 2))}</pre>` : "Select an asset to preview metadata.";
+    }
+
+    function bulkTagFiltered() {
+      const tag = prompt("Tag to add to all filtered assets:");
+      if (!tag) return;
+      const ids = new Set(filteredAssets().map(asset => asset.asset_id));
+      const assets = fieldValue("asset_entries").map(asset => ids.has(asset.asset_id) ? { ...asset, tags: Array.from(new Set([...(asset.tags || []), tag])) } : asset);
+      setField("asset_entries", assets);
+      updatePreview();
+      renderAssetLibrary();
+    }
+
+    function bulkEditFiltered() {
+      const consent = prompt(`Consent status (${ASSET_CONSENT_STATUSES.join(", ")}):`, "internal_only");
+      const canon = prompt(`Canon level (${ASSET_CANON_LEVELS.join(", ")}):`, "prototype");
+      const ids = new Set(filteredAssets().map(asset => asset.asset_id));
+      const assets = fieldValue("asset_entries").map(asset => ids.has(asset.asset_id) ? { ...asset, consent_status: consent || asset.consent_status, canon_level: canon || asset.canon_level } : asset);
+      setField("asset_entries", assets);
+      updatePreview();
+      renderAssetLibrary();
+    }
+
+    function bulkDeleteFiltered() {
+      const ids = new Set(filteredAssets().map(asset => asset.asset_id));
+      if (!ids.size || !confirm(`Delete ${ids.size} filtered asset metadata record(s)? This does not delete source files.`)) return;
+      setField("asset_entries", fieldValue("asset_entries").filter(asset => !ids.has(asset.asset_id)));
+      updatePreview();
+      renderAssetLibrary();
     }
     async function downloadAll() {
       const profile = buildProfile();
@@ -797,6 +1154,11 @@
         ["profile.art-prompt.md", artPrompt(profile)],
         ["profile.dialogue-prompt.md", dialoguePrompt(profile)],
         ["profile.relationships.json", JSON.stringify(profile.relationship_graph, null, 2)],
+        ["profile.assets.json", JSON.stringify(profile.asset_library.assets, null, 2)],
+        ["profile.asset-manifest.json", JSON.stringify(assetManifest(profile), null, 2)],
+        ["profile.visual-reference.md", visualReferenceSheet(profile)],
+        ["profile.art-reference.md", artReference(profile)],
+        ["profile.sprite-reference.md", spriteReference(profile)],
         ["schema.json", schema]
       ];
       downloadText(`${profile.profile_id || "character"}-profile-package-${timestampSlug()}.zip`, makeZip(files), "application/zip");
@@ -851,7 +1213,7 @@
         importedWarnings.push(`Imported ${source.schema_version || source.schema || "legacy"} and migrated safely to 3.0.0.`);
         flattenLegacy(source, set);
       }
-      const knownTop = new Set(["schema_version", "schema_id", "schema_name", "profile_id", "created_at", "updated_at", "metadata", "consent", "identity", "appearance", "personality", "motivation", "motivation_values", "decision_making", "social_model", "social_relationship_model", "relationship_graph", "knowledge_domains", "humor_and_voice", "humor_communication", "conflict_and_stress", "conflict_stress_response", "signature_behaviors", "narrative_engine", "game_mechanics", "ai_generation", "ai_generation_metadata", "project_usage", "source_notes", "generated_content", "privacy", "exports", "generated", "character_core", "voice_and_behavior", "narrative_design", "extensions"]);
+      const knownTop = new Set(["schema_version", "schema_id", "schema_name", "profile_id", "created_at", "updated_at", "metadata", "consent", "identity", "appearance", "asset_library", "personality", "motivation", "motivation_values", "decision_making", "social_model", "social_relationship_model", "relationship_graph", "knowledge_domains", "humor_and_voice", "humor_communication", "conflict_and_stress", "conflict_stress_response", "signature_behaviors", "narrative_engine", "game_mechanics", "ai_generation", "ai_generation_metadata", "project_usage", "source_notes", "generated_content", "privacy", "exports", "generated", "character_core", "voice_and_behavior", "narrative_design", "extensions"]);
       importedExtensions.unknown_fields = Object.fromEntries(Object.entries(source).filter(([key]) => !knownTop.has(key)));
       flatFields.forEach(field => {
         setField(field.id, set[field.id] ?? defaultForField(field));
@@ -872,6 +1234,12 @@
     }
     function flattenModern(source, set) {
       Object.assign(set, source.identity, source.appearance, source.personality, source.motivation, source.motivation_values, source.decision_making, source.social_model, source.social_relationship_model, source.humor_and_voice, source.humor_communication, source.conflict_and_stress, source.conflict_stress_response, source.narrative_engine, source.game_mechanics, source.ai_generation, source.ai_generation_metadata, source.project_usage, source.source_notes, source.generated_content);
+      if (source.asset_library) {
+        Object.assign(set, source.asset_library);
+        set.asset_entries = source.asset_library.assets || [];
+        set.asset_group_entries = source.asset_library.asset_groups || [];
+        set.style_guide_entries = source.asset_library.style_guides || [];
+      }
       set.relationship_entries = source.relationship_graph || source.social_relationship_model?.relationship_graph || [];
       set.knowledge_domain_entries = Array.isArray(source.knowledge_domains) ? source.knowledge_domains : (source.knowledge_domains?.domains || []);
       set.signature_behavior_entries = Array.isArray(source.signature_behaviors) ? source.signature_behaviors : (source.signature_behaviors?.behaviors || []);
@@ -1025,6 +1393,10 @@
 
     renderForm();
     resetForm();
+    ASSET_TYPES.forEach(type => el("asset_filter_type").insertAdjacentHTML("beforeend", `<option value="${type}">${type}</option>`));
+    ASSET_CANON_LEVELS.forEach(level => el("asset_filter_canon").insertAdjacentHTML("beforeend", `<option value="${level}">${level}</option>`));
+    ASSET_CONSENT_STATUSES.forEach(status => el("asset_filter_consent").insertAdjacentHTML("beforeend", `<option value="${status}">${status}</option>`));
+    renderAssetLibrary();
     document.addEventListener("input", () => { dirty = true; updatePreview(); });
     document.addEventListener("change", () => { dirty = true; updatePreview(); });
     el("submitBtn").addEventListener("click", submitProfile);
@@ -1034,6 +1406,7 @@
     el("generateDialogueBtn").addEventListener("click", generateDialoguePromptOutput);
     el("generateNpcBtn").addEventListener("click", generateNpcSummary);
     el("generateRelationshipBtn").addEventListener("click", generateRelationshipSummary);
+    el("generateVisualRefBtn").addEventListener("click", generateVisualReferenceSheet);
     el("copyJsonBtn").addEventListener("click", () => copyText(JSON.stringify(buildProfile(), null, 2), "Copied full JSON."));
     el("copyMarkdownBtn").addEventListener("click", () => copyText(markdownProfile(), "Copied markdown profile."));
     el("downloadAllBtn").addEventListener("click", downloadAll);
@@ -1045,6 +1418,11 @@
     el("downloadArtPromptBtn").addEventListener("click", () => downloadText(`art-prompt-${timestampSlug()}.txt`, artPrompt(), "text/plain"));
     el("downloadDialoguePromptBtn").addEventListener("click", () => downloadText(`dialogue-prompt-${timestampSlug()}.txt`, dialoguePrompt(), "text/plain"));
     el("downloadRelationshipsBtn").addEventListener("click", () => downloadText(`profile.relationships-${timestampSlug()}.json`, JSON.stringify(buildProfile().relationship_graph, null, 2), "application/json"));
+    el("downloadAssetsBtn").addEventListener("click", () => downloadText(`profile.assets-${timestampSlug()}.json`, JSON.stringify(buildProfile().asset_library.assets, null, 2), "application/json"));
+    el("downloadAssetManifestBtn").addEventListener("click", () => downloadText(`profile.asset-manifest-${timestampSlug()}.json`, JSON.stringify(assetManifest(), null, 2), "application/json"));
+    el("downloadVisualRefBtn").addEventListener("click", () => downloadText(`profile.visual-reference-${timestampSlug()}.md`, visualReferenceSheet(), "text/markdown"));
+    el("downloadArtRefBtn").addEventListener("click", () => downloadText(`profile.art-reference-${timestampSlug()}.md`, artReference(), "text/markdown"));
+    el("downloadSpriteRefBtn").addEventListener("click", () => downloadText(`profile.sprite-reference-${timestampSlug()}.md`, spriteReference(), "text/markdown"));
     el("validateJsonBtn").addEventListener("click", () => {
       const warnings = validateProfile(buildProfile());
       importedWarnings = warnings.length ? warnings : ["Profile validates against the app's required v3 checks."];
@@ -1054,6 +1432,17 @@
     });
     el("copyShareLinkBtn").addEventListener("click", () => copyText(shareLink(), "Copied generated share link."));
     el("field_search").addEventListener("input", event => filterFields(event.target.value));
+    ["asset_search", "asset_filter_type", "asset_filter_canon", "asset_filter_consent", "asset_filter_project", "asset_filter_tag", "asset_filter_creator", "asset_filter_date"].forEach(id => el(id).addEventListener("input", () => renderAssetLibrary()));
+    ["asset_filter_type", "asset_filter_canon", "asset_filter_consent"].forEach(id => el(id).addEventListener("change", () => renderAssetLibrary()));
+    el("assetGalleryBtn").addEventListener("click", () => renderAssetLibrary("gallery"));
+    el("assetTableBtn").addEventListener("click", () => renderAssetLibrary("table"));
+    el("bulkTagBtn").addEventListener("click", bulkTagFiltered);
+    el("bulkEditBtn").addEventListener("click", bulkEditFiltered);
+    el("bulkDeleteBtn").addEventListener("click", bulkDeleteFiltered);
+    el("assetUpload").addEventListener("change", event => { addUploadedAssets(event.target.files); event.target.value = ""; });
+    el("assetDropZone").addEventListener("dragover", event => { event.preventDefault(); el("assetDropZone").classList.add("dragging"); });
+    el("assetDropZone").addEventListener("dragleave", () => el("assetDropZone").classList.remove("dragging"));
+    el("assetDropZone").addEventListener("drop", event => { event.preventDefault(); el("assetDropZone").classList.remove("dragging"); addUploadedAssets(event.dataTransfer.files); });
     el("importFile").addEventListener("change", handleImport);
     el("resetBtn").addEventListener("click", resetForm);
   </script>
