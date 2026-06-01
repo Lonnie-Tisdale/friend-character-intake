@@ -126,6 +126,25 @@ legend {
   font-size: .88rem;
 }
 
+.field-title {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-weight: 700;
+}
+
+.tip {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 800;
+}
+
 input,
 select,
 textarea {
@@ -184,6 +203,35 @@ textarea {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+details {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 0;
+}
+
+summary {
+  padding: 16px 18px;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+details > section {
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+}
+
+.counter {
+  color: var(--muted);
+  font-size: .78rem;
+  text-align: right;
+}
+
+.summary-box {
+  min-height: 96px;
 }
 
 button {
@@ -269,11 +317,11 @@ pre {
           <span>You can contact me later if a descriptor needs clarification.</span>
         </label>
         <label>
-          Display name <span class="required">*</span>
+          <span class="field-title">Display name <span class="required">*</span><span class="tip" title="Used for filenames, review, and human-readable records.">?</span></span>
           <input name="identity.display_name" required autocomplete="name">
         </label>
         <label>
-          Preferred contact
+          <span class="field-title">Preferred contact <span class="tip" title="Optional follow-up route when a detail needs approval or clarification.">?</span></span>
           <input name="identity.contact" autocomplete="email" placeholder="Email, Discord, phone, etc.">
         </label>
       </div>
@@ -283,19 +331,19 @@ pre {
       <h2>Core Identity</h2>
       <div class="grid">
         <label>
-          In-game name or nickname
-          <input name="identity.game_name">
+          <span class="field-title">In-game name or nickname <span class="tip" title="Used to generate the character id and in-game display name.">?</span></span>
+          <input name="identity.game_name" placeholder="Example: Cody, Crowbot, The Spreadsheet Mystic">
         </label>
         <label>
-          Pronouns
+          <span class="field-title">Pronouns <span class="tip" title="Helps dialogue and narration refer to the character correctly.">?</span></span>
           <input name="identity.pronouns" placeholder="Optional">
         </label>
         <label>
-          Current city or usual setting
-          <input name="identity.location">
+          <span class="field-title">Current city or usual setting <span class="tip" title="Anchors encounter design, source images, and scene context.">?</span></span>
+          <input name="identity.location" placeholder="San Diego, Chico, DEFCON, a kitchen at 2 a.m.">
         </label>
         <label>
-          Age range
+          <span class="field-title">Age range <span class="tip" title="Optional broad context for writing age-appropriate voice and life stage.">?</span></span>
           <select name="identity.age_range">
             <option value="">Prefer not to say</option>
             <option>20s</option>
@@ -306,7 +354,7 @@ pre {
           </select>
         </label>
         <label class="full">
-          One-sentence character summary
+          <span class="field-title">One-sentence character summary <span class="tip" title="A quick human-authored profile for future game writers and generation prompts.">?</span></span>
           <textarea name="identity.summary" placeholder="Example: A hyper-prepared market guy with firefighter reflexes and passport avoidance issues."></textarea>
         </label>
       </div>
@@ -316,31 +364,31 @@ pre {
       <h2>Visual Descriptors</h2>
       <div class="grid three">
         <label>
-          Height / build
+          <span class="field-title">Height / build <span class="tip" title="Supports consistent character art, silhouettes, and animation choices.">?</span></span>
           <input name="appearance.height_build" placeholder="Tall, compact, broad, lanky, etc.">
         </label>
         <label>
-          Hair
+          <span class="field-title">Hair <span class="tip" title="Captures stable visual anchors for art prompts.">?</span></span>
           <input name="appearance.hair" placeholder="Color, length, style, facial hair">
         </label>
         <label>
-          Eyes / brows
-          <input name="appearance.eyes">
+          <span class="field-title">Eyes / brows <span class="tip" title="Useful for portraits, expression sheets, and image matching.">?</span></span>
+          <input name="appearance.eyes" placeholder="Blue eyes, heavy brows, bright eye contact">
         </label>
         <label>
-          Face shape / features
-          <input name="appearance.face">
+          <span class="field-title">Face shape / features <span class="tip" title="Gives image prompts more specificity without depending only on photos.">?</span></span>
+          <input name="appearance.face" placeholder="Angular face, round cheeks, strong nose">
         </label>
         <label>
-          Skin tone / complexion
-          <input name="appearance.complexion">
+          <span class="field-title">Skin tone / complexion <span class="tip" title="Optional descriptor for respectful and accurate visual reference.">?</span></span>
+          <input name="appearance.complexion" placeholder="Optional">
         </label>
         <label>
-          Distinguishing marks
+          <span class="field-title">Distinguishing marks <span class="tip" title="Captures details that should remain consistent across art.">?</span></span>
           <input name="appearance.distinguishing_marks" placeholder="Scars, tattoos, glasses, etc.">
         </label>
         <label class="full">
-          Overall silhouette
+          <span class="field-title">Overall silhouette <span class="tip" title="The fastest way to make a character recognizable in-game.">?</span></span>
           <textarea name="appearance.silhouette" placeholder="What would make you recognizable from across the room?"></textarea>
         </label>
       </div>
@@ -350,19 +398,19 @@ pre {
       <h2>Style and Props</h2>
       <div class="grid">
         <label>
-          Everyday clothing
+          <span class="field-title">Everyday clothing <span class="tip" title="Default costume reference for character art and sprites.">?</span></span>
           <textarea name="style.everyday_clothing" placeholder="Default outfit, shoes, colors, textures, layers"></textarea>
         </label>
         <label>
-          Iconic outfit
+          <span class="field-title">Iconic outfit <span class="tip" title="A memorable look for key scenes, portraits, or promotional art.">?</span></span>
           <textarea name="style.iconic_outfit" placeholder="The look people would instantly associate with you"></textarea>
         </label>
         <label>
-          Accessories
+          <span class="field-title">Accessories <span class="tip" title="Small visual motifs that help image prompts and inventory flavor.">?</span></span>
           <input name="style.accessories" placeholder="Hat, sunglasses, bag, jewelry, watch">
         </label>
         <label>
-          Carried items or props
+          <span class="field-title">Carried items or props <span class="tip" title="Objects that can become mechanics, jokes, or visual hooks.">?</span></span>
           <input name="style.props" placeholder="Camera, laptop, canteen, fanny pack, etc.">
         </label>
       </div>
@@ -372,27 +420,27 @@ pre {
       <h2>Expression and Movement</h2>
       <div class="grid">
         <label>
-          Default facial expression
+          <span class="field-title">Default facial expression <span class="tip" title="Helps portraits and dialogue beats feel like the real person.">?</span></span>
           <input name="presence.default_expression" placeholder="Smirk, deadpan, warm, suspicious, etc.">
         </label>
         <label>
-          How you stand or move
+          <span class="field-title">How you stand or move <span class="tip" title="Captures body language for animation, scene writing, and recognition.">?</span></span>
           <input name="presence.posture_movement" placeholder="Loose, precise, restless, grounded, theatrical">
         </label>
         <label>
-          Voice or speech rhythm
+          <span class="field-title">Voice or speech rhythm <span class="tip" title="Dialogue generation needs rhythm as much as vocabulary.">?</span></span>
           <input name="presence.voice" placeholder="Fast, dry, calm, broadcaster, chaotic, etc.">
         </label>
         <label>
-          Social energy
-          <select name="presence.social_energy">
+          <span class="field-title">Primary Social Energy <span class="tip" title="Main social role used for dialogue, NPC behavior, and party dynamics.">?</span></span>
+          <select name="presence.primary_social_energy" data-social-energy>
             <option value="">Choose one</option>
-            <option>Quiet observer</option>
-            <option>Warm stabilizer</option>
-            <option>Chaotic instigator</option>
-            <option>Deadpan commentator</option>
-            <option>Practical fixer</option>
-            <option>Magnetic performer</option>
+          </select>
+        </label>
+        <label>
+          <span class="field-title">Secondary Social Energy <span class="tip" title="Optional second archetype for richer combinations and less flat characters.">?</span></span>
+          <select name="presence.secondary_social_energy" data-social-energy>
+            <option value="">Optional</option>
           </select>
         </label>
       </div>
@@ -400,6 +448,27 @@ pre {
 
     <section>
       <h2>Personality Anchors</h2>
+      <fieldset>
+        <legend>Core Motivation</legend>
+        <p class="hint">Motivations often predict decisions better than surface traits.</p>
+        <div class="checks">
+          <label><input type="checkbox" name="personality.core_motivation" value="Truth">Truth</label>
+          <label><input type="checkbox" name="personality.core_motivation" value="Adventure">Adventure</label>
+          <label><input type="checkbox" name="personality.core_motivation" value="Mastery">Mastery</label>
+          <label><input type="checkbox" name="personality.core_motivation" value="Freedom">Freedom</label>
+          <label><input type="checkbox" name="personality.core_motivation" value="Knowledge">Knowledge</label>
+          <label><input type="checkbox" name="personality.core_motivation" value="Family">Family</label>
+          <label><input type="checkbox" name="personality.core_motivation" value="Friendship">Friendship</label>
+          <label><input type="checkbox" name="personality.core_motivation" value="Justice">Justice</label>
+          <label><input type="checkbox" name="personality.core_motivation" value="Recognition">Recognition</label>
+          <label><input type="checkbox" name="personality.core_motivation" value="Creativity">Creativity</label>
+          <label><input type="checkbox" name="personality.core_motivation" value="Service">Service</label>
+          <label><input type="checkbox" name="personality.core_motivation" value="Discovery">Discovery</label>
+          <label><input type="checkbox" name="personality.core_motivation" value="Legacy">Legacy</label>
+          <label><input type="checkbox" name="personality.core_motivation" value="Survival">Survival</label>
+          <label><input type="checkbox" name="personality.core_motivation" value="Belonging">Belonging</label>
+        </div>
+      </fieldset>
       <fieldset>
         <legend>Pick up to six that fit</legend>
         <p class="hint">These become quick tags for writing scenes, dialogue, mechanics, and image prompts.</p>
@@ -420,16 +489,78 @@ pre {
       </fieldset>
       <div class="grid" style="margin-top: 14px;">
         <label>
-          Custom traits
+          <span class="field-title">Custom traits <span class="tip" title="Free-form personality labels not covered by the checklist. Stored as tags for future search.">?</span></span>
           <input name="personality.custom_traits" placeholder="Comma-separated">
         </label>
         <label>
-          Biggest contradiction
+          <span class="field-title">Biggest contradiction <span class="tip" title="Contradictions create memorable dialogue, conflict, and choices.">?</span></span>
           <input name="personality.contradiction" placeholder="Example: deeply cautious but addicted to risky trades">
         </label>
         <label class="full">
-          Things the character version should never get wrong
-          <textarea name="personality.never_get_wrong"></textarea>
+          <span class="field-title">Signature behaviors <span class="tip" title="Recognizable habits are often better character fuel than adjectives.">?</span></span>
+          <textarea name="personality.signature_behaviors" placeholder="Examples: Always opens twenty browser tabs. Turns every debate into a research project. Can't resist pressing mysterious buttons."></textarea>
+        </label>
+        <label class="full">
+          <span class="field-title">Things the character version should never get wrong <span class="tip" title="Protects the real person's voice, boundaries, and non-negotiable traits.">?</span></span>
+          <textarea name="personality.never_get_wrong" placeholder="Example: Do not make them cruel, careless with friends, or anti-curious."></textarea>
+        </label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Strengths, Flaws, and Communication</h2>
+      <div class="grid">
+        <fieldset>
+          <legend>Strengths</legend>
+          <p class="hint">Useful for party roles, skill checks, and heroic moments.</p>
+          <div class="checks">
+            <label><input type="checkbox" name="personality.strengths" value="Empathetic">Empathetic</label>
+            <label><input type="checkbox" name="personality.strengths" value="Strategic">Strategic</label>
+            <label><input type="checkbox" name="personality.strengths" value="Courageous">Courageous</label>
+            <label><input type="checkbox" name="personality.strengths" value="Resourceful">Resourceful</label>
+            <label><input type="checkbox" name="personality.strengths" value="Analytical">Analytical</label>
+            <label><input type="checkbox" name="personality.strengths" value="Creative">Creative</label>
+            <label><input type="checkbox" name="personality.strengths" value="Adaptable">Adaptable</label>
+            <label><input type="checkbox" name="personality.strengths" value="Loyal">Loyal</label>
+            <label><input type="checkbox" name="personality.strengths" value="Patient">Patient</label>
+            <label><input type="checkbox" name="personality.strengths" value="Charismatic">Charismatic</label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Flaws</legend>
+          <p class="hint">Useful for conflict, comedy, bad decisions, and growth arcs.</p>
+          <div class="checks">
+            <label><input type="checkbox" name="personality.flaws" value="Overthinks">Overthinks</label>
+            <label><input type="checkbox" name="personality.flaws" value="Stubborn">Stubborn</label>
+            <label><input type="checkbox" name="personality.flaws" value="Impulsive">Impulsive</label>
+            <label><input type="checkbox" name="personality.flaws" value="Distractible">Distractible</label>
+            <label><input type="checkbox" name="personality.flaws" value="Argumentative">Argumentative</label>
+            <label><input type="checkbox" name="personality.flaws" value="Avoids conflict">Avoids conflict</label>
+            <label><input type="checkbox" name="personality.flaws" value="Trusting">Trusting</label>
+            <label><input type="checkbox" name="personality.flaws" value="Cynical">Cynical</label>
+            <label><input type="checkbox" name="personality.flaws" value="Perfectionist">Perfectionist</label>
+            <label><input type="checkbox" name="personality.flaws" value="Risk-seeking">Risk-seeking</label>
+          </div>
+        </fieldset>
+        <label>
+          <span class="field-title">Communication Style <span class="tip" title="Guides dialogue generation: how they explain, argue, joke, or listen.">?</span></span>
+          <select name="personality.communication_style">
+            <option value="">Choose one</option>
+            <option>Teacher</option>
+            <option>Debater</option>
+            <option>Storyteller</option>
+            <option>Listener</option>
+            <option>Researcher</option>
+            <option>Diplomat</option>
+            <option>Comedian</option>
+            <option>Coach</option>
+            <option>Analyst</option>
+            <option>Philosopher</option>
+          </select>
+        </label>
+        <label>
+          <span class="field-title">Character Tags <span class="tip" title="Search/filter tags for NPC generation, image prompts, and future systems.">?</span></span>
+          <input name="personality.character_tags" placeholder="parkour, philosopher, skeptic, programmer, musician">
         </label>
       </div>
     </section>
@@ -438,15 +569,31 @@ pre {
       <h2>Game Use</h2>
       <div class="grid">
         <label>
-          Suggested class / role
+          <span class="field-title">Suggested class / role <span class="tip" title="A flavorful class label for character sheets and encounter writing.">?</span></span>
           <input name="game.role" placeholder="Street Photographer, Security Expert, Burner DJ, etc.">
         </label>
         <label>
-          Mechanics hooks
+          <span class="field-title">Mechanics hooks <span class="tip" title="Abilities, flaws, events, or status effects this person naturally suggests.">?</span></span>
           <input name="game.mechanics" placeholder="Comma-separated abilities, perks, flaws, events">
         </label>
+        <fieldset class="full">
+          <legend>Potential Party Role</legend>
+          <p class="hint">Pick any that fit. These help party composition, quest logic, and NPC behavior.</p>
+          <div class="checks">
+            <label><input type="checkbox" name="game.potential_party_roles" value="Leader">Leader</label>
+            <label><input type="checkbox" name="game.potential_party_roles" value="Scout">Scout</label>
+            <label><input type="checkbox" name="game.potential_party_roles" value="Support">Support</label>
+            <label><input type="checkbox" name="game.potential_party_roles" value="Strategist">Strategist</label>
+            <label><input type="checkbox" name="game.potential_party_roles" value="Diplomat">Diplomat</label>
+            <label><input type="checkbox" name="game.potential_party_roles" value="Wildcard">Wildcard</label>
+            <label><input type="checkbox" name="game.potential_party_roles" value="Researcher">Researcher</label>
+            <label><input type="checkbox" name="game.potential_party_roles" value="Tank">Tank</label>
+            <label><input type="checkbox" name="game.potential_party_roles" value="Social Specialist">Social Specialist</label>
+            <label><input type="checkbox" name="game.potential_party_roles" value="Mentor">Mentor</label>
+          </div>
+        </fieldset>
         <label>
-          Comedic exaggeration level
+          <span class="field-title">Comedic exaggeration level <span class="tip" title="Sets how heightened the game version should feel.">?</span></span>
           <select name="game.exaggeration_level">
             <option>Affectionate and mild</option>
             <option selected>Noticeably heightened</option>
@@ -455,29 +602,54 @@ pre {
           </select>
         </label>
         <label>
-          Boundaries
+          <span class="field-title">Boundaries <span class="tip" title="Topics, jokes, visuals, or real-life details to avoid.">?</span></span>
           <input name="game.boundaries" placeholder="Topics, jokes, or visual details to avoid">
         </label>
       </div>
     </section>
 
+    <details>
+      <summary>Advanced Narrative Systems</summary>
+      <section>
+        <h2>Decision Patterns</h2>
+        <div class="grid">
+          <label>
+            <span class="field-title">Under pressure <span class="tip" title="Helps simulate choices during crises and branching scenes.">?</span></span>
+            <textarea name="systems.under_pressure" placeholder="Example: gets quiet, gathers facts, then makes one blunt call."></textarea>
+          </label>
+          <label>
+            <span class="field-title">When helping friends <span class="tip" title="Captures social support behavior for party banter and quests.">?</span></span>
+            <textarea name="systems.helping_friends" placeholder="Example: brings food, fixes the tech, then pretends it was no big deal."></textarea>
+          </label>
+          <label>
+            <span class="field-title">Temptations <span class="tip" title="Creates believable flaws, side quests, and comedy traps.">?</span></span>
+            <textarea name="systems.temptations" placeholder="Example: cannot ignore a debate, a bargain bin gadget, or a forbidden hallway."></textarea>
+          </label>
+          <label>
+            <span class="field-title">Growth arc <span class="tip" title="Optional long-term narrative direction for future games.">?</span></span>
+            <textarea name="systems.growth_arc" placeholder="Example: learning to lead without turning everything into a solo burden."></textarea>
+          </label>
+        </div>
+      </section>
+    </details>
+
     <section>
       <h2>Source Images</h2>
       <div class="grid">
         <label class="full">
-          Image files or links
+          <span class="field-title">Image files or links <span class="tip" title="Approved source images for visual reference and image prompts.">?</span></span>
           <textarea name="source_images.references" placeholder="Paste filenames, cloud links, or notes like: front portrait, side profile, full-body casual outfit."></textarea>
         </label>
         <label>
-          Best image for face reference
-          <input name="source_images.best_face_reference">
+          <span class="field-title">Best image for face reference <span class="tip" title="Primary face reference for portrait consistency.">?</span></span>
+          <input name="source_images.best_face_reference" placeholder="portrait-current.jpg">
         </label>
         <label>
-          Best image for outfit/body reference
-          <input name="source_images.best_full_body_reference">
+          <span class="field-title">Best image for outfit/body reference <span class="tip" title="Primary reference for body shape, posture, outfit, and props.">?</span></span>
+          <input name="source_images.best_full_body_reference" placeholder="full-body-casual.jpg">
         </label>
         <label class="full">
-          Image notes
+          <span class="field-title">Image notes <span class="tip" title="Clarifies which photo details are current, outdated, or inaccurate.">?</span></span>
           <textarea name="source_images.notes" placeholder="Mention old photos, lighting issues, outdated hairstyles, or which details are still accurate."></textarea>
         </label>
       </div>
@@ -485,6 +657,16 @@ pre {
 
     <section>
       <h2>Review</h2>
+      <div class="grid">
+        <label class="full">
+          <span class="field-title">Generated Character Summary <span class="tip" title="Auto-composed from completed fields for quick review and handoff.">?</span></span>
+          <textarea id="generatedSummary" class="summary-box" readonly placeholder="Click Generate Character Summary after filling a few fields."></textarea>
+        </label>
+        <label class="full">
+          <span class="field-title">Import JSON for compatibility check <span class="tip" title="Load an older or newer intake JSON record to review, update, or validate field compatibility.">?</span></span>
+          <input id="importJson" type="file" accept="application/json,.json">
+        </label>
+      </div>
       <pre id="preview">{}</pre>
     </section>
 
@@ -492,6 +674,7 @@ pre {
       <output id="status">Ready.</output>
       <div class="button-row">
         <button type="button" id="copyJson">Copy JSON</button>
+        <button type="button" id="generateSummary">Generate Character Summary</button>
         <button type="button" id="downloadJson" class="primary">Download JSON</button>
         <button type="reset">Clear</button>
       </div>
@@ -503,6 +686,51 @@ pre {
 const form = document.querySelector("#intakeForm");
 const preview = document.querySelector("#preview");
 const status = document.querySelector("#status");
+const generatedSummary = document.querySelector("#generatedSummary");
+const arrayFields = new Set([
+  "personality.custom_traits",
+  "personality.character_tags",
+  "game.mechanics"
+]);
+const checkboxArrayFields = [
+  "personality.traits",
+  "personality.core_motivation",
+  "personality.strengths",
+  "personality.flaws",
+  "game.potential_party_roles"
+];
+const socialEnergyOptions = [
+  "Quiet observer",
+  "Warm stabilizer",
+  "Chaotic instigator",
+  "Deadpan commentator",
+  "Practical fixer",
+  "Magnetic performer",
+  "Thoughtful Mentor",
+  "Curious Guide",
+  "Warm Stabilizer",
+  "Community Builder",
+  "Explorer",
+  "Storyteller",
+  "Scholar",
+  "Philosopher",
+  "Connector",
+  "Visionary",
+  "Trusted Advisor",
+  "Trickster Sage",
+  "Reluctant Leader",
+  "Investigator",
+  "Catalyst"
+];
+
+document.querySelectorAll("[data-social-energy]").forEach((select) => {
+  socialEnergyOptions.forEach((optionText) => {
+    const option = document.createElement("option");
+    option.value = optionText;
+    option.textContent = optionText;
+    select.append(option);
+  });
+});
 
 function setNested(target, path, value) {
   const parts = path.split(".");
@@ -531,25 +759,31 @@ function slugify(value) {
 
 function formToRecord() {
   const record = {
-    schema: "friend_descriptor_intake.v1",
+    schema: "friend_descriptor_intake.v2",
     submitted_at: new Date().toISOString()
   };
   const data = new FormData(form);
 
   for (const [name, value] of data.entries()) {
-    if (name === "personality.traits") continue;
+    if (checkboxArrayFields.includes(name)) continue;
     if (value === "") continue;
     const normalized = name.startsWith("consent.")
       ? true
-      : ["personality.custom_traits", "game.mechanics"].includes(name)
+      : arrayFields.has(name)
       ? splitList(value)
       : value;
     setNested(record, name, normalized);
   }
 
-  const traits = [...form.querySelectorAll('input[name="personality.traits"]:checked')]
-    .map((input) => input.value);
-  if (traits.length) setNested(record, "personality.traits", traits);
+  checkboxArrayFields.forEach((fieldName) => {
+    const values = [...form.querySelectorAll(`input[name="${fieldName}"]:checked`)]
+      .map((input) => input.value);
+    if (values.length) setNested(record, fieldName, values);
+  });
+
+  if (record.presence?.primary_social_energy) {
+    record.presence.social_energy = record.presence.primary_social_energy;
+  }
 
   record.character_id = slugify(record.identity?.game_name || record.identity?.display_name);
   return record;
@@ -557,6 +791,145 @@ function formToRecord() {
 
 function refreshPreview() {
   preview.textContent = JSON.stringify(formToRecord(), null, 2);
+  updateCounters();
+}
+
+function shortList(items) {
+  return Array.isArray(items) && items.length ? items.join(", ") : "";
+}
+
+function composeSummary(record) {
+  const name = record.identity?.game_name || record.identity?.display_name || "This character";
+  const role = record.game?.role ? `, a ${record.game.role}` : "";
+  const location = record.identity?.location ? ` usually found around ${record.identity.location}` : "";
+  const social = [record.presence?.primary_social_energy, record.presence?.secondary_social_energy]
+    .filter(Boolean)
+    .join(" + ");
+  const motivation = shortList(record.personality?.core_motivation);
+  const strengths = shortList(record.personality?.strengths);
+  const flaws = shortList(record.personality?.flaws);
+  const tags = shortList(record.personality?.character_tags);
+  const behaviors = record.personality?.signature_behaviors;
+  const communication = record.personality?.communication_style;
+  const party = shortList(record.game?.potential_party_roles);
+
+  return [
+    `${name}${role}${location}.`,
+    social ? `Social energy: ${social}.` : "",
+    motivation ? `Core motivation: ${motivation}.` : "",
+    communication ? `Communication style: ${communication}.` : "",
+    strengths ? `Strengths: ${strengths}.` : "",
+    flaws ? `Flaws: ${flaws}.` : "",
+    behaviors ? `Signature behaviors: ${behaviors}` : "",
+    party ? `Potential party role: ${party}.` : "",
+    tags ? `Tags: ${tags}.` : ""
+  ].filter(Boolean).join(" ");
+}
+
+function updateCounters() {
+  document.querySelectorAll("textarea").forEach((textarea) => {
+    let counter = textarea.parentElement.querySelector(".counter");
+    if (!counter) {
+      counter = document.createElement("span");
+      counter.className = "counter";
+      textarea.insertAdjacentElement("afterend", counter);
+    }
+    counter.textContent = `${textarea.value.length} characters`;
+  });
+}
+
+function clearFormControls() {
+  form.querySelectorAll("input, select, textarea").forEach((control) => {
+    if (control.id === "importJson" || control.id === "generatedSummary") return;
+    if (control.type === "checkbox") control.checked = false;
+    else control.value = "";
+  });
+}
+
+function getNested(source, path) {
+  return path.split(".").reduce((cursor, part) => cursor?.[part], source);
+}
+
+function setControlValue(name, value) {
+  if (value === undefined || value === null) return;
+  const controls = [...form.querySelectorAll(`[name="${CSS.escape(name)}"]`)];
+  if (!controls.length) return;
+
+  if (controls[0].type === "checkbox") {
+    const values = Array.isArray(value) ? value : [value];
+    controls.forEach((control) => {
+      control.checked = values.includes(control.value) || value === true;
+    });
+    return;
+  }
+
+  controls[0].value = Array.isArray(value) ? value.join(", ") : value;
+}
+
+function importRecord(record) {
+  clearFormControls();
+  const normalized = structuredClone(record);
+  if (normalized.presence?.social_energy && !normalized.presence.primary_social_energy) {
+    normalized.presence.primary_social_energy = normalized.presence.social_energy;
+  }
+  [
+    "consent.use_as_character_reference",
+    "consent.combine_with_images",
+    "consent.contact_for_clarification",
+    "identity.display_name",
+    "identity.game_name",
+    "identity.pronouns",
+    "identity.contact",
+    "identity.location",
+    "identity.age_range",
+    "identity.summary",
+    "appearance.height_build",
+    "appearance.hair",
+    "appearance.eyes",
+    "appearance.face",
+    "appearance.complexion",
+    "appearance.distinguishing_marks",
+    "appearance.silhouette",
+    "style.everyday_clothing",
+    "style.iconic_outfit",
+    "style.accessories",
+    "style.props",
+    "presence.default_expression",
+    "presence.posture_movement",
+    "presence.voice",
+    "presence.primary_social_energy",
+    "presence.secondary_social_energy",
+    "personality.core_motivation",
+    "personality.traits",
+    "personality.custom_traits",
+    "personality.contradiction",
+    "personality.signature_behaviors",
+    "personality.never_get_wrong",
+    "personality.strengths",
+    "personality.flaws",
+    "personality.communication_style",
+    "personality.character_tags",
+    "game.role",
+    "game.mechanics",
+    "game.potential_party_roles",
+    "game.exaggeration_level",
+    "game.boundaries",
+    "systems.under_pressure",
+    "systems.helping_friends",
+    "systems.temptations",
+    "systems.growth_arc",
+    "source_images.references",
+    "source_images.best_face_reference",
+    "source_images.best_full_body_reference",
+    "source_images.notes"
+  ].forEach((path) => setControlValue(path, getNested(normalized, path)));
+
+  generatedSummary.value = composeSummary(normalized);
+  const version = normalized.schema || "unknown schema";
+  status.textContent = version === "friend_descriptor_intake.v1"
+    ? "Imported v1 record. It remains compatible; new v2 fields are optional."
+    : `Imported ${version}.`;
+  refreshPreview();
 }
 
 function download(filename, content) {
@@ -583,11 +956,32 @@ document.querySelector("#copyJson").addEventListener("click", async () => {
   status.textContent = "JSON copied.";
 });
 
+document.querySelector("#generateSummary").addEventListener("click", () => {
+  generatedSummary.value = composeSummary(formToRecord());
+  status.textContent = "Character summary generated.";
+  refreshPreview();
+});
+
 document.querySelector("#downloadJson").addEventListener("click", () => {
   if (!form.reportValidity()) return;
   const record = formToRecord();
   download(`${record.character_id}-descriptor-intake.json`, JSON.stringify(record, null, 2));
   status.textContent = "JSON downloaded.";
+});
+
+document.querySelector("#importJson").addEventListener("change", async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+  try {
+    const record = JSON.parse(await file.text());
+    const supported = ["friend_descriptor_intake.v1", "friend_descriptor_intake.v2"].includes(record.schema);
+    if (!supported) {
+      status.textContent = "Imported JSON, but schema version is unknown. Review before using.";
+    }
+    importRecord(record);
+  } catch (error) {
+    status.textContent = "Could not import JSON. Check that the file is valid.";
+  }
 });
 
 document.querySelectorAll("[data-max]").forEach((group) => {
