@@ -1,13 +1,13 @@
 {
   "packet_schema": "chatgpt_review_packet.v1",
-  "generated_at": "2026-06-06T05:48:53.239Z",
-  "commit": "128dd67",
+  "generated_at": "2026-06-06T06:50:47.504Z",
+  "commit": "67fcf81",
   "purpose": "Portable context for AI systems that cannot browse the live GitHub Pages app.",
   "public_links": {
-    "intake_form": "https://lonnie-tisdale.github.io/friend-character-intake/index.html?cachebust=128dd67",
-    "review_dashboard": "https://lonnie-tisdale.github.io/friend-character-intake/review.html?cachebust=128dd67",
-    "markdown_packet": "https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.md?cachebust=128dd67",
-    "json_packet": "https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.json?cachebust=128dd67"
+    "intake_form": "https://lonnie-tisdale.github.io/friend-character-intake/index.html?cachebust=67fcf81",
+    "review_dashboard": "https://lonnie-tisdale.github.io/friend-character-intake/review.html?cachebust=67fcf81",
+    "markdown_packet": "https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.md?cachebust=67fcf81",
+    "json_packet": "https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.json?cachebust=67fcf81"
   },
   "review_prompt": "You are reviewing a static, local-first universal profile intake and review system. Do not assume you can browse the live URL. Use this packet as the source of truth. Evaluate whether the language is clear for nontechnical users and whether the schema remains powerful enough for advanced canon, asset, graph, AI, game, and export workflows. Flag corporate/HR/personality-test/fantasy-only language, privacy risks, confusing required fields, missing consent guardrails, and any gaps for reviewing real people, fictional characters, NPCs, historical figures, AI agents, family members, partners, children, collaborators, and pets.",
   "app_summary": {
@@ -59,6 +59,8 @@
       "ai_generation",
       "project_usage",
       "source_notes",
+      "governance",
+      "profile_evolution",
       "generated_content",
       "extensions"
     ],
@@ -87,6 +89,14 @@
       "game_mechanics",
       "ai_generation",
       "project_usage",
+      "epistemic_metadata",
+      "context_registry",
+      "export_policy_id",
+      "target_context_id",
+      "export_type",
+      "exported_at",
+      "excluded_counts",
+      "export_audit_event",
       "source_notes",
       "specialized_profiles",
       "governance",
@@ -114,6 +124,8 @@
       "asset_group",
       "style_guide",
       "visibility",
+      "reality_status",
+      "perspective",
       "profile_evolution",
       "governance",
       "profile_actor",
@@ -550,9 +562,9 @@
           "id": "relationship_entries",
           "label": "Relationship entries",
           "type": "rows",
-          "help": "Repeatable entries. Format: related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes | story source | confidence/canon | visibility",
-          "placeholder": "Kai | collaborator | 8 | 2 | 7 | 6 | loyal chaos | starts projects from jokes | old Discord-to-road-trip friend | self-reported + witnessed | Community Lore | project_only\nRin | side quest magnet | 7 | 4 | 6 | 8 | brilliant trouble | somehow always at the same afterparty | causes useful chaos together | second-hand | Likely | reviewer_only",
-          "format": "related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes | story source | confidence/canon | visibility"
+          "help": "Repeatable entries. Format: relationship id | related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes | story source | confidence/canon | visibility | context | info type | reality status | perspective",
+          "placeholder": "rel_maya_kai | Kai | collaborator | 8 | 2 | 7 | 6 | loyal chaos | starts projects from jokes | old Discord-to-road-trip friend | self-reported + witnessed | Community Lore | project_only | htf | relationship | community_perception | community\nrel_maya_rin | Rin | side quest magnet | 7 | 4 | 6 | 8 | brilliant trouble | somehow always at the same afterparty | causes useful chaos together | second-hand | Likely | reviewer_only | htf | joke_meme | parody | community",
+          "format": "relationship id | related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes | story source | confidence/canon | visibility | context | info type | reality status | perspective"
         }
       ]
     },
@@ -689,9 +701,9 @@
           "id": "story_provenance_entries",
           "label": "Story provenance entries",
           "type": "rows",
-          "help": "Repeatable entries. Format: story id/title | who told it | source type | confidence/canon | witnesses comma-list | notes",
-          "placeholder": "story_conference_sleep | slept through conference, made keynote | self + two witnesses | Likely | Kai,Rin | details vary by teller\nstory_taco_drive | drove three states for tacos | running joke | Community Lore | hallway crew | exact number of states disputed",
-          "format": "story id/title | who told it | source type | confidence/canon | witnesses comma-list | notes"
+          "help": "Repeatable entries. Format: story id/title | who told it | source type | confidence/canon | witnesses comma-list | notes | context | info type | reality status | perspective",
+          "placeholder": "story_conference_sleep | slept through conference, made keynote | self + two witnesses | Likely | Kai,Rin | details vary by teller | global | experience | subjective | self_report\nstory_taco_drive | drove three states for tacos | running joke | Community Lore | hallway crew | exact number of states disputed | htf | lore | community_perception | community",
+          "format": "story id/title | who told it | source type | confidence/canon | witnesses comma-list | notes | context | info type | reality status | perspective"
         },
         {
           "id": "most_chaotic_moment",
@@ -707,6 +719,79 @@
       "title": "Project Usage",
       "note": "Where this profile can show up: cruise NPC, Discord lore, art prompts, internal memory, game systems, or future chaos.",
       "fields": [
+        {
+          "id": "context_id",
+          "label": "What project is this information for?",
+          "type": "select",
+          "help": "Stores the project or scope this submission belongs to without creating a separate form.",
+          "placeholder": "",
+          "options": [
+            "global",
+            "en",
+            "htf",
+            "oregon_fail",
+            "shawniverse",
+            "sketchpad_survivors",
+            "little_dust_devil",
+            "hi_orbit_games",
+            "k_st_engineering",
+            "future_projects",
+            "other"
+          ]
+        },
+        {
+          "id": "information_type",
+          "label": "What kind of information is this?",
+          "type": "select",
+          "help": "Plain category for the information being submitted.",
+          "placeholder": "",
+          "options": [
+            "biography",
+            "psychology",
+            "relationship",
+            "experience",
+            "skill",
+            "observation",
+            "lore",
+            "character",
+            "joke_meme",
+            "project_role",
+            "other"
+          ]
+        },
+        {
+          "id": "reality_status",
+          "label": "How should this information be understood?",
+          "type": "select",
+          "help": "Internal guardrail that separates fact, experience, perception, fiction, parody, and lore.",
+          "placeholder": "",
+          "options": [
+            "factual",
+            "subjective",
+            "community_perception",
+            "speculative",
+            "fictional",
+            "parody",
+            "lore",
+            "unknown"
+          ]
+        },
+        {
+          "id": "perspective",
+          "label": "Whose perspective is this?",
+          "type": "select",
+          "help": "Separates self-report, community perception, reviewer observation, and other source postures.",
+          "placeholder": "",
+          "options": [
+            "self_report",
+            "community",
+            "aggregated_observation",
+            "reviewer_observation",
+            "project_author",
+            "third_party",
+            "unknown"
+          ]
+        },
         {
           "id": "approved_projects",
           "label": "Where can this be used?",
@@ -805,17 +890,17 @@
           "id": "claim_requests",
           "label": "Claim requests",
           "type": "rows",
-          "help": "Repeatable entries. Format: claim id | claimant | verification method | evidence summary | status | submitted_at | reviewed_by | reviewed_at | reviewer notes",
-          "placeholder": "claim_20260605_maya | Maya | known Discord account + self-confirmed profile details | confirmed by private message | reviewer_pending | 2026-06-05 |  |  | waiting on owner confirmation",
-          "format": "claim id | claimant | verification method | evidence summary | status | submitted_at | reviewed_by | reviewed_at | reviewer notes"
+          "help": "Repeatable entries. Format: claim id | claimant | verification method | evidence summary | status | submitted_at | reviewed_by | reviewed_at | reviewer notes | context | info type | reality status | perspective",
+          "placeholder": "claim_20260605_maya | Maya | known Discord account + self-confirmed profile details | confirmed by private message | reviewer_pending | 2026-06-05 |  |  | waiting on owner confirmation | global | biography | factual | self_report",
+          "format": "claim id | claimant | verification method | evidence summary | status | submitted_at | reviewed_by | reviewed_at | reviewer notes | context | info type | reality status | perspective"
         },
         {
           "id": "change_requests",
           "label": "Pending / historical change requests",
           "type": "rows",
-          "help": "Repeatable entries. Format: change id | type | operation | target path | proposed by | status | submitted_at | reviewer | reviewed_at | summary | visibility | payload/notes | payload JSON",
-          "placeholder": "chg_story_001 | add_story | append | narrative_engine.story_provenance | maya | reviewer_pending | 2026-06-05 |  |  | add WCCC hallway story | project_only | structured story payload | {\"story_id_title\":\"story_wccc_hallway\",\"who_told_it\":\"Maya\",\"source_type\":\"Self-Reported\",\"confidence_canon\":\"Likely\",\"witnesses\":[\"Kai\"],\"notes\":\"Public-safe hallway story.\"}",
-          "format": "change id | type | operation | target path | proposed by | status | submitted_at | reviewer | reviewed_at | summary | visibility | payload/notes | payload JSON"
+          "help": "Repeatable entries. Format: change id | type | operation | target path | proposed by | status | submitted_at | reviewer | reviewed_at | summary | visibility | payload/notes | payload JSON | context | info type | reality status | perspective",
+          "placeholder": "chg_story_001 | add_story | append | narrative_engine.story_provenance | maya | reviewer_pending | 2026-06-05 |  |  | add WCCC hallway story | project_only | structured story payload | {\"story_id_title\":\"story_wccc_hallway\",\"who_told_it\":\"Maya\",\"source_type\":\"Self-Reported\",\"confidence_canon\":\"Likely\",\"witnesses\":[\"Kai\"],\"notes\":\"Public-safe hallway story.\",\"context_id\":\"htf\",\"information_type\":\"lore\",\"reality_status\":\"community_perception\",\"perspective\":\"self_report\"} | htf | lore | community_perception | self_report",
+          "format": "change id | type | operation | target path | proposed by | status | submitted_at | reviewer | reviewed_at | summary | visibility | payload/notes | payload JSON | context | info type | reality status | perspective"
         },
         {
           "id": "relationship_approval_entries",
@@ -1470,9 +1555,9 @@
           "id": "relationship_entity_entries",
           "label": "Relationship entities",
           "type": "rows",
-          "help": "Repeatable entries. Format: relationship_id | person_a | person_b | relationship_type | trust level | conflict level | history level | influence level | communication frequency | relationship health | running dynamic | inside jokes | shared history | relationship notes | confidence level | canon level | consent status | requested visibility | person A approval | person B approval | reviewer status",
-          "placeholder": "rel_packetghost_crew | person_packetghost | person_crew | friend | 8 | 2 | 7 | 6 | frequent | healthy | starts projects from jokes | airport floor lore | Discord-to-road-trip friendship | public-safe relationship summary only | high | semi_canon | approved | project_only | approved | pending | needs_bilateral_approval",
-          "format": "relationship_id | person_a | person_b | relationship_type | trust level | conflict level | history level | influence level | communication frequency | relationship health | running dynamic | inside jokes | shared history | relationship notes | confidence level | canon level | consent status | requested visibility | person A approval | person B approval | reviewer status"
+          "help": "Repeatable entries. Format: relationship_id | person_a | person_b | relationship_type | trust level | conflict level | history level | influence level | communication frequency | relationship health | running dynamic | inside jokes | shared history | relationship notes | confidence level | canon level | consent status | requested visibility | person A approval | person B approval | reviewer status | context | info type | reality status | perspective",
+          "placeholder": "rel_packetghost_crew | person_packetghost | person_crew | friend | 8 | 2 | 7 | 6 | frequent | healthy | starts projects from jokes | airport floor lore | Discord-to-road-trip friendship | public-safe relationship summary only | high | semi_canon | approved | project_only | approved | pending | needs_bilateral_approval | htf | relationship | community_perception | community",
+          "format": "relationship_id | person_a | person_b | relationship_type | trust level | conflict level | history level | influence level | communication frequency | relationship health | running dynamic | inside jokes | shared history | relationship notes | confidence level | canon level | consent status | requested visibility | person A approval | person B approval | reviewer status | context | info type | reality status | perspective"
         },
         {
           "id": "organization_entity_entries",
@@ -2013,9 +2098,9 @@
           "id": "relationship_entries",
           "label": "Relationship entries",
           "type": "rows",
-          "help": "Repeatable entries. Format: related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes | story source | confidence/canon | visibility",
-          "placeholder": "Kai | collaborator | 8 | 2 | 7 | 6 | loyal chaos | starts projects from jokes | old Discord-to-road-trip friend | self-reported + witnessed | Community Lore | project_only\nRin | side quest magnet | 7 | 4 | 6 | 8 | brilliant trouble | somehow always at the same afterparty | causes useful chaos together | second-hand | Likely | reviewer_only",
-          "format": "related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes | story source | confidence/canon | visibility"
+          "help": "Repeatable entries. Format: relationship id | related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes | story source | confidence/canon | visibility | context | info type | reality status | perspective",
+          "placeholder": "rel_maya_kai | Kai | collaborator | 8 | 2 | 7 | 6 | loyal chaos | starts projects from jokes | old Discord-to-road-trip friend | self-reported + witnessed | Community Lore | project_only | htf | relationship | community_perception | community\nrel_maya_rin | Rin | side quest magnet | 7 | 4 | 6 | 8 | brilliant trouble | somehow always at the same afterparty | causes useful chaos together | second-hand | Likely | reviewer_only | htf | joke_meme | parody | community",
+          "format": "relationship id | related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes | story source | confidence/canon | visibility | context | info type | reality status | perspective"
         }
       ]
     },
@@ -2287,9 +2372,9 @@
           "id": "story_provenance_entries",
           "label": "Story provenance entries",
           "type": "rows",
-          "help": "Repeatable entries. Format: story id/title | who told it | source type | confidence/canon | witnesses comma-list | notes",
-          "placeholder": "story_conference_sleep | slept through conference, made keynote | self + two witnesses | Likely | Kai,Rin | details vary by teller\nstory_taco_drive | drove three states for tacos | running joke | Community Lore | hallway crew | exact number of states disputed",
-          "format": "story id/title | who told it | source type | confidence/canon | witnesses comma-list | notes"
+          "help": "Repeatable entries. Format: story id/title | who told it | source type | confidence/canon | witnesses comma-list | notes | context | info type | reality status | perspective",
+          "placeholder": "story_conference_sleep | slept through conference, made keynote | self + two witnesses | Likely | Kai,Rin | details vary by teller | global | experience | subjective | self_report\nstory_taco_drive | drove three states for tacos | running joke | Community Lore | hallway crew | exact number of states disputed | htf | lore | community_perception | community",
+          "format": "story id/title | who told it | source type | confidence/canon | witnesses comma-list | notes | context | info type | reality status | perspective"
         },
         {
           "id": "most_chaotic_moment",
@@ -2585,6 +2670,79 @@
       "title": "Project Usage",
       "note": "Where this profile can show up: cruise NPC, Discord lore, art prompts, internal memory, game systems, or future chaos.",
       "fields": [
+        {
+          "id": "context_id",
+          "label": "What project is this information for?",
+          "type": "select",
+          "help": "Stores the project or scope this submission belongs to without creating a separate form.",
+          "placeholder": "",
+          "options": [
+            "global",
+            "en",
+            "htf",
+            "oregon_fail",
+            "shawniverse",
+            "sketchpad_survivors",
+            "little_dust_devil",
+            "hi_orbit_games",
+            "k_st_engineering",
+            "future_projects",
+            "other"
+          ]
+        },
+        {
+          "id": "information_type",
+          "label": "What kind of information is this?",
+          "type": "select",
+          "help": "Plain category for the information being submitted.",
+          "placeholder": "",
+          "options": [
+            "biography",
+            "psychology",
+            "relationship",
+            "experience",
+            "skill",
+            "observation",
+            "lore",
+            "character",
+            "joke_meme",
+            "project_role",
+            "other"
+          ]
+        },
+        {
+          "id": "reality_status",
+          "label": "How should this information be understood?",
+          "type": "select",
+          "help": "Internal guardrail that separates fact, experience, perception, fiction, parody, and lore.",
+          "placeholder": "",
+          "options": [
+            "factual",
+            "subjective",
+            "community_perception",
+            "speculative",
+            "fictional",
+            "parody",
+            "lore",
+            "unknown"
+          ]
+        },
+        {
+          "id": "perspective",
+          "label": "Whose perspective is this?",
+          "type": "select",
+          "help": "Separates self-report, community perception, reviewer observation, and other source postures.",
+          "placeholder": "",
+          "options": [
+            "self_report",
+            "community",
+            "aggregated_observation",
+            "reviewer_observation",
+            "project_author",
+            "third_party",
+            "unknown"
+          ]
+        },
         {
           "id": "approved_projects",
           "label": "Where can this be used?",
@@ -2888,17 +3046,17 @@
           "id": "claim_requests",
           "label": "Claim requests",
           "type": "rows",
-          "help": "Repeatable entries. Format: claim id | claimant | verification method | evidence summary | status | submitted_at | reviewed_by | reviewed_at | reviewer notes",
-          "placeholder": "claim_20260605_maya | Maya | known Discord account + self-confirmed profile details | confirmed by private message | reviewer_pending | 2026-06-05 |  |  | waiting on owner confirmation",
-          "format": "claim id | claimant | verification method | evidence summary | status | submitted_at | reviewed_by | reviewed_at | reviewer notes"
+          "help": "Repeatable entries. Format: claim id | claimant | verification method | evidence summary | status | submitted_at | reviewed_by | reviewed_at | reviewer notes | context | info type | reality status | perspective",
+          "placeholder": "claim_20260605_maya | Maya | known Discord account + self-confirmed profile details | confirmed by private message | reviewer_pending | 2026-06-05 |  |  | waiting on owner confirmation | global | biography | factual | self_report",
+          "format": "claim id | claimant | verification method | evidence summary | status | submitted_at | reviewed_by | reviewed_at | reviewer notes | context | info type | reality status | perspective"
         },
         {
           "id": "change_requests",
           "label": "Pending / historical change requests",
           "type": "rows",
-          "help": "Repeatable entries. Format: change id | type | operation | target path | proposed by | status | submitted_at | reviewer | reviewed_at | summary | visibility | payload/notes | payload JSON",
-          "placeholder": "chg_story_001 | add_story | append | narrative_engine.story_provenance | maya | reviewer_pending | 2026-06-05 |  |  | add WCCC hallway story | project_only | structured story payload | {\"story_id_title\":\"story_wccc_hallway\",\"who_told_it\":\"Maya\",\"source_type\":\"Self-Reported\",\"confidence_canon\":\"Likely\",\"witnesses\":[\"Kai\"],\"notes\":\"Public-safe hallway story.\"}",
-          "format": "change id | type | operation | target path | proposed by | status | submitted_at | reviewer | reviewed_at | summary | visibility | payload/notes | payload JSON"
+          "help": "Repeatable entries. Format: change id | type | operation | target path | proposed by | status | submitted_at | reviewer | reviewed_at | summary | visibility | payload/notes | payload JSON | context | info type | reality status | perspective",
+          "placeholder": "chg_story_001 | add_story | append | narrative_engine.story_provenance | maya | reviewer_pending | 2026-06-05 |  |  | add WCCC hallway story | project_only | structured story payload | {\"story_id_title\":\"story_wccc_hallway\",\"who_told_it\":\"Maya\",\"source_type\":\"Self-Reported\",\"confidence_canon\":\"Likely\",\"witnesses\":[\"Kai\"],\"notes\":\"Public-safe hallway story.\",\"context_id\":\"htf\",\"information_type\":\"lore\",\"reality_status\":\"community_perception\",\"perspective\":\"self_report\"} | htf | lore | community_perception | self_report",
+          "format": "change id | type | operation | target path | proposed by | status | submitted_at | reviewer | reviewed_at | summary | visibility | payload/notes | payload JSON | context | info type | reality status | perspective"
         },
         {
           "id": "relationship_approval_entries",
@@ -3159,6 +3317,163 @@
       "inspiration_source",
       "fictionalized_as"
     ]
+  },
+  "context_registry": [
+    {
+      "context_id": "global",
+      "display_name": "Global",
+      "aliases": [
+        "general",
+        "real_world",
+        "real-world"
+      ]
+    },
+    {
+      "context_id": "en",
+      "display_name": "Epic of Gnosis",
+      "aliases": [
+        "epic_of_gnosis",
+        "epic of gnosis",
+        "eog"
+      ]
+    },
+    {
+      "context_id": "htf",
+      "display_name": "HTF",
+      "aliases": [
+        "hometown_friends",
+        "hometown friends"
+      ]
+    },
+    {
+      "context_id": "oregon_fail",
+      "display_name": "Oregon Fail",
+      "aliases": [
+        "wccc",
+        "west_coast_crypto_cruise",
+        "west coast crypto cruise",
+        "west coast crypto-cruise"
+      ]
+    },
+    {
+      "context_id": "shawniverse",
+      "display_name": "Shawniverse",
+      "aliases": []
+    },
+    {
+      "context_id": "sketchpad_survivors",
+      "display_name": "Sketchpad Survivors",
+      "aliases": [
+        "sketchpad survivors"
+      ]
+    },
+    {
+      "context_id": "little_dust_devil",
+      "display_name": "Little Dust Devil",
+      "aliases": [
+        "little dust devil"
+      ]
+    },
+    {
+      "context_id": "hi_orbit_games",
+      "display_name": "Hi-Orbit Games",
+      "aliases": [
+        "hi orbit games",
+        "hi-orbit"
+      ]
+    },
+    {
+      "context_id": "k_st_engineering",
+      "display_name": "K-St Engineering",
+      "aliases": [
+        "k st engineering",
+        "kst_engineering",
+        "kst"
+      ]
+    },
+    {
+      "context_id": "future_projects",
+      "display_name": "Future Projects",
+      "aliases": [
+        "future"
+      ]
+    },
+    {
+      "context_id": "other",
+      "display_name": "Other / Not Sure",
+      "aliases": [
+        "unknown",
+        "not_sure",
+        "not sure"
+      ]
+    }
+  ],
+  "export_policies": {
+    "public_default": {
+      "export_policy_id": "public_default",
+      "target_context_id": "global",
+      "export_type": "public",
+      "include_contexts": [
+        "global"
+      ],
+      "require_reviewed": false,
+      "require_complete_relationship_approval": true,
+      "deny_missing_context": true,
+      "deny_missing_reality_status": true,
+      "deny_missing_perspective": true,
+      "include_private_fields": false,
+      "include_audit_history": false,
+      "include_claim_requests": false
+    },
+    "project_default": {
+      "export_policy_id": "project_default",
+      "target_context_id": "global",
+      "export_type": "project",
+      "include_contexts": [
+        "global"
+      ],
+      "require_reviewed": false,
+      "require_complete_relationship_approval": true,
+      "deny_missing_context": true,
+      "deny_missing_reality_status": true,
+      "deny_missing_perspective": true,
+      "include_private_fields": false,
+      "include_audit_history": false,
+      "include_claim_requests": false
+    },
+    "ai_agent_default": {
+      "export_policy_id": "ai_agent_default",
+      "target_context_id": "global",
+      "export_type": "ai_agent",
+      "include_contexts": [
+        "global"
+      ],
+      "require_reviewed": false,
+      "require_complete_relationship_approval": true,
+      "deny_missing_context": true,
+      "deny_missing_reality_status": true,
+      "deny_missing_perspective": true,
+      "include_private_fields": false,
+      "include_audit_history": false,
+      "include_claim_requests": false
+    },
+    "oregon_fail_default": {
+      "export_policy_id": "oregon_fail_default",
+      "target_context_id": "oregon_fail",
+      "export_type": "project",
+      "include_contexts": [
+        "oregon_fail",
+        "global"
+      ],
+      "require_reviewed": false,
+      "require_complete_relationship_approval": true,
+      "deny_missing_context": true,
+      "deny_missing_reality_status": true,
+      "deny_missing_perspective": true,
+      "include_private_fields": false,
+      "include_audit_history": false,
+      "include_claim_requests": false
+    }
   },
   "sample_profile": {
     "schema_version": "3.0.0",

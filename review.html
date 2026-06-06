@@ -141,9 +141,33 @@
       return profile?.identity?.display_name || profile?.identity?.in_world_name || profile?.display_name || profile?.profile_id || "Unnamed profile";
     }
 
+    function ensureProfileGovernance(profile, profileId = "") {
+      profile.profile_id = profile.profile_id || profileId || slugify(profileName(profile));
+      profile.governance = profile.governance || {};
+      profile.governance.profile_owner = profile.governance.profile_owner || "";
+      profile.governance.review_owner = profile.governance.review_owner || "";
+      profile.governance.claim_requests = profile.governance.claim_requests || [];
+      profile.governance.change_requests = profile.governance.change_requests || profile.profile_evolution?.pending_changes || [];
+      profile.governance.relationship_approvals = profile.governance.relationship_approvals || [];
+      profile.governance.version_history = profile.governance.version_history || profile.profile_evolution?.applied_versions || [];
+      profile.governance.audit_trail = profile.governance.audit_trail || profile.profile_evolution?.audit_events || [];
+      profile.profile_evolution = profile.profile_evolution || {};
+      profile.profile_evolution.model_version = profile.profile_evolution.model_version || "1.0.0";
+      profile.profile_evolution.stable_identity_paths = profile.profile_evolution.stable_identity_paths || ["profile_id", "entity.entity_id", "identity.display_name", "identity.profile_classification", "identity.entity_subtype"];
+      profile.profile_evolution.living_record_paths = profile.profile_evolution.living_record_paths || ["narrative_engine", "relationship_graph", "knowledge_graph", "asset_library", "project_usage", "source_notes"];
+      profile.profile_evolution.identity_layers = profile.profile_evolution.identity_layers || {
+        entity_id: profile.entity?.entity_id || profile.profile_id,
+        profile_id: profile.profile_id,
+        projection_id: ""
+      };
+      syncEvolution(profile);
+      return profile;
+    }
+
     function makeRecord(profile, fileName = "") {
       const normalized = normalizeProfile(profile);
       const id = normalized.profile_id || slugify(profileName(normalized)) || `profile-${Date.now()}`;
+      ensureProfileGovernance(normalized, id);
       return {
         id: `${id}-${Math.random().toString(16).slice(2, 8)}`,
         profile_id: id,
@@ -404,39 +428,118 @@
     function updateSelectedFromPanel() {
       const record = selectedRecord();
       if (!record) return;
+      const before = {
+        status: record.status,
+        reviewer: record.reviewer,
+        confidence_level: record.confidence_level,
+        canon_level: record.canon_level
+      };
+      const reviewedAt = nowIso();
       record.status = el("reviewStatus").value;
       record.reviewer = el("reviewer").value.trim();
       record.confidence_level = el("confidenceLevel").value;
       record.canon_level = el("canonLevel").value;
       record.reviewer_notes = el("reviewerNotes").value.trim();
-      record.updated_at = nowIso();
+      record.updated_at = reviewedAt;
       record.profile.project_usage = record.profile.project_usage || {};
       record.profile.project_usage.canon_level = record.canon_level;
       record.profile.source_notes = record.profile.source_notes || {};
       record.profile.source_notes.accuracy_confidence = record.confidence_level;
+      Object.entries(before).forEach(([field, oldValue]) => {
+        const newValue = record[field];
+        if (oldValue === newValue) return;
+        appendAudit(record.profile, {
+          date: reviewedAt,
+          actor: record.reviewer || "local reviewer",
+          action: `${field}_changed`,
+          target: record.profile.profile_id || record.profile_id,
+          summary: `${field} changed from ${oldValue || "_blank_"} to ${newValue || "_blank_"}`,
+          notes: record.reviewer_notes
+        });
+      });
+      if (before.status !== record.status && ["reviewed", "approved"].includes(record.status)) {
+        appendVersion(record.profile, {
+          version: nextVersion(record.profile),
+          date: reviewedAt,
+          modified_by: record.reviewer || "local reviewer",
+          change_summary: `Review status changed to ${record.status}`,
+          source_change_id: `review_status_${record.status}_${reviewedAt}`,
+          exportable: record.status === "approved" ? "review_required" : "no"
+        });
+      }
+      syncEvolution(record.profile);
       renderList();
       setStatus("Review changes staged in browser memory.", "ok");
     }
 
-    const APPLICABLE_CHANGE_PATHS = new Set([
-      "narrative_engine.story_provenance",
-      "knowledge_graph.events",
-      "knowledge_graph.relationship_entities",
-      "knowledge_graph.timeline",
-      "knowledge_graph.links",
-      "relationship_graph",
-      "asset_library.assets",
-      "knowledge_graph.projects",
-      "project_usage.approved_projects",
-      "project_usage.project_specific_notes",
-      "source_notes.unresolved_questions"
-    ]);
+    const CONTEXT_REGISTRY = [
+      { context_id: "global", aliases: ["general", "real_world", "real-world"] },
+      { context_id: "en", aliases: ["epic_of_gnosis", "epic of gnosis", "eog"] },
+      { context_id: "htf", aliases: ["hometown_friends", "hometown friends"] },
+      { context_id: "oregon_fail", aliases: ["wccc", "west_coast_crypto_cruise", "west coast crypto cruise", "west coast crypto-cruise"] },
+      { context_id: "shawniverse", aliases: [] },
+      { context_id: "sketchpad_survivors", aliases: ["sketchpad survivors"] },
+      { context_id: "little_dust_devil", aliases: ["little dust devil"] },
+      { context_id: "hi_orbit_games", aliases: ["hi orbit games", "hi-orbit"] },
+      { context_id: "k_st_engineering", aliases: ["k st engineering", "kst_engineering", "kst"] },
+      { context_id: "future_projects", aliases: ["future"] },
+      { context_id: "other", aliases: ["unknown", "not_sure", "not sure"] }
+    ];
+    const TERMINAL_CHANGE_STATUSES = new Set(["approved", "applied", "rejected", "withdrawn"]);
+    const NON_FACTUAL_REALITY_STATUSES = new Set(["subjective", "community_perception", "speculative", "fictional", "parody", "lore", "unknown"]);
+    const PROMOTED_REALITY_STATUSES = new Set(["factual"]);
+    const NON_BIOGRAPHICAL_INFORMATION_TYPES = new Set(["lore", "character", "joke_meme", "observation", "experience", "project_role", "other"]);
+    const PROMOTED_INFORMATION_TYPES = new Set(["biography", "psychology"]);
+    const CHANGE_PATH_POLICIES = {
+      "narrative_engine.story_provenance": { operations: ["append", "add", "remove"], kind: "array", payloadType: "object", idFields: ["story_id_title"] },
+      "knowledge_graph.events": { operations: ["append", "add", "remove"], kind: "array", payloadType: "object", idFields: ["entity_id"] },
+      "knowledge_graph.relationship_entities": { operations: ["append", "add", "remove"], kind: "array", payloadType: "object", idFields: ["relationship_id"], relationship: true },
+      "knowledge_graph.timeline": { operations: ["append", "add", "remove"], kind: "array", payloadType: "object", idFields: ["entity_id", "date"] },
+      "knowledge_graph.links": { operations: ["append", "add", "remove"], kind: "array", payloadType: "object", idFields: ["target_entity_id", "relationship_type"] },
+      "relationship_graph": { operations: ["append", "add", "remove"], kind: "array", payloadType: "object", idFields: ["relationship_id"], relationship: true },
+      "asset_library.assets": { operations: ["append", "add", "remove"], kind: "array", payloadType: "object", idFields: ["asset_id"] },
+      "knowledge_graph.projects": { operations: ["append", "add", "remove"], kind: "array", payloadType: "object", idFields: ["entity_id"] },
+      "project_usage.approved_projects": { operations: ["append", "add", "remove"], kind: "array", payloadType: "string" },
+      "project_usage.project_specific_notes": { operations: ["replace"], kind: "scalar", payloadType: "string" },
+      "source_notes.unresolved_questions": { operations: ["append", "add", "remove"], kind: "array", payloadType: "string" }
+    };
+    const APPLICABLE_CHANGE_PATHS = new Set(Object.keys(CHANGE_PATH_POLICIES));
+
+    function contextKey(value) {
+      return String(value || "").trim().toLowerCase().replace(/[\s-]+/g, "_");
+    }
+
+    function normalizeContextId(value) {
+      const original = String(value || "").trim();
+      const aliasMap = {};
+      CONTEXT_REGISTRY.forEach(context => [context.context_id, ...(context.aliases || [])].forEach(alias => {
+        const key = contextKey(alias);
+        if (key) aliasMap[key] = context.context_id;
+      }));
+      const normalized = aliasMap[contextKey(original)] || "other";
+      return { context_id: normalized, normalized_from: original && original !== normalized ? original : "" };
+    }
+
+    function normalizeEpistemicObject(object) {
+      if (!object || typeof object !== "object") return object;
+      if (object.context_id) {
+        const normalized = normalizeContextId(object.context_id);
+        object.context_id = normalized.context_id;
+        if (normalized.normalized_from) object.normalized_from = normalized.normalized_from;
+      }
+      return object;
+    }
 
     function reviewChange(changeId, action) {
       const record = selectedRecord();
       if (!record) return;
       const changes = record.profile?.governance?.change_requests || record.profile?.profile_evolution?.pending_changes || [];
-      const index = changes.findIndex(change => (change.change_id || change.type || "change") === changeId);
+      const matches = changes.map((change, index) => ({ change, index })).filter(item => item.change.change_id === changeId);
+      if (matches.length > 1) {
+        setStatus(`Could not ${action} ${changeId}: duplicate change_id found.`, "warn");
+        return;
+      }
+      const index = matches[0]?.index ?? -1;
       if (index === -1) return;
       const reason = (el(`change_reason_${changeId}`)?.value || "").trim();
       try {
@@ -458,9 +561,14 @@
     }
 
     function decideChangeRequest(change, record, status, decisionReason = "") {
+      normalizeEpistemicObject(change);
+      if (!change.change_id) throw new Error("Change requests must have a unique change_id.");
+      if (TERMINAL_CHANGE_STATUSES.has(change.status)) throw new Error(`Change ${change.change_id} is already ${change.status}.`);
       const reviewedAt = nowIso();
       const reviewer = record.reviewer || change.reviewer || "local reviewer";
+      if (status === "approved") validateCategoryPromotion(change, undefined, reviewer, decisionReason);
       const next = { ...change, status, reviewer, reviewed_at: reviewedAt, decision_reason: decisionReason };
+      markChangeDecision(record.profile, change.change_id, status);
       appendAudit(record.profile, {
         date: reviewedAt,
         actor: reviewer,
@@ -480,17 +588,38 @@
       return next;
     }
 
+    function markChangeDecision(profile, changeId, status) {
+      profile.profile_evolution = profile.profile_evolution || {};
+      if (status === "applied") profile.profile_evolution.applied_change_ids = uniqueList([...(profile.profile_evolution.applied_change_ids || []), changeId]);
+      if (status === "rejected") profile.profile_evolution.rejected_change_ids = uniqueList([...(profile.profile_evolution.rejected_change_ids || []), changeId]);
+      if (status === "withdrawn") profile.profile_evolution.withdrawn_change_ids = uniqueList([...(profile.profile_evolution.withdrawn_change_ids || []), changeId]);
+    }
+
+    function uniqueList(values) {
+      return Array.from(new Set((values || []).filter(Boolean)));
+    }
+
     function applyChangeRequest(change, record, decisionReason = "") {
+      if (!change.change_id) throw new Error("Change requests must have a unique change_id.");
+      if (TERMINAL_CHANGE_STATUSES.has(change.status)) throw new Error(`Change ${change.change_id} is already ${change.status}.`);
+      if (changeAlreadyApplied(record.profile, change.change_id)) throw new Error(`Change ${change.change_id} has already been applied.`);
       const targetPath = change.target_path || "";
-      if (!APPLICABLE_CHANGE_PATHS.has(targetPath)) throw new Error(`Target path is not apply-whitelisted: ${targetPath}`);
+      const policy = CHANGE_PATH_POLICIES[targetPath];
+      if (!policy) throw new Error(`Target path is not apply-whitelisted: ${targetPath}`);
       const operation = change.operation || "append";
+      if (!policy.operations.includes(operation)) throw new Error(`${operation} is not allowed for ${targetPath}.`);
+      normalizeEpistemicObject(change);
       const payload = structuredPayload(change);
+      normalizeEpistemicObject(payload);
+      validatePayloadForPolicy(payload, policy, operation, targetPath);
+      validateCategoryPromotion(change, payload, record.reviewer || change.reviewer || "local reviewer", decisionReason);
       const before = cloneJson(valueAtPath(record.profile, targetPath));
-      applyOperation(record.profile, targetPath, operation, payload);
+      applyOperation(record.profile, targetPath, operation, payload, policy);
       const after = cloneJson(valueAtPath(record.profile, targetPath));
       const reviewedAt = nowIso();
       const reviewer = record.reviewer || change.reviewer || "local reviewer";
       const next = { ...change, status: "applied", reviewer, reviewed_at: reviewedAt, decision_reason: decisionReason };
+      markChangeDecision(record.profile, change.change_id, "applied");
       appendAudit(record.profile, {
         date: reviewedAt,
         actor: reviewer,
@@ -528,6 +657,29 @@
       return next;
     }
 
+    function changeAlreadyApplied(profile, changeId) {
+      return (profile.profile_evolution?.applied_change_ids || []).includes(changeId) ||
+        (profile.governance?.version_history || []).some(entry => entry.change_id === changeId || entry.source_change_id === changeId);
+    }
+
+    function validateCategoryPromotion(change, payload, reviewer, decisionReason) {
+      if (!isCategoryPromotion(change, payload)) return;
+      if (!decisionReason.trim()) throw new Error("Category promotion requires an explicit reviewer reason.");
+      if (change.proposed_by && reviewer && String(change.proposed_by).trim().toLowerCase() === String(reviewer).trim().toLowerCase()) {
+        throw new Error("Category promotion cannot be approved by the same person who proposed it.");
+      }
+      change.reclassification_review_required = true;
+    }
+
+    function isCategoryPromotion(change, payload = {}) {
+      const previousReality = change.previous_reality_status || payload.previous_reality_status || "";
+      const nextReality = change.reality_status || payload.reality_status || "";
+      const previousType = change.previous_information_type || payload.previous_information_type || "";
+      const nextType = change.information_type || payload.information_type || "";
+      return (NON_FACTUAL_REALITY_STATUSES.has(previousReality) && PROMOTED_REALITY_STATUSES.has(nextReality)) ||
+        (NON_BIOGRAPHICAL_INFORMATION_TYPES.has(previousType) && PROMOTED_INFORMATION_TYPES.has(nextType));
+    }
+
     function structuredPayload(change) {
       if (change.payload && typeof change.payload === "object") return cloneJson(change.payload);
       if (change.payload_json) {
@@ -536,7 +688,19 @@
       throw new Error("Structured payload_json or payload is required to apply a change.");
     }
 
-    function applyOperation(profile, targetPath, operation, payload) {
+    function validatePayloadForPolicy(payload, policy, operation, targetPath) {
+      if (operation === "remove") {
+        const match = payload?.match || payload;
+        if (!match || typeof match !== "object" || Array.isArray(match) || !Object.keys(match).length) throw new Error(`${targetPath} remove requires a non-empty match object.`);
+        if (!policy.idFields.some(field => match[field])) throw new Error(`${targetPath} remove requires one stable identifier: ${policy.idFields.join(", ")}.`);
+        return;
+      }
+      if (policy.payloadType === "object" && (!payload || typeof payload !== "object" || Array.isArray(payload))) throw new Error(`${targetPath} requires an object payload.`);
+      if (policy.payloadType === "string" && typeof payload !== "string") throw new Error(`${targetPath} requires a string payload.`);
+      if (policy.payloadType === "object" && policy.idFields?.length && !policy.idFields.some(field => payload[field])) throw new Error(`${targetPath} requires one stable identifier: ${policy.idFields.join(", ")}.`);
+    }
+
+    function applyOperation(profile, targetPath, operation, payload, policy) {
       const parent = parentAtPath(profile, targetPath, true);
       const key = targetPath.split(".").pop();
       const current = parent[key];
@@ -557,17 +721,20 @@
       if (operation === "remove") {
         if (Array.isArray(current)) {
           const match = payload?.match || payload;
-          parent[key] = current.filter(item => !matchesPayload(item, match));
+          const next = current.filter(item => !matchesPayload(item, match, policy));
+          if (next.length === current.length) throw new Error(`${targetPath} remove did not match any existing item.`);
+          parent[key] = next;
           return;
         }
-        parent[key] = "";
-        return;
+        throw new Error(`${targetPath} remove is only allowed for arrays.`);
       }
       throw new Error(`Unsupported operation: ${operation}`);
     }
 
-    function matchesPayload(item, match) {
+    function matchesPayload(item, match, policy = {}) {
       if (!match || typeof match !== "object") return JSON.stringify(item) === JSON.stringify(match);
+      if (!Object.keys(match).length) return false;
+      if (policy.idFields?.length && !policy.idFields.some(field => match[field])) return false;
       return Object.entries(match).every(([key, value]) => item?.[key] === value);
     }
 
@@ -608,12 +775,17 @@
     function appendVersion(profile, version) {
       profile.governance = profile.governance || {};
       profile.governance.version_history = profile.governance.version_history || [];
+      if (profile.governance.version_history.some(entry => entry.version === version.version)) throw new Error(`Duplicate version ${version.version}.`);
       profile.governance.version_history.push(version);
     }
 
     function nextVersion(profile) {
-      const count = (profile.governance?.version_history || []).length + 1;
-      return `1.0.${count}`;
+      const patches = (profile.governance?.version_history || [])
+        .map(entry => String(entry.version || "0.0.0").match(/^(\d+)\.(\d+)\.(\d+)$/))
+        .filter(Boolean)
+        .map(match => Number(match[3]))
+        .filter(Number.isFinite);
+      return `1.0.${patches.length ? Math.max(...patches) + 1 : 1}`;
     }
 
     function syncEvolution(profile) {
@@ -625,6 +797,14 @@
       profile.profile_evolution.pending_changes = (profile.governance.change_requests || []).filter(change => !["approved", "applied", "rejected", "withdrawn"].includes(change.status));
       profile.profile_evolution.applied_versions = profile.governance.version_history || [];
       profile.profile_evolution.audit_events = profile.governance.audit_trail || [];
+      profile.profile_evolution.applied_change_ids = uniqueList([...(profile.profile_evolution.applied_change_ids || []), ...(profile.governance.version_history || []).map(entry => entry.change_id || entry.source_change_id)]);
+      profile.profile_evolution.rejected_change_ids = uniqueList([...(profile.profile_evolution.rejected_change_ids || []), ...(profile.governance.change_requests || []).filter(change => change.status === "rejected").map(change => change.change_id)]);
+      profile.profile_evolution.withdrawn_change_ids = uniqueList([...(profile.profile_evolution.withdrawn_change_ids || []), ...(profile.governance.change_requests || []).filter(change => change.status === "withdrawn").map(change => change.change_id)]);
+      profile.profile_evolution.identity_layers = profile.profile_evolution.identity_layers || {
+        entity_id: profile.entity?.entity_id || profile.profile_id || "",
+        profile_id: profile.profile_id || "",
+        projection_id: ""
+      };
     }
 
     function reviewClaim(claimId, action) {
@@ -638,10 +818,31 @@
       const reviewer = record.reviewer || "local reviewer";
       const reason = (el(`claim_reason_${claimId}`)?.value || "").trim();
       const claim = claims[index];
+      const existingOwner = record.profile.governance.profile_owner || "";
+      const requestedOwner = claim.claimant || "";
+      if (action === "approved" && !reason) {
+        setStatus(`Could not approve claim ${claimId}: reviewer reason is required.`, "warn");
+        return;
+      }
+      if (action === "approved" && existingOwner && requestedOwner && existingOwner !== requestedOwner && claim.type !== "ownership_transfer" && claim.request_type !== "ownership_transfer") {
+        setStatus(`Could not approve claim ${claimId}: ownership transfer from ${existingOwner} to ${requestedOwner} must use an explicit ownership_transfer claim.`, "warn");
+        return;
+      }
       claims[index] = { ...claim, status: action, reviewed_by: reviewer, reviewed_at: reviewedAt, reviewer_notes: reason };
       if (action === "approved") {
-        record.profile.governance.profile_owner = claim.claimant || record.profile.governance.profile_owner || "";
+        record.profile.governance.profile_owner = requestedOwner || record.profile.governance.profile_owner || "";
         record.profile.governance.claim_status = "approved";
+        if (existingOwner !== record.profile.governance.profile_owner) {
+          appendAudit(record.profile, {
+            date: reviewedAt,
+            actor: reviewer,
+            action: "ownership_changed",
+            target: record.profile.profile_id || record.profile_id,
+            summary: `Profile owner changed from ${existingOwner || "_none_"} to ${record.profile.governance.profile_owner || "_none_"}`,
+            notes: reason,
+            claim_id: claim.claim_id || claimId
+          });
+        }
         appendVersion(record.profile, {
           version: nextVersion(record.profile),
           date: reviewedAt,
@@ -695,10 +896,32 @@
     function setSelectedStatus(status) {
       const record = selectedRecord();
       if (!record) return;
+      const previousStatus = record.status;
+      if (previousStatus === status) return;
+      const reviewedAt = nowIso();
       record.status = status;
-      record.updated_at = nowIso();
+      record.updated_at = reviewedAt;
       if (status === "reviewed" && record.confidence_level === "Unreviewed") record.confidence_level = "Medium";
       if (status === "approved" && record.confidence_level === "Unreviewed") record.confidence_level = "High";
+      appendAudit(record.profile, {
+        date: reviewedAt,
+        actor: record.reviewer || "local reviewer",
+        action: "review_status_changed",
+        target: record.profile.profile_id || record.profile_id,
+        summary: `Review status changed from ${previousStatus || "_blank_"} to ${status}`,
+        notes: record.reviewer_notes || ""
+      });
+      if (["reviewed", "approved"].includes(status)) {
+        appendVersion(record.profile, {
+          version: nextVersion(record.profile),
+          date: reviewedAt,
+          modified_by: record.reviewer || "local reviewer",
+          change_summary: `Review status changed to ${status}`,
+          source_change_id: `review_status_${status}_${reviewedAt}`,
+          exportable: status === "approved" ? "review_required" : "no"
+        });
+      }
+      syncEvolution(record.profile);
       renderList();
       renderPanel();
       setStatus(`Marked ${profileName(record.profile)} as ${status}.`, "ok");

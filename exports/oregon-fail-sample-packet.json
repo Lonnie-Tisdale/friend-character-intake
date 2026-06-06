@@ -1,0 +1,879 @@
+{
+  "packet_schema": "living_identity_graph.oregon_fail_sample_packet.v1",
+  "generated_at": "2026-06-06T07:30:11.325Z",
+  "source_system": "Descriptor Form Database / Living Identity Graph",
+  "integration_rule": "Oregon Fail must consume this governed export, not raw profiles.",
+  "governed_export": {
+    "schema_version": "3.0.0",
+    "schema_id": "kstreet_person_profile.v3",
+    "profile_id": "example-person-oregon-fail-sample",
+    "created_at": "2026-06-01T00:00:00.000Z",
+    "updated_at": "2026-06-01T00:00:00.000Z",
+    "entity": {
+      "entity_id": "person_example",
+      "entity_type": "person",
+      "profile_classification": "Fictionalized Person",
+      "entity_subtype": "real_person",
+      "display_name": "Packet Ghost",
+      "created_at": "2026-06-01T00:00:00.000Z",
+      "updated_at": "2026-06-01T00:00:00.000Z",
+      "tags": [
+        "sample",
+        "person",
+        "htf",
+        "k-street",
+        "wccc"
+      ],
+      "notes": "Fictional sample root person entity with HTF / K Street / WCCC flavor.",
+      "relationships": [
+        {
+          "target_entity_id": "org_shared_group",
+          "relationship_type": "associated_with",
+          "strength": "7",
+          "notes": "Sample graph link for a friend-circle profile."
+        }
+      ]
+    },
+    "consent": {
+      "permission_to_store": true,
+      "permission_to_fictionalize": true,
+      "permission_for_ai_dialogue": true,
+      "permission_for_art_generation": false,
+      "permission_for_cross_project_reuse": true,
+      "permission_for_relationship_simulation": true,
+      "contact_for_questions": false,
+      "consent_basis": "fictional_creation",
+      "minor_status": "not_minor",
+      "guardian_consent_required": false,
+      "guardian_consent_confirmed": false,
+      "consent_date": "2026-06-01",
+      "withdrawal_requested": false,
+      "relationship_visibility": "exportable",
+      "restricted_uses": [
+        "romance",
+        "dating_sim",
+        "public ads",
+        "training_data"
+      ],
+      "sensitive_topics_to_avoid": [
+        "private family details"
+      ],
+      "consent_notes": "Sample record only. Do not treat as a real submission. Keep private contact, real names, source images, and boundaries out of public exports unless explicitly approved."
+    },
+    "identity": {
+      "display_name": "Packet Ghost",
+      "profile_classification": "Fictionalized Person",
+      "entity_subtype": "real_person",
+      "in_world_name": "Packet Ghost",
+      "short_bio": "A sleep-deprived internet friend who fixes weird problems, finds the useful room at conferences, and turns Discord jokes into actual project plans.",
+      "three_word_vibe": "Chaotic, creative, caffeinated",
+      "animal_affinity": "Crow with a laptop bag",
+      "current_obsession": "Local AI models, Bitcoin self-custody, retro RPG design, parkour history, and weird internet archaeology.",
+      "nicknames": [
+        "Packet Ghost",
+        "WiFi Oracle"
+      ],
+      "pronouns": "they/them",
+      "age_range": "30s",
+      "current_location": "Usually between the group chat, a hacker house kitchen, and the crypto conference hallway track",
+      "origin_location": "Parkour forums and long road trips",
+      "communities": [
+        "HTF",
+        "K Street",
+        "West Coast Crypto Cruise",
+        "parkour community",
+        "local AI Discord"
+      ],
+      "roles": [
+        "lore keeper",
+        "developer",
+        "event instigator",
+        "meme curator",
+        "fixer"
+      ],
+      "professions": [
+        "developer",
+        "researcher",
+        "full-time side quest"
+      ],
+      "identity_tags": [
+        "hacker-house",
+        "roadtrip",
+        "ai-agents",
+        "crypto-conference",
+        "parkour-lore"
+      ]
+    },
+    "appearance": {
+      "height_build": "medium height, parkour-adjacent posture, hard to lose in a crowd",
+      "hair": "messy travel hair, usually under a beanie by day three",
+      "eyes": "alert, sleep-deprived, always scanning for outlets, exits, and the bit",
+      "face_features": "expressive eyebrows, too-aware resting face, looks like they just read the room and the room failed QA",
+      "distinguishing_marks": "old conference wristband, scuffed shoes, hoodie with mystery pockets",
+      "silhouette": "hoodie, backpack, forward lean, looks ready to climb a wall or fix a router",
+      "everyday_clothing": "black hoodie, conference badge, trail shoes, cargo pants, jacket with too many pockets",
+      "iconic_outfit": "sun-faded camp shirt, beat-up sneakers, sunglasses at night, backpack that has seen things",
+      "accessories": "camera, pocket notebook, hardware wallet, carabiner, old lanyard",
+      "carried_items": "half-charged laptop, coffee thermos, phone with 200 open tabs, multi-tool",
+      "signature_item": "Backpack containing an unknown dimension",
+      "default_expression": "half amused, half concerned, already debugging the situation",
+      "movement_body_language": "paces while thinking, perches on furniture wrong, talks with hands, moves like the floor is optional",
+      "image_prompt_notes": "modern internet nomad, hacker-house roadtrip energy, conference badge, travel-worn hoodie, bright tired eyes",
+      "negative_image_prompt_notes": "avoid corporate mascot, resume headshot, generic tech bro, quest hero cosplay, or villain caricature"
+    },
+    "asset_library": {
+      "primary_reference_asset_id": "asset_example_face_reference",
+      "primary_portrait_asset_id": "asset_example_portrait",
+      "primary_sprite_asset_id": "asset_example_sprite",
+      "primary_face_reference_asset_id": "asset_example_face_reference",
+      "assets": [],
+      "asset_groups": [
+        {
+          "group_id": "group_example_face",
+          "group_name": "Packet Ghost Face References",
+          "description": "Approved references where the person looks like themselves, not a stock photo.",
+          "asset_ids": [],
+          "tags": [
+            "face"
+          ],
+          "notes": "Private source files stay outside the public repo."
+        }
+      ],
+      "style_guides": [
+        {
+          "guide_name": "Retro JRPG Style",
+          "description": "Readable roadtrip RPG interpretation.",
+          "asset_ids": [
+            "asset_example_sprite"
+          ],
+          "prompt_notes": "Readable silhouette, expressive idle pose, travel-worn outfit, useful chaos.",
+          "negative_prompt_notes": "Avoid polished resume headshot energy."
+        }
+      ]
+    },
+    "knowledge_graph": {
+      "graph_schema_version": "4.0.0-foundation",
+      "graph_id": "person_example_graph",
+      "root_entity_id": "person_example",
+      "entities": [
+        {
+          "entity_id": "person_example",
+          "entity_type": "person",
+          "profile_classification": "Fictionalized Person",
+          "entity_subtype": "real_person",
+          "display_name": "Packet Ghost",
+          "created_at": "2026-06-01T00:00:00.000Z",
+          "updated_at": "2026-06-01T00:00:00.000Z",
+          "tags": [
+            "sample",
+            "person",
+            "htf",
+            "k-street",
+            "wccc"
+          ],
+          "notes": "Fictional sample root person entity with group-culture examples.",
+          "relationships": [
+            {
+              "target_entity_id": "org_shared_group",
+              "relationship_type": "associated_with",
+              "strength": "7",
+              "notes": "Sample graph link."
+            }
+          ],
+          "profile_ref": "current_profile"
+        },
+        {
+          "entity_id": "org_shared_group",
+          "entity_type": "organization",
+          "display_name": "HTF / K Street",
+          "created_at": "2026-06-01",
+          "updated_at": "2026-06-01",
+          "tags": [
+            "friend-circle",
+            "projects",
+            "organization"
+          ],
+          "notes": "Sample organization node for the shared circle."
+        }
+      ],
+      "relationship_entities": [
+        {
+          "relationship_id": "rel_example_oregon_fail",
+          "person_a": "person_example",
+          "person_b": "person_oregon_fail_crew",
+          "relationship_type": "collaborator",
+          "requested_visibility": "project_only",
+          "context_id": "oregon_fail",
+          "information_type": "relationship",
+          "reality_status": "fictional",
+          "perspective": "project_author",
+          "relationship_notes": "Approved fictional relationship for Oregon Fail sample."
+        }
+      ],
+      "organizations": [
+        {
+          "entity_id": "org_shared_group",
+          "organization_name": "HTF / K Street",
+          "founding_date": "2026-01-01",
+          "description": "Strange capable circle building games, AI tools, events, and lore.",
+          "members": [
+            "person_example"
+          ],
+          "roles": [
+            "developer",
+            "lore keeper",
+            "fixer"
+          ],
+          "projects": [
+            "project_wccc"
+          ],
+          "associated_locations": [
+            "loc_hacker_house_kitchen"
+          ],
+          "assets": [
+            "asset_example_face_reference"
+          ],
+          "history": "Grew through Discord threads, road trips, late-night builds, and occasional poor decisions.",
+          "status": "active"
+        }
+      ],
+      "locations": [
+        {
+          "entity_id": "loc_hacker_house_kitchen",
+          "display_name": "Hacker House Kitchen",
+          "location_type": "real_world",
+          "description": "3 AM planning table, half-cleaned whiteboard, someone's laptop fan screaming.",
+          "associated_people": [
+            "person_example"
+          ],
+          "associated_events": [
+            "event_midnight_build"
+          ],
+          "associated_organizations": [
+            "org_shared_group"
+          ],
+          "tags": [
+            "hacker-house",
+            "build-sprint"
+          ]
+        }
+      ],
+      "events": [
+        {
+          "entity_id": "event_midnight_build",
+          "title": "Midnight Build Sprint",
+          "event_date": "2026-06-01",
+          "participants": [
+            "person_example"
+          ],
+          "organizations": [
+            "org_shared_group"
+          ],
+          "locations": [
+            "loc_hacker_house_kitchen"
+          ],
+          "stories": [
+            "story_startup_from_joke"
+          ],
+          "outcomes": "Prototype worked badly enough to continue.",
+          "notes": "Approximate date; public-safe sample event.",
+          "context_id": "oregon_fail",
+          "information_type": "character",
+          "reality_status": "fictional",
+          "perspective": "project_author"
+        }
+      ],
+      "story_objects": [
+        {
+          "entity_id": "story_startup_from_joke",
+          "title": "Started A Business From A Discord Joke",
+          "summary": "A side project escaped containment and became group lore.",
+          "participants": [
+            "person_example"
+          ],
+          "related_events": [
+            "event_midnight_build"
+          ],
+          "related_locations": [
+            "loc_hacker_house_kitchen"
+          ],
+          "related_people": [
+            "person_example"
+          ],
+          "importance": "high",
+          "canonical_status": "semi_canon"
+        }
+      ],
+      "projects": [
+        {
+          "entity_id": "project_wccc",
+          "project_name": "West Coast Crypto Cruise",
+          "description": "Game/narrative project about crypto conference chaos, friendship, and weird competence.",
+          "contributors": [
+            "person_example"
+          ],
+          "organizations": [
+            "org_shared_group"
+          ],
+          "related_people": [
+            "person_example"
+          ],
+          "related_events": [
+            "event_midnight_build"
+          ],
+          "status": "active",
+          "context_id": "oregon_fail",
+          "information_type": "character",
+          "reality_status": "fictional",
+          "perspective": "project_author"
+        }
+      ],
+      "concepts": [
+        {
+          "entity_id": "concept_practical_care",
+          "concept_name": "Hallway Track Lore",
+          "definition": "The real story that happens between official agenda items.",
+          "summary": "Conference friendships, rumors, jokes, and useful accidents.",
+          "related_people": [
+            "person_example"
+          ],
+          "related_projects": [
+            "project_wccc"
+          ],
+          "related_stories": [
+            "story_startup_from_joke"
+          ]
+        }
+      ],
+      "links": [
+        {
+          "target_entity_id": "org_shared_group",
+          "relationship_type": "associated_with",
+          "strength": "7",
+          "notes": "Sample graph link.",
+          "context_id": "oregon_fail",
+          "information_type": "character",
+          "reality_status": "fictional",
+          "perspective": "project_author"
+        }
+      ],
+      "timeline": [
+        {
+          "date": "2026-06-01",
+          "entity_id": "event_midnight_build",
+          "type": "event",
+          "title": "The joke became a build",
+          "notes": "Discord bit turned into an actual project plan.",
+          "related_entities": [
+            "person_example",
+            "org_shared_group"
+          ],
+          "context_id": "oregon_fail",
+          "information_type": "character",
+          "reality_status": "fictional",
+          "perspective": "project_author"
+        }
+      ],
+      "assets": []
+    },
+    "personality": {
+      "classification_note": "These tags are descriptive shortcuts for writing and search, not psychological assessments or diagnoses.",
+      "primary_social_energy": "Chaotic Instigator",
+      "secondary_social_energy": "Deadpan Commentator",
+      "personality_traits": [
+        "curious",
+        "stubborn",
+        "reliable",
+        "chaotic",
+        "caffeinated"
+      ],
+      "custom_traits": [
+        "can smell bad incentives",
+        "answers Discord at impossible hours",
+        "keeps receipts in the spiritual sense"
+      ],
+      "strengths": [
+        "fixing servers at 2 AM",
+        "finding cheap flights",
+        "talking people off ledges",
+        "remembering obscure lore"
+      ],
+      "flaws": [
+        "overcommits to the bit",
+        "forgets sleep is load-bearing",
+        "buys the top",
+        "turns every problem into a research spiral"
+      ],
+      "character_archetype": "Terminal Wizard / Roadtrip Bard",
+      "signature_ability": "Can find WiFi anywhere and somehow always knows somebody who knows somebody.",
+      "temperament": "sleep-deprived optimism with a suspicious amount of competence",
+      "biggest_contradiction": "wants a stable life but keeps joining side quests that become companies"
+    },
+    "motivation": {
+      "core_motivation": "Make confusing situations survivable for the people they love.",
+      "ranked_values": [
+        "Friendship",
+        "Freedom",
+        "Curiosity",
+        "Building real things"
+      ],
+      "what_they_optimize_for": "good signal, good people, enough battery, enough runway, nobody stranded at the wrong airport",
+      "what_they_refuse_to_compromise": "will not betray a vulnerable ally for convenience",
+      "what_tempts_them": "being needed, being right, having the answer first",
+      "what_they_are_trying_to_become": "someone who trusts others enough to share the load",
+      "greatest_need": "permission to not be useful every second",
+      "greatest_fear": "being useless when people are counting on them",
+      "moral_center": "care is practical, but people are never merely problems",
+      "shadow_desire": "to control the room so no one can fail"
+    },
+    "decision_making": {
+      "decision_style": "Research First",
+      "risk_tolerance": "Variable",
+      "planning_horizon": "Long Term",
+      "under_pressure_behavior": "gets quieter, prioritizes essentials, delegates cleanly, checks who has water and who has the keys",
+      "common_blind_spot": "assumes people want solved problems more than emotional processing",
+      "failure_mode": "takes over and becomes terse",
+      "recovery_pattern": "apologizes with a concrete repair plan",
+      "what_makes_them_act": "a friend is at risk and no one owns the next step",
+      "what_makes_them_freeze": "competing needs where every option hurts someone"
+    },
+    "social_model": {
+      "group_role": "Fixer",
+      "friendship_style": "Problem Solver",
+      "relationship_to_group_network": "Sample-safe HTF / K Street friend, Discord regular, and WCCC-ready background NPC energy.",
+      "how_they_show_care": "makes the plan easier, remembers who needed a ride, sends the useful link at exactly the right time",
+      "how_they_receive_care": "responds to concrete help and honest presence",
+      "how_they_ask_for_help": "frames it as a logistical need first",
+      "trust_builders": [
+        "follow-through",
+        "honest constraints"
+      ],
+      "trust_breakers": [
+        "performative loyalty",
+        "needless secrecy"
+      ],
+      "disagreement_style": "starts with reasons, then asks what outcome matters most",
+      "apology_style": "direct apology plus changed process",
+      "boundary_style": "calm, firm, specific",
+      "loyalty_triggers": [
+        "shared work",
+        "protecting someone vulnerable"
+      ],
+      "betrayal_triggers": [
+        "using someone as a tool"
+      ]
+    },
+    "relationship_graph": [
+      {
+        "relationship_id": "rel_example_oregon_fail",
+        "related_person": "Sample Crew",
+        "relationship_type": "collaborator",
+        "visibility": "project_only",
+        "context_id": "oregon_fail",
+        "information_type": "relationship",
+        "reality_status": "fictional",
+        "perspective": "project_author",
+        "notes": "Approved fictional project relationship for Oregon Fail sample.",
+        "normalized_from": "west_coast_crypto_cruise"
+      }
+    ],
+    "knowledge_domains": [
+      {
+        "domain": "Weird Internet Archaeology",
+        "expertise_level": "Advanced",
+        "confidence_level": "High",
+        "lived_experience": "yes",
+        "public_authority": "informal",
+        "notes": "finds the old post, dead repo, or Discord lore everyone half-remembers",
+        "dialogue_use": "can explain why the cursed old thing still matters"
+      }
+    ],
+    "humor_and_voice": {
+      "communication_modes": [
+        "Discord essayist",
+        "dry one-liner sniper",
+        "voice memo philosopher"
+      ],
+      "humor_types": [
+        "deadpan",
+        "meme-literate",
+        "absurdist",
+        "founder gallows humor"
+      ],
+      "voice_rhythm": "starts with 'okay so' then builds a whole theory; pauses for the bit; gets very precise when stakes rise",
+      "typical_phrases": [
+        "This seems like a bad idea. Let's do it.",
+        "I have concerns, but not enough concerns.",
+        "We're already committed."
+      ],
+      "vocabulary": [
+        "vibes",
+        "constraints",
+        "signal",
+        "rugged",
+        "side quest",
+        "load-bearing",
+        "canonical",
+        "cursed but useful"
+      ],
+      "topics_they_bring_up": [
+        "Parkour",
+        "AI agents",
+        "Crypto",
+        "Philosophy",
+        "Street photography",
+        "UFO lore",
+        "Startups",
+        "Open source software"
+      ],
+      "topics_they_avoid": [
+        "private family details"
+      ],
+      "example_quotes": [
+        "How hard could it possibly be?",
+        "That went better than expected.",
+        "Let's never do that again."
+      ],
+      "battle_intro_quote": "This seems like a bad idea. Let's do it.",
+      "battle_victory_quote": "See? Completely under control.",
+      "dialogue_dos": [
+        "sound like a real friend",
+        "include practical weirdness",
+        "know the lore"
+      ],
+      "dialogue_donts": [
+        "do not make them a tech bro caricature",
+        "do not turn every line into a pitch",
+        "do not make private lore public"
+      ]
+    },
+    "conflict_and_stress": {
+      "when_challenged": [
+        "research until the room gets tired",
+        "debate the premise",
+        "take control of logistics",
+        "make a joke to lower the voltage"
+      ],
+      "stress_signals": [
+        "shorter sentences",
+        "more lists",
+        "starts cleaning the kitchen",
+        "opens the same tab six times"
+      ],
+      "escalation_triggers": [
+        "bad-faith arguments",
+        "avoidable risk to friends",
+        "last-minute mystery plans"
+      ],
+      "deescalation_methods": [
+        "clear facts",
+        "food",
+        "a concrete next step",
+        "five minutes outside"
+      ],
+      "conflict_strengths": [
+        "separates facts from panic",
+        "names the real decision",
+        "protects the quiet person in the room"
+      ],
+      "conflict_weaknesses": [
+        "can become terse",
+        "may over-control"
+      ],
+      "repair_pattern": "direct apology, changed process, and a follow-up message after everyone has slept",
+      "pressure_dialogue_style": "shorter, more procedural, fewer jokes, more 'okay, first we solve the immediate problem'"
+    },
+    "signature_behaviors": [
+      {
+        "behavior": "opens twenty browser tabs",
+        "context": "fact-checking a Discord argument",
+        "frequency": "Common",
+        "comedic_exaggeration_potential": "Medium",
+        "game_use_notes": "can trigger Research Spiral mechanic",
+        "dialogue_use_notes": "mutters source comparisons"
+      }
+    ],
+    "narrative_engine": {
+      "personal_quest": "build something that probably should not work, make it useful, then accidentally turn it into a community",
+      "growth_arc": "learns to stop treating burnout as proof of commitment",
+      "legendary_story": "Accidentally slept through a conference and still made the keynote. Later drove across three states for a single taco recommendation.",
+      "story_teller": "self plus hallway crew",
+      "story_source_type": "Composite",
+      "story_confidence": "Likely",
+      "story_canon_status": "Community Lore",
+      "story_provenance": [
+        {
+          "story_id_title": "story_oregon_fail_sample",
+          "who_told_it": "project_author",
+          "source_type": "Composite",
+          "confidence_canon": "Likely",
+          "notes": "Sample Oregon Fail-safe story input.",
+          "context_id": "oregon_fail",
+          "information_type": "character",
+          "reality_status": "fictional",
+          "perspective": "project_author"
+        }
+      ],
+      "most_chaotic_moment": "Missed a flight and accidentally joined a startup.",
+      "recurring_internal_conflict": "wants peace but keeps volunteering for impossible projects because the group needs someone with a spreadsheet and a car",
+      "shadow_version": "sleep-deprived chaos engine who mistakes urgency for meaning",
+      "best_self_version": "grounded builder who can hold ambition, friendship, and rest at the same time",
+      "running_joke": "always says they are leaving in ten minutes, then becomes load-bearing to the next three-hour conversation",
+      "symbolic_motifs": [
+        "gas station coffee",
+        "conference badge",
+        "open tabs",
+        "rooftop at sunrise",
+        "dusty road"
+      ],
+      "character_themes": [
+        "friendship under stress",
+        "ambition without permission",
+        "community as survival tech",
+        "making meaning from chaos"
+      ],
+      "dramatic_question": "can you build impossible things without becoming impossible to live with?",
+      "what_changes_them": "a friend calling them out with love, a project failing honestly, a road trip that creates enough silence to think",
+      "what_never_changes": "they will always notice the person quietly falling out of the group orbit",
+      "role_in_group_story": "the one who knows the lore, finds the workaround, and somehow has the charger",
+      "ideal_scene": "3 AM kitchen table after the conference, everyone tired, the plan broken, and suddenly they make it make sense",
+      "nightmare_scene": "a high-stakes group decision with bad WiFi, no clear owner, and three people pretending they are fine"
+    },
+    "game_mechanics": {
+      "suggested_class_role": "Lore Keeper / Fixer",
+      "potential_party_roles": [
+        "organizer",
+        "researcher",
+        "hype engine",
+        "chaos dampener",
+        "road captain",
+        "bad idea validator"
+      ],
+      "passive_abilities": [
+        "can find WiFi anywhere",
+        "knows somebody who knows somebody",
+        "spots the weird incentive",
+        "remembers obscure lore"
+      ],
+      "active_abilities": [
+        "turns panic into a checklist",
+        "makes a Discord thread useful",
+        "finds cheap flights",
+        "turns a joke into a prototype"
+      ],
+      "traversal_abilities": [
+        "can sleep in airports",
+        "navigates cities by vibes and coffee shops",
+        "finds the back entrance",
+        "climbs the thing safely"
+      ],
+      "support_abilities": [
+        "talks people off ledges",
+        "feeds the team",
+        "keeps the group chat alive",
+        "reminds people water exists"
+      ],
+      "social_abilities": [
+        "befriends the venue staff",
+        "reads the room",
+        "finds the afterparty",
+        "knows when the bit has gone too far"
+      ],
+      "research_abilities": [
+        "weird internet archaeology",
+        "source triangulation",
+        "AI agent prototyping",
+        "crypto wallet debugging",
+        "parkour history recall"
+      ],
+      "weaknesses": [
+        "low battery",
+        "bad coffee",
+        "no sleep",
+        "ambiguous plans",
+        "someone says 'quick call'"
+      ],
+      "status_effects": [
+        "Caffeinated",
+        "Rugged",
+        "In Flow",
+        "Overclocked",
+        "Airport Mode",
+        "Research Spiral",
+        "Conference Brain"
+      ],
+      "special_dialogue_triggers": [
+        "someone says 'how hard could it be?'",
+        "a wallet is missing",
+        "a plan has no owner",
+        "someone opens a 40-tab research stack"
+      ],
+      "failure_comedy_mechanics": [
+        "generates ideas faster than consequences",
+        "gets on the wrong bus but finds better lore",
+        "forgets the charger but has three adapters"
+      ],
+      "power_curve": "starts as a useful weirdo, becomes the person everyone quietly routes impossible problems through",
+      "balance_notes": "strong improvisation should cost sleep, battery, social credit, or snacks"
+    },
+    "ai_generation": {
+      "canonical_short_description": "A sleep-deprived builder with road-trip instincts, Discord lore, and the suspicious ability to make bad plans useful.",
+      "canonical_long_description": "A capable internet friend shaped by hacker houses, parkour culture, startup chaos, crypto conferences, AI projects, and late-night conversations.",
+      "art_prompt_summary": "modern hacker-house roadtrip character, conference badge, travel-worn hoodie, bright tired eyes, backpack full of impossible tools",
+      "dialogue_prompt_summary": "write like a real group-chat regular: specific, funny, tired, capable, slightly too online, never generic",
+      "behavioral_prompt_summary": "protect the group, follow the weird lead, ask practical questions, keep the humor sharp, and remember friendship is part logistics",
+      "game_design_summary": "support/chaos utility character who converts bad plans into survivable adventures and unlocks hidden social routes",
+      "do_not_misrepresent": [
+        "Do not make them cruel",
+        "Do not make them a generic tech bro",
+        "Do not reveal private contact information"
+      ],
+      "sensitive_topics": [
+        "private family details"
+      ],
+      "safe_exaggerations": [
+        "opens too many research tabs",
+        "can find WiFi anywhere",
+        "has a plan for snacks",
+        "knows somebody who knows somebody"
+      ],
+      "unsafe_exaggerations": [
+        "cruelty"
+      ],
+      "prompt_tags": [
+        "hacker-house",
+        "roadtrip",
+        "AI-agents",
+        "crypto-conference",
+        "parkour-lore",
+        "deadpan"
+      ],
+      "negative_prompt_tags": [
+        "corporate stock photo",
+        "resume headshot",
+        "quest hero cosplay",
+        "generic cyberpunk villain"
+      ]
+    },
+    "project_usage": {
+      "approved_projects": [
+        "Oregon Fail"
+      ],
+      "project_relevance_notes": "Good sample for cruise NPC energy, group memory, social cameos, late-night dialogue, and support-character writing.",
+      "project_specific_notes": "Okay as a background NPC on West Coast Crypto Cruise; ask before making this sample a main character or romance subplot.",
+      "canon_level": "Raw",
+      "canon_truth_status": "Community Lore",
+      "context_id": "oregon_fail",
+      "information_type": "character",
+      "reality_status": "fictional",
+      "perspective": "project_author",
+      "normalized_from": "wccc"
+    },
+    "source_notes": {
+      "source_notes": "fictional sample with HTF / K Street / WCCC voice; no real person or private image included",
+      "contributors": [
+        "HTF / K Street"
+      ],
+      "last_reviewed": "2026-06-01",
+      "accuracy_confidence": "High"
+    },
+    "specialized_profiles": {
+      "agent_capabilities": [
+        "summarize approved project memory",
+        "generate public-safe NPC dialogue",
+        "answer lore questions with source caveats"
+      ],
+      "agent_limitations": [
+        "cannot claim to be the real person",
+        "cannot invent consent",
+        "cannot expose private source notes"
+      ],
+      "agent_memory_scope": "May use approved profile fields, approved project notes, and public-safe relationship summaries only.",
+      "agent_tool_access": [
+        "read approved profile JSON",
+        "export markdown summaries"
+      ],
+      "agent_operating_instructions": "Be useful, cautious with private data, cite source notes when uncertain, and respect restricted uses.",
+      "historical_confidence": "Unreviewed"
+    },
+    "governance": {
+      "archive_status": "active",
+      "export_permissions": [
+        "markdown_profile allowed",
+        "agent_context allowed",
+        "relationship_graph reviewer_only"
+      ],
+      "allowed_export_targets": [
+        "public example",
+        "review packet",
+        "local AI workspace"
+      ],
+      "relationship_approvals": [
+        {
+          "relationship_id": "rel_example_oregon_fail",
+          "person_a": "person_example",
+          "person_b": "person_oregon_fail_crew",
+          "requested_visibility": "project_only",
+          "person_a_approval": "approved",
+          "person_b_approval": "approved",
+          "reviewer_status": "approved",
+          "notes": "Sample bilateral approval for governed export."
+        }
+      ]
+    },
+    "profile_evolution": {
+      "model_version": "1.0.0",
+      "stable_identity_paths": [
+        "profile_id",
+        "entity.entity_id",
+        "identity.display_name",
+        "identity.profile_classification",
+        "identity.entity_subtype"
+      ],
+      "living_record_paths": [
+        "narrative_engine",
+        "relationship_graph",
+        "knowledge_graph",
+        "asset_library",
+        "project_usage",
+        "source_notes"
+      ]
+    },
+    "generated_content": {
+      "character_summary": "Packet Ghost is a sleep-deprived fixer whose road-trip instincts, weird internet memory, and deadpan timing turn group chaos into usable lore."
+    },
+    "epistemic_metadata": {
+      "context_id": "oregon_fail",
+      "information_type": "character",
+      "reality_status": "fictional",
+      "perspective": "project_author",
+      "normalized_from": "wccc"
+    },
+    "export_policy_id": "oregon_fail_default",
+    "target_context_id": "oregon_fail",
+    "export_type": "project",
+    "export_scope": "project",
+    "exported_at": "2026-06-06T07:30:11.324Z",
+    "excluded_counts": {
+      "missing_context": 0,
+      "wrong_context": 2,
+      "unknown_context": 0,
+      "missing_reality_status": 0,
+      "missing_perspective": 0,
+      "unreviewed": 0,
+      "unapproved_relationship": 0,
+      "private_visibility": 0,
+      "claim_requests_excluded": 1,
+      "audit_history_excluded": 1
+    },
+    "export_audit_event": {
+      "date": "2026-06-06T07:30:11.324Z",
+      "actor": "local export",
+      "action": "export_generated",
+      "target": "example-person-oregon-fail-sample",
+      "summary": "Generated project export with oregon_fail_default",
+      "export_policy_id": "oregon_fail_default",
+      "target_context_id": "oregon_fail"
+    }
+  }
+}

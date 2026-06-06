@@ -28,6 +28,8 @@
     "ai_generation",
     "project_usage",
     "source_notes",
+    "governance",
+    "profile_evolution",
     "generated_content",
     "extensions"
   ],
@@ -111,6 +113,14 @@
     "game_mechanics": { "$ref": "#/$defs/object" },
     "ai_generation": { "$ref": "#/$defs/object" },
     "project_usage": { "$ref": "#/$defs/object" },
+    "epistemic_metadata": { "$ref": "#/$defs/object" },
+    "context_registry": { "$ref": "#/$defs/object" },
+    "export_policy_id": { "type": "string" },
+    "target_context_id": { "type": "string" },
+    "export_type": { "type": "string" },
+    "exported_at": { "type": "string" },
+    "excluded_counts": { "$ref": "#/$defs/object" },
+    "export_audit_event": { "$ref": "#/$defs/audit_event" },
     "source_notes": { "$ref": "#/$defs/object" },
     "specialized_profiles": { "$ref": "#/$defs/object" },
     "governance": { "$ref": "#/$defs/governance" },
@@ -134,7 +144,11 @@
         "target_entity_id": { "type": "string" },
         "relationship_type": { "type": "string" },
         "strength": { "type": ["string", "number"] },
-        "notes": { "type": "string" }
+        "notes": { "type": "string" },
+        "context_id": { "type": "string" },
+        "information_type": { "type": "string" },
+        "reality_status": { "$ref": "#/$defs/reality_status" },
+        "perspective": { "$ref": "#/$defs/perspective" }
       },
       "additionalProperties": true
     },
@@ -181,7 +195,11 @@
         "requested_visibility": { "$ref": "#/$defs/visibility" },
         "person_a_approval": { "type": "string" },
         "person_b_approval": { "type": "string" },
-        "reviewer_status": { "type": "string" }
+        "reviewer_status": { "type": "string" },
+        "context_id": { "type": "string" },
+        "information_type": { "type": "string" },
+        "reality_status": { "$ref": "#/$defs/reality_status" },
+        "perspective": { "$ref": "#/$defs/perspective" }
       },
       "additionalProperties": true
     },
@@ -312,6 +330,7 @@
       "type": "object",
       "properties": {
         "related_person": { "type": "string" },
+        "relationship_id": { "type": "string" },
         "relationship_type": { "type": "string" },
         "trust_level": { "type": "string" },
         "conflict_level": { "type": "string" },
@@ -324,7 +343,11 @@
         "confidence_canon": { "type": "string" },
         "visibility": { "$ref": "#/$defs/visibility" },
         "bilateral_approval_required": { "type": "boolean" },
-        "approval_status": { "type": "string" }
+        "approval_status": { "type": "string" },
+        "context_id": { "type": "string" },
+        "information_type": { "type": "string" },
+        "reality_status": { "$ref": "#/$defs/reality_status" },
+        "perspective": { "$ref": "#/$defs/perspective" }
       },
       "additionalProperties": true
     },
@@ -411,22 +434,36 @@
       "type": "string",
       "enum": ["private", "reviewer_only", "project_only", "exportable"]
     },
+    "reality_status": {
+      "type": "string",
+      "enum": ["factual", "subjective", "community_perception", "speculative", "fictional", "parody", "lore", "unknown"]
+    },
+    "perspective": {
+      "type": "string",
+      "enum": ["self_report", "community", "aggregated_observation", "reviewer_observation", "project_author", "third_party", "unknown"]
+    },
     "profile_evolution": {
       "type": "object",
       "description": "Additive living-record layer for stable identity, pending changes, applied versions, and audit events. This lets profiles evolve without resubmitting or replacing the whole profile.",
+      "required": ["model_version", "stable_identity_paths", "living_record_paths", "pending_changes", "applied_versions", "audit_events"],
       "properties": {
         "model_version": { "type": "string" },
         "stable_identity_paths": { "type": "array", "items": { "type": "string" } },
         "living_record_paths": { "type": "array", "items": { "type": "string" } },
         "pending_changes": { "type": "array", "items": { "$ref": "#/$defs/change_request" } },
         "applied_versions": { "type": "array", "items": { "$ref": "#/$defs/version_history_entry" } },
-        "audit_events": { "type": "array", "items": { "$ref": "#/$defs/audit_event" } }
+        "audit_events": { "type": "array", "items": { "$ref": "#/$defs/audit_event" } },
+        "applied_change_ids": { "type": "array", "items": { "type": "string" } },
+        "rejected_change_ids": { "type": "array", "items": { "type": "string" } },
+        "withdrawn_change_ids": { "type": "array", "items": { "type": "string" } },
+        "identity_layers": { "$ref": "#/$defs/object" }
       },
       "additionalProperties": true
     },
     "governance": {
       "type": "object",
       "description": "Ownership, editor/reviewer permissions, claims, change review, relationship approval, lifecycle, and export controls.",
+      "required": ["profile_owner", "review_owner", "claim_requests", "change_requests", "relationship_approvals", "version_history", "audit_trail"],
       "properties": {
         "profile_owner": { "type": "string" },
         "owner_contact": { "type": "string" },
@@ -495,7 +532,11 @@
         "submitted_at": { "type": "string" },
         "reviewed_by": { "type": "string" },
         "reviewed_at": { "type": "string" },
-        "reviewer_notes": { "type": "string" }
+        "reviewer_notes": { "type": "string" },
+        "context_id": { "type": "string" },
+        "information_type": { "type": "string" },
+        "reality_status": { "$ref": "#/$defs/reality_status" },
+        "perspective": { "$ref": "#/$defs/perspective" }
       },
       "additionalProperties": true
     },
@@ -524,7 +565,14 @@
         "visibility": { "$ref": "#/$defs/visibility" },
         "payload_notes": { "type": "string" },
         "payload_json": { "type": "string" },
-        "payload": { "$ref": "#/$defs/object" }
+        "payload": { "$ref": "#/$defs/object" },
+        "context_id": { "type": "string" },
+        "information_type": { "type": "string" },
+        "reality_status": { "$ref": "#/$defs/reality_status" },
+        "perspective": { "$ref": "#/$defs/perspective" },
+        "previous_reality_status": { "$ref": "#/$defs/reality_status" },
+        "previous_information_type": { "type": "string" },
+        "reclassification_review_required": { "type": "boolean" }
       },
       "additionalProperties": true
     },

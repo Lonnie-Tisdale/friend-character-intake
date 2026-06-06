@@ -371,6 +371,81 @@
     const RELATIONSHIP_VISIBILITY = ["private", "reviewer_only", "project_only", "exportable"];
     const STORY_SOURCE_TYPES = ["Witnessed", "Self-Reported", "Second-Hand", "Running Joke", "Community Lore", "Public Source", "Composite", "Unknown"];
     const CANON_TRUTH_STATUSES = ["Verified", "Likely", "Community Lore", "Running Joke", "Parody", "Unknown"];
+    const CONTEXT_REGISTRY = [
+      { context_id: "global", display_name: "Global", aliases: ["general", "real_world", "real-world"] },
+      { context_id: "en", display_name: "Epic of Gnosis", aliases: ["epic_of_gnosis", "epic of gnosis", "eog"] },
+      { context_id: "htf", display_name: "HTF", aliases: ["hometown_friends", "hometown friends"] },
+      { context_id: "oregon_fail", display_name: "Oregon Fail", aliases: ["wccc", "west_coast_crypto_cruise", "west coast crypto cruise", "west coast crypto-cruise"] },
+      { context_id: "shawniverse", display_name: "Shawniverse", aliases: [] },
+      { context_id: "sketchpad_survivors", display_name: "Sketchpad Survivors", aliases: ["sketchpad survivors"] },
+      { context_id: "little_dust_devil", display_name: "Little Dust Devil", aliases: ["little dust devil"] },
+      { context_id: "hi_orbit_games", display_name: "Hi-Orbit Games", aliases: ["hi orbit games", "hi-orbit"] },
+      { context_id: "k_st_engineering", display_name: "K-St Engineering", aliases: ["k st engineering", "kst_engineering", "kst"] },
+      { context_id: "future_projects", display_name: "Future Projects", aliases: ["future"] },
+      { context_id: "other", display_name: "Other / Not Sure", aliases: ["unknown", "not_sure", "not sure"] }
+    ];
+    const PROJECT_CONTEXTS = CONTEXT_REGISTRY.map(context => context.context_id);
+    const INFORMATION_TYPES = ["biography", "psychology", "relationship", "experience", "skill", "observation", "lore", "character", "joke_meme", "project_role", "other"];
+    const REALITY_STATUSES = ["factual", "subjective", "community_perception", "speculative", "fictional", "parody", "lore", "unknown"];
+    const PERSPECTIVES = ["self_report", "community", "aggregated_observation", "reviewer_observation", "project_author", "third_party", "unknown"];
+    const EXPORT_POLICIES = {
+      public_default: {
+        export_policy_id: "public_default",
+        target_context_id: "global",
+        export_type: "public",
+        include_contexts: ["global"],
+        require_reviewed: false,
+        require_complete_relationship_approval: true,
+        deny_missing_context: true,
+        deny_missing_reality_status: true,
+        deny_missing_perspective: true,
+        include_private_fields: false,
+        include_audit_history: false,
+        include_claim_requests: false
+      },
+      project_default: {
+        export_policy_id: "project_default",
+        target_context_id: "global",
+        export_type: "project",
+        include_contexts: ["global"],
+        require_reviewed: false,
+        require_complete_relationship_approval: true,
+        deny_missing_context: true,
+        deny_missing_reality_status: true,
+        deny_missing_perspective: true,
+        include_private_fields: false,
+        include_audit_history: false,
+        include_claim_requests: false
+      },
+      ai_agent_default: {
+        export_policy_id: "ai_agent_default",
+        target_context_id: "global",
+        export_type: "ai_agent",
+        include_contexts: ["global"],
+        require_reviewed: false,
+        require_complete_relationship_approval: true,
+        deny_missing_context: true,
+        deny_missing_reality_status: true,
+        deny_missing_perspective: true,
+        include_private_fields: false,
+        include_audit_history: false,
+        include_claim_requests: false
+      },
+      oregon_fail_default: {
+        export_policy_id: "oregon_fail_default",
+        target_context_id: "oregon_fail",
+        export_type: "project",
+        include_contexts: ["oregon_fail", "global"],
+        require_reviewed: false,
+        require_complete_relationship_approval: true,
+        deny_missing_context: true,
+        deny_missing_reality_status: true,
+        deny_missing_perspective: true,
+        include_private_fields: false,
+        include_audit_history: false,
+        include_claim_requests: false
+      }
+    };
     const RELATIONSHIP_TYPES = ["friend", "family", "collaborator", "mentor", "rival", "ex", "project_member", "location_association", "event_participant", "organization_member", "inspiration_source", "fictionalized_as"];
     const PERMISSION_ROLES = ["owner", "editor", "reviewer", "project_viewer", "exporter"];
     const CLAIM_STATUSES = ["draft", "submitted", "needs_verification", "reviewer_pending", "approved", "rejected", "withdrawn"];
@@ -385,7 +460,7 @@
       "primary_social_energy", "secondary_social_energy", "personality_traits", "custom_traits", "strengths", "flaws", "character_archetype", "signature_ability",
       "voice_rhythm", "typical_phrases", "example_quotes", "battle_intro_quote", "battle_victory_quote", "dialogue_dos", "dialogue_donts",
       "relationship_to_group_network", "relationship_entries", "how_they_show_care", "friendship_style",
-      "approved_projects", "project_relevance_notes", "legendary_story", "story_teller", "story_source_type", "story_confidence", "story_canon_status", "story_provenance_entries", "most_chaotic_moment", "topics_they_bring_up", "canon_level", "canon_truth_status",
+      "context_id", "information_type", "reality_status", "perspective", "approved_projects", "project_relevance_notes", "legendary_story", "story_teller", "story_source_type", "story_confidence", "story_canon_status", "story_provenance_entries", "most_chaotic_moment", "topics_they_bring_up", "canon_level", "canon_truth_status",
       "profile_owner", "owner_contact", "claim_status", "claim_requests", "change_requests", "relationship_approval_entries",
       "character_summary", "ai_context_output"
     ]);
@@ -498,7 +573,7 @@
           f("graph_notes", "Graph notes", "textarea", "Graph-level notes for this person node.", "Root node for a real friend profile that can become WCCC NPC context, group lore, and future project memory."),
           rows("graph_link_entries", "Graph links", "target entity id | relationship type | strength 1-10 | notes", "org_htf_kstreet | organization_member | 8 | long-running friend/project circle\nproject_wccc | project_member | 6 | approved for light cruise NPC energy\nloc_conference_hallway | location_association | 7 | usually found where the best hallway track is happening"),
           rows("graph_entity_entries", "Linked entities", "entity_id | entity_type | display_name | created_at | updated_at | tags comma-list | notes", "org_htf_kstreet | organization | HTF / K Street | 2026-01-01 | 2026-06-01 | friend-circle,projects | equal circle of builders, artists, researchers, instigators\nloc_conference_hallway | location | Crypto Conference Hallway Track |  |  | conference,roadtrip | where half the real plot happens"),
-          rows("relationship_entity_entries", "Relationship entities", "relationship_id | person_a | person_b | relationship_type | trust level | conflict level | history level | influence level | communication frequency | relationship health | running dynamic | inside jokes | shared history | relationship notes | confidence level | canon level | consent status | requested visibility | person A approval | person B approval | reviewer status", "rel_packetghost_crew | person_packetghost | person_crew | friend | 8 | 2 | 7 | 6 | frequent | healthy | starts projects from jokes | airport floor lore | Discord-to-road-trip friendship | public-safe relationship summary only | high | semi_canon | approved | project_only | approved | pending | needs_bilateral_approval"),
+          rows("relationship_entity_entries", "Relationship entities", "relationship_id | person_a | person_b | relationship_type | trust level | conflict level | history level | influence level | communication frequency | relationship health | running dynamic | inside jokes | shared history | relationship notes | confidence level | canon level | consent status | requested visibility | person A approval | person B approval | reviewer status | context | info type | reality status | perspective", "rel_packetghost_crew | person_packetghost | person_crew | friend | 8 | 2 | 7 | 6 | frequent | healthy | starts projects from jokes | airport floor lore | Discord-to-road-trip friendship | public-safe relationship summary only | high | semi_canon | approved | project_only | approved | pending | needs_bilateral_approval | htf | relationship | community_perception | community"),
           rows("organization_entity_entries", "Organization entities", "entity_id | organization name | founding date | description | members comma-list | roles comma-list | projects comma-list | associated locations comma-list | assets comma-list | history | status", "org_htf_kstreet | HTF / K Street | 2026-01-01 | strange capable circle building games, AI tools, events, and lore | person_packetghost,person_crew | member,lore_keeper,fixer | project_wccc,project_profile_database | loc_hacker_house,loc_conference_hallway | asset_logo | grew through Discord threads, road trips, late nights, and poor timing | active"),
           rows("faction_entity_entries", "Faction entities", "entity_id | faction name | description | members comma-list | roles comma-list | projects comma-list | associated locations comma-list | assets comma-list | goals | status", "faction_hallway_track | Hallway Track Diplomats | informal conference crew that finds the real conversation | person_packetghost,person_crew | connector,scout | project_wccc | loc_conference_hallway | asset_badge | turn chance encounters into useful lore | active"),
           rows("location_entity_entries", "Location entities", "entity_id | display name | location type | description | associated people comma-list | associated events comma-list | associated organizations comma-list | associated assets comma-list | coordinates optional | tags comma-list", "loc_hacker_house_kitchen | Hacker House Kitchen | real_world | 3 AM planning table, half-cleaned whiteboard, someone's laptop fan screaming | person_packetghost | event_midnight_build | org_htf_kstreet | asset_reference_photo |  | hacker-house,build-sprint"),
@@ -591,7 +666,7 @@
         title: "Relationship Graph",
         note: "Who knows whom, who trusts whom, who collaborates, who causes trouble together, and who always ends up in the same side quest. For WCCC/Oregon Fail, this may be more important than biography.",
         fields: [
-          rows("relationship_entries", "Relationship entries", "related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes | story source | confidence/canon | visibility", "Kai | collaborator | 8 | 2 | 7 | 6 | loyal chaos | starts projects from jokes | old Discord-to-road-trip friend | self-reported + witnessed | Community Lore | project_only\nRin | side quest magnet | 7 | 4 | 6 | 8 | brilliant trouble | somehow always at the same afterparty | causes useful chaos together | second-hand | Likely | reviewer_only")
+          rows("relationship_entries", "Relationship entries", "relationship id | related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes | story source | confidence/canon | visibility | context | info type | reality status | perspective", "rel_maya_kai | Kai | collaborator | 8 | 2 | 7 | 6 | loyal chaos | starts projects from jokes | old Discord-to-road-trip friend | self-reported + witnessed | Community Lore | project_only | htf | relationship | community_perception | community\nrel_maya_rin | Rin | side quest magnet | 7 | 4 | 6 | 8 | brilliant trouble | somehow always at the same afterparty | causes useful chaos together | second-hand | Likely | reviewer_only | htf | joke_meme | parody | community")
         ]
       },
       {
@@ -656,7 +731,7 @@
           s("story_source_type", "Story source type", STORY_SOURCE_TYPES, "Whether this was witnessed, self-reported, second-hand, a running joke, community lore, public source, or composite."),
           s("story_confidence", "Story confidence", CANON_TRUTH_STATUSES, "How true-ish the story is: verified, likely, community lore, running joke, parody, or unknown."),
           s("story_canon_status", "Story canon status", CANON_TRUTH_STATUSES, "How this story should be treated inside WCCC/Oregon Fail continuity."),
-          rows("story_provenance_entries", "Story provenance entries", "story id/title | who told it | source type | confidence/canon | witnesses comma-list | notes", "story_conference_sleep | slept through conference, made keynote | self + two witnesses | Likely | Kai,Rin | details vary by teller\nstory_taco_drive | drove three states for tacos | running joke | Community Lore | hallway crew | exact number of states disputed"),
+          rows("story_provenance_entries", "Story provenance entries", "story id/title | who told it | source type | confidence/canon | witnesses comma-list | notes | context | info type | reality status | perspective", "story_conference_sleep | slept through conference, made keynote | self + two witnesses | Likely | Kai,Rin | details vary by teller | global | experience | subjective | self_report\nstory_taco_drive | drove three states for tacos | running joke | Community Lore | hallway crew | exact number of states disputed | htf | lore | community_perception | community"),
           f("most_chaotic_moment", "Most chaotic moment", "textarea", "A memorable moment where the plan became lore.", "Missed a flight and accidentally joined a startup. Lost a wallet, found a friend. Ended up at Burning Man with 24 hours notice."),
           f("recurring_internal_conflict", "Recurring internal conflict", "textarea", "Inner contradiction.", "Wants peace but keeps volunteering for impossible projects because the group needs someone with a spreadsheet and a car."),
           f("shadow_version", "Shadow version", "textarea", "Unhealthy extreme.", "Becomes a sleep-deprived chaos engine who mistakes urgency for meaning."),
@@ -717,6 +792,10 @@
         title: "Project Usage",
         note: "Where this profile can show up: cruise NPC, Discord lore, art prompts, internal memory, game systems, or future chaos.",
         fields: [
+          s("context_id", "What project is this information for?", PROJECT_CONTEXTS, "Stores the project or scope this submission belongs to without creating a separate form."),
+          s("information_type", "What kind of information is this?", INFORMATION_TYPES, "Plain category for the information being submitted."),
+          s("reality_status", "How should this information be understood?", REALITY_STATUSES, "Internal guardrail that separates fact, experience, perception, fiction, parody, and lore."),
+          s("perspective", "Whose perspective is this?", PERSPECTIVES, "Separates self-report, community perception, reviewer observation, and other source postures."),
           l("approved_projects", "Where can this be used?", "One per line.", "HTF\nK Street\nWest Coast Crypto Cruise\nShared Person Database\nAI Dialogue Agent\nArt Generation\nGroup Memory\nPrivate Review\nFuture Weird Project"),
           f("project_relevance_notes", "Why do you belong in the database?", "textarea", "Why this person/entity matters to one or more projects.", "Good for cruise NPC energy, group memory, social cameos, late-night dialogue, and support-character writing."),
           f("project_specific_notes", "Project-specific notes / boundaries", "textarea", "Usage notes per project.", "Okay as a background NPC on West Coast Crypto Cruise; ask before making me a main character or romance subplot."),
@@ -772,8 +851,8 @@
           rows("reviewer_entries", "Reviewers", "reviewer id/name | role | permissions comma-list | scope | added_by | added_at | notes", "archive-reviewer | reviewer | approve_changes,resolve_claims,export_approved | all projects | review owner | 2026-06-05 | trusted local reviewer"),
           rows("permission_rule_entries", "Permission rules", "role | action | scope | review required yes/no | notes", "owner | suggest_change | own_profile | no | owner changes still enter history\neditor | add_story | assigned_profile | yes | reviewer approves before export\nreviewer | approve_change | assigned_project | no | cannot approve changes they proposed"),
           s("claim_status", "Current claim status", CLAIM_STATUSES, "Tracks whether a profile is unclaimed, pending verification, approved, rejected, or withdrawn."),
-          rows("claim_requests", "Claim requests", "claim id | claimant | verification method | evidence summary | status | submitted_at | reviewed_by | reviewed_at | reviewer notes", "claim_20260605_maya | Maya | known Discord account + self-confirmed profile details | confirmed by private message | reviewer_pending | 2026-06-05 |  |  | waiting on owner confirmation"),
-          rows("change_requests", "Pending / historical change requests", "change id | type | operation | target path | proposed by | status | submitted_at | reviewer | reviewed_at | summary | visibility | payload/notes | payload JSON", "chg_story_001 | add_story | append | narrative_engine.story_provenance | maya | reviewer_pending | 2026-06-05 |  |  | add WCCC hallway story | project_only | structured story payload | {\"story_id_title\":\"story_wccc_hallway\",\"who_told_it\":\"Maya\",\"source_type\":\"Self-Reported\",\"confidence_canon\":\"Likely\",\"witnesses\":[\"Kai\"],\"notes\":\"Public-safe hallway story.\"}"),
+          rows("claim_requests", "Claim requests", "claim id | claimant | verification method | evidence summary | status | submitted_at | reviewed_by | reviewed_at | reviewer notes | context | info type | reality status | perspective", "claim_20260605_maya | Maya | known Discord account + self-confirmed profile details | confirmed by private message | reviewer_pending | 2026-06-05 |  |  | waiting on owner confirmation | global | biography | factual | self_report"),
+          rows("change_requests", "Pending / historical change requests", "change id | type | operation | target path | proposed by | status | submitted_at | reviewer | reviewed_at | summary | visibility | payload/notes | payload JSON | context | info type | reality status | perspective", "chg_story_001 | add_story | append | narrative_engine.story_provenance | maya | reviewer_pending | 2026-06-05 |  |  | add WCCC hallway story | project_only | structured story payload | {\"story_id_title\":\"story_wccc_hallway\",\"who_told_it\":\"Maya\",\"source_type\":\"Self-Reported\",\"confidence_canon\":\"Likely\",\"witnesses\":[\"Kai\"],\"notes\":\"Public-safe hallway story.\",\"context_id\":\"htf\",\"information_type\":\"lore\",\"reality_status\":\"community_perception\",\"perspective\":\"self_report\"} | htf | lore | community_perception | self_report"),
           rows("relationship_approval_entries", "Relationship approvals", "relationship id | person/entity A | person/entity B | requested visibility | A approval | B approval | reviewer status | notes", "rel_maya_kai | person_maya | person_kai | project_only | approved | pending | needs_bilateral_approval | do not export until both sides approve"),
           rows("version_history_entries", "Version history", "version | date | modified by | change summary | source change id | exportable yes/no", "1.0.0 | 2026-06-05 | reviewer_name | initial approved profile | initial_review | yes"),
           rows("audit_trail_entries", "Audit trail", "date | actor | action | target | summary | notes", "2026-06-05 | reviewer_name | approved_change | chg_story_001 | added WCCC hallway story | source confirmed by owner"),
@@ -850,8 +929,8 @@
       else node.value = value || "";
     }
     function rowKeys(id) {
-      return {
-        relationship_entries: ["related_person", "relationship_type", "trust_level", "conflict_level", "history_level", "influence_level", "emotional_tone", "running_dynamic", "notes", "story_source", "confidence_canon", "visibility"],
+      const profile = {
+        relationship_entries: ["relationship_id", "related_person", "relationship_type", "trust_level", "conflict_level", "history_level", "influence_level", "emotional_tone", "running_dynamic", "notes", "story_source", "confidence_canon", "visibility", "context_id", "information_type", "reality_status", "perspective"],
         knowledge_domain_entries: ["domain", "expertise_level", "confidence_level", "lived_experience", "public_authority", "notes", "dialogue_use"],
         signature_behavior_entries: ["behavior", "context", "frequency", "comedic_exaggeration_potential", "game_use_notes", "dialogue_use_notes"],
         asset_entries: assetObjectKeys,
@@ -859,7 +938,7 @@
         style_guide_entries: ["guide_name", "description", "asset_ids", "prompt_notes", "negative_prompt_notes"],
         graph_link_entries: ["target_entity_id", "relationship_type", "strength", "notes"],
         graph_entity_entries: ["entity_id", "entity_type", "display_name", "created_at", "updated_at", "tags", "notes"],
-        relationship_entity_entries: ["relationship_id", "person_a", "person_b", "relationship_type", "trust_level", "conflict_level", "history_level", "influence_level", "communication_frequency", "relationship_health", "running_dynamic", "inside_jokes", "shared_history", "relationship_notes", "confidence_level", "canon_level", "consent_status", "requested_visibility", "person_a_approval", "person_b_approval", "reviewer_status"],
+        relationship_entity_entries: ["relationship_id", "person_a", "person_b", "relationship_type", "trust_level", "conflict_level", "history_level", "influence_level", "communication_frequency", "relationship_health", "running_dynamic", "inside_jokes", "shared_history", "relationship_notes", "confidence_level", "canon_level", "consent_status", "requested_visibility", "person_a_approval", "person_b_approval", "reviewer_status", "context_id", "information_type", "reality_status", "perspective"],
         organization_entity_entries: ["entity_id", "organization_name", "founding_date", "description", "members", "roles", "projects", "associated_locations", "assets", "history", "status"],
         faction_entity_entries: ["entity_id", "faction_name", "description", "members", "roles", "projects", "associated_locations", "assets", "goals", "status"],
         location_entity_entries: ["entity_id", "display_name", "location_type", "description", "associated_people", "associated_events", "associated_organizations", "associated_assets", "coordinates_optional", "tags"],
@@ -868,12 +947,12 @@
         project_entity_entries: ["entity_id", "project_name", "description", "contributors", "organizations", "assets", "related_people", "related_events", "status", "repository_links"],
         concept_entity_entries: ["entity_id", "concept_name", "definition", "summary", "related_people", "related_projects", "related_stories", "related_assets"],
         timeline_entries: ["date", "entity_id", "timeline_type", "title", "summary", "related_entities"],
-        story_provenance_entries: ["story_id_title", "who_told_it", "source_type", "confidence_canon", "witnesses", "notes"],
+        story_provenance_entries: ["story_id_title", "who_told_it", "source_type", "confidence_canon", "witnesses", "notes", "context_id", "information_type", "reality_status", "perspective"],
         editor_entries: ["editor_id", "role", "permissions", "scope", "added_by", "added_at", "notes"],
         reviewer_entries: ["reviewer_id", "role", "permissions", "scope", "added_by", "added_at", "notes"],
         permission_rule_entries: ["role", "action", "scope", "review_required", "notes"],
-        claim_requests: ["claim_id", "claimant", "verification_method", "evidence_summary", "status", "submitted_at", "reviewed_by", "reviewed_at", "reviewer_notes"],
-        change_requests: ["change_id", "type", "operation", "target_path", "proposed_by", "status", "submitted_at", "reviewer", "reviewed_at", "summary", "visibility", "payload_notes", "payload_json"],
+        claim_requests: ["claim_id", "claimant", "verification_method", "evidence_summary", "status", "submitted_at", "reviewed_by", "reviewed_at", "reviewer_notes", "context_id", "information_type", "reality_status", "perspective"],
+        change_requests: ["change_id", "type", "operation", "target_path", "proposed_by", "status", "submitted_at", "reviewer", "reviewed_at", "summary", "visibility", "payload_notes", "payload_json", "context_id", "information_type", "reality_status", "perspective"],
         relationship_approval_entries: ["relationship_id", "person_a", "person_b", "requested_visibility", "person_a_approval", "person_b_approval", "reviewer_status", "notes"],
         version_history_entries: ["version", "date", "modified_by", "change_summary", "source_change_id", "exportable"],
         audit_trail_entries: ["date", "actor", "action", "target", "summary", "notes"],
@@ -929,6 +1008,82 @@
       return String(text || "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[char]));
     }
 
+    function contextKey(value) {
+      return String(value || "").trim().toLowerCase().replace(/[\s-]+/g, "_");
+    }
+
+    function contextAliasMap() {
+      const map = {};
+      CONTEXT_REGISTRY.forEach(context => {
+        [context.context_id, ...(context.aliases || [])].forEach(alias => {
+          const key = contextKey(alias);
+          if (key) map[key] = context.context_id;
+        });
+      });
+      return map;
+    }
+
+    function duplicateContextAliases() {
+      const seen = {};
+      const duplicates = [];
+      CONTEXT_REGISTRY.forEach(context => {
+        [context.context_id, ...(context.aliases || [])].forEach(alias => {
+          const key = contextKey(alias);
+          if (!key) return;
+          if (seen[key] && seen[key] !== context.context_id) duplicates.push({ alias, first_context_id: seen[key], second_context_id: context.context_id });
+          seen[key] = context.context_id;
+        });
+      });
+      return duplicates;
+    }
+
+    function uniqueList(values) {
+      return Array.from(new Set((values || []).filter(Boolean)));
+    }
+
+    function normalizeContextId(value) {
+      const original = String(value || "").trim();
+      const normalized = contextAliasMap()[contextKey(original)] || "other";
+      return {
+        context_id: normalized,
+        normalized_from: original && original !== normalized ? original : ""
+      };
+      return normalizeProfileContexts(profile);
+    }
+
+    function normalizeEpistemicObject(object, fallback = {}) {
+      if (!object || typeof object !== "object") return object;
+      const sourceContext = object.context_id || fallback.context_id || "";
+      if (sourceContext) {
+        const normalized = normalizeContextId(sourceContext);
+        object.context_id = normalized.context_id;
+        if (normalized.normalized_from) object.normalized_from = normalized.normalized_from;
+      }
+      object.information_type = object.information_type || fallback.information_type || "";
+      object.reality_status = object.reality_status || fallback.reality_status || "";
+      object.perspective = object.perspective || fallback.perspective || "";
+      return object;
+    }
+
+    function normalizeProfileContexts(profile) {
+      const fallback = normalizeEpistemicObject(profile.epistemic_metadata || {});
+      profile.epistemic_metadata = fallback;
+      profile.project_usage = profile.project_usage || {};
+      normalizeEpistemicObject(profile.project_usage, fallback);
+      [
+        profile.relationship_graph,
+        profile.narrative_engine?.story_provenance,
+        profile.knowledge_graph?.relationship_entities,
+        profile.knowledge_graph?.links,
+        profile.knowledge_graph?.timeline,
+        profile.knowledge_graph?.events,
+        profile.knowledge_graph?.projects,
+        profile.governance?.claim_requests,
+        profile.governance?.change_requests
+      ].forEach(collection => (collection || []).forEach(item => normalizeEpistemicObject(item, fallback)));
+      return profile;
+    }
+
     function buildProfile() {
       const values = Object.fromEntries(flatFields.map(field => [field.id, fieldValue(field.id)]));
       const profileId = importedExtensions.profile_id || slugify(values.display_name || values.in_world_name || values.real_name_optional);
@@ -962,6 +1117,13 @@
           sensitive_topics_to_avoid: values.sensitive_topics_to_avoid,
           consent_notes: values.consent_notes
         },
+        epistemic_metadata: {
+          context_id: values.context_id,
+          information_type: values.information_type,
+          reality_status: values.reality_status,
+          perspective: values.perspective
+        },
+        context_registry: { contexts: CONTEXT_REGISTRY },
         identity: pick(values, ["display_name", "profile_classification", "entity_subtype", "real_name_optional", "optional_contact", "in_world_name", "short_bio", "three_word_vibe", "animal_affinity", "current_obsession", "nicknames", "pronouns", "age_range", "current_location", "origin_location", "communities", "roles", "professions", "identity_tags"]),
         appearance: pick(values, ["height_build", "hair", "eyes", "face_features", "skin_tone", "distinguishing_marks", "silhouette", "everyday_clothing", "iconic_outfit", "accessories", "carried_items", "signature_item", "default_expression", "movement_body_language", "image_prompt_notes", "negative_image_prompt_notes"]),
         asset_library: {
@@ -995,10 +1157,11 @@
         },
         game_mechanics: pick(values, ["suggested_class_role", "potential_party_roles", "passive_abilities", "active_abilities", "traversal_abilities", "support_abilities", "social_abilities", "research_abilities", "weaknesses", "status_effects", "special_dialogue_triggers", "failure_comedy_mechanics", "power_curve", "balance_notes"]),
         ai_generation: pick(values, ["canonical_short_description", "canonical_long_description", "art_prompt_summary", "dialogue_prompt_summary", "behavioral_prompt_summary", "game_design_summary", "do_not_misrepresent", "sensitive_topics", "safe_exaggerations", "unsafe_exaggerations", "prompt_tags", "negative_prompt_tags"]),
-        project_usage: pick(values, ["approved_projects", "project_relevance_notes", "project_specific_notes", "canon_level", "canon_truth_status"]),
+        project_usage: pick(values, ["context_id", "information_type", "reality_status", "perspective", "approved_projects", "project_relevance_notes", "project_specific_notes", "canon_level", "canon_truth_status"]),
         source_notes: pick(values, ["source_images", "source_interviews", "source_notes", "contributors", "reviewers", "last_reviewed", "accuracy_confidence", "unresolved_questions"]),
         specialized_profiles: pick(values, ["agent_capabilities", "agent_limitations", "agent_memory_scope", "agent_tool_access", "agent_operating_instructions", "historical_sources", "historical_confidence", "contested_claims", "scholarly_consensus", "species", "breed", "handler_relationship", "behavioral_traits", "care_requirements"]),
         governance: {
+          ...(importedExtensions.governance_extensions || {}),
           profile_owner: values.profile_owner,
           owner_contact: values.owner_contact,
           review_owner: values.review_owner,
@@ -1020,12 +1183,18 @@
           allowed_export_targets: values.allowed_export_targets
         },
         profile_evolution: {
+          ...(importedExtensions.profile_evolution_extensions || {}),
           model_version: "1.0.0",
           stable_identity_paths: ["profile_id", "entity.entity_id", "identity.display_name", "identity.profile_classification", "identity.entity_subtype"],
           living_record_paths: ["narrative_engine", "relationship_graph", "knowledge_graph", "asset_library", "project_usage", "source_notes"],
           pending_changes: values.change_requests.filter(change => !["approved", "applied", "rejected", "withdrawn"].includes(change.status)),
           applied_versions: values.version_history_entries,
-          audit_events: values.audit_trail_entries
+          audit_events: values.audit_trail_entries,
+          identity_layers: {
+            entity_id: values.entity_id || profileId,
+            profile_id: profileId,
+            projection_id: importedExtensions.projection_id || ""
+          }
         },
         generated_content: pick(values, ["character_summary", "ai_context_output", "art_prompt_output", "dialogue_prompt_output", "npc_summary", "relationship_summary", "character_context_output", "organization_summary_output", "project_summary_output", "timeline_summary", "lore_summary", "ai_agent_context"]),
         extensions: importedExtensions.unknown_fields || {}
@@ -1131,13 +1300,141 @@
     function compactProfile(profile = buildProfile()) {
       return pruneEmpty(JSON.parse(JSON.stringify(profile)));
     }
-    function scopedProfile(scope, profile = buildProfile()) {
-      const scoped = compactProfile(profile);
-      const allowedVisibility = scope === "public" ? new Set(["exportable"]) : new Set(["project_only", "exportable"]);
-      const blockedApprovals = (scoped.governance?.relationship_approvals || []).filter(approval => allowedVisibility.has(approval.requested_visibility) && (approval.reviewer_status === "needs_bilateral_approval" || approval.person_a_approval !== "approved" || approval.person_b_approval !== "approved"));
-      if (blockedApprovals.length) {
-        return { blocked: true, blockedApprovals };
+
+    function relationshipId(row) {
+      return row?.relationship_id || row?.id || row?.entity_id || "";
+    }
+
+    function approvalIsComplete(approval) {
+      return approval?.person_a_approval === "approved" &&
+        approval?.person_b_approval === "approved" &&
+        !["needs_bilateral_approval", "pending", "reviewer_pending", "rejected", "withdrawn"].includes(approval?.reviewer_status || "");
+    }
+
+    function approvedRelationshipIds(governance, allowedVisibility) {
+      return new Set((governance?.relationship_approvals || [])
+        .filter(approval => allowedVisibility.has(approval.requested_visibility) && approvalIsComplete(approval))
+        .map(approval => approval.relationship_id)
+        .filter(Boolean));
+    }
+
+    function incompleteRelationshipApprovals(governance, allowedVisibility) {
+      return (governance?.relationship_approvals || [])
+        .filter(approval => allowedVisibility.has(approval.requested_visibility) && !approvalIsComplete(approval));
+    }
+
+    function relationshipIsExportable(row, allowedVisibility, approvedIds, fallbackVisibility = "private") {
+      const id = relationshipId(row);
+      const visibility = row?.requested_visibility || row?.visibility || fallbackVisibility;
+      return Boolean(id && allowedVisibility.has(visibility) && approvedIds.has(id));
+    }
+
+    function explicitPublicVisibility(row) {
+      return row?.visibility === "exportable" || row?.requested_visibility === "exportable" || row?.export_visibility === "exportable";
+    }
+
+    function scrubPublicGraphObject(row) {
+      const copy = { ...row };
+      delete copy.notes;
+      delete copy.relationships;
+      delete copy.history;
+      delete copy.coordinates_optional;
+      delete copy.repository_links;
+      return copy;
+    }
+
+    function exportPolicyFor(scope = "public", policyId = "") {
+      const fallback = scope === "public" ? "public_default" : scope === "ai_agent" ? "ai_agent_default" : "project_default";
+      return EXPORT_POLICIES[policyId] || EXPORT_POLICIES[fallback];
+    }
+
+    function emptyExcludedCounts() {
+      return {
+        missing_context: 0,
+        wrong_context: 0,
+        unknown_context: 0,
+        missing_reality_status: 0,
+        missing_perspective: 0,
+        unreviewed: 0,
+        unapproved_relationship: 0,
+        private_visibility: 0,
+        claim_requests_excluded: 0,
+        audit_history_excluded: 0
+      };
+    }
+
+    function reviewApproved(item) {
+      return ["approved", "reviewed", "applied"].includes(item?.review_status || item?.status || item?.reviewer_status || "");
+    }
+
+    function allowedVisibilityForPolicy(policy) {
+      return policy.export_type === "public" ? new Set(["exportable"]) : new Set(["project_only", "exportable"]);
+    }
+
+    function canExportEpistemicItem(item, policy, counts, fallback = {}) {
+      normalizeEpistemicObject(item, fallback);
+      if (policy.deny_missing_context && !item.context_id) { counts.missing_context++; return false; }
+      if (policy.deny_missing_reality_status && !item.reality_status) { counts.missing_reality_status++; return false; }
+      if (policy.deny_missing_perspective && !item.perspective) { counts.missing_perspective++; return false; }
+      if (item.context_id === "other") { counts.unknown_context++; return false; }
+      if (!policy.include_contexts.includes(item.context_id)) { counts.wrong_context++; return false; }
+      if (policy.require_reviewed && !reviewApproved(item)) { counts.unreviewed++; return false; }
+      const visibility = item.visibility || item.requested_visibility || "";
+      if (visibility && !allowedVisibilityForPolicy(policy).has(visibility)) { counts.private_visibility++; return false; }
+      return true;
+    }
+
+    function filterEpistemicArray(items, policy, counts, fallback = {}) {
+      return (items || []).filter(item => canExportEpistemicItem(item, policy, counts, fallback));
+    }
+
+    function scopedProfile(scope, profile = buildProfile(), policyId = "") {
+      let policy = exportPolicyFor(scope, policyId);
+      const scoped = normalizeProfileContexts(compactProfile(profile));
+      const excludedCounts = emptyExcludedCounts();
+      const exportFallback = scoped.epistemic_metadata || {};
+      if (!policyId && policy.export_policy_id === "project_default" && exportFallback.context_id && exportFallback.context_id !== "other") {
+        policy = { ...policy, target_context_id: exportFallback.context_id, include_contexts: uniqueList([exportFallback.context_id, "global"]) };
       }
+      const allowedVisibility = allowedVisibilityForPolicy(policy);
+      const blockingMetadata = [];
+      if (policy.deny_missing_context && !exportFallback.context_id) blockingMetadata.push("context_id");
+      if (policy.deny_missing_reality_status && !exportFallback.reality_status) blockingMetadata.push("reality_status");
+      if (policy.deny_missing_perspective && !exportFallback.perspective) blockingMetadata.push("perspective");
+      if (exportFallback.context_id === "other") blockingMetadata.push("known_context");
+      if (exportFallback.context_id && !policy.include_contexts.includes(exportFallback.context_id)) blockingMetadata.push("included_context");
+      if (blockingMetadata.length) {
+        blockingMetadata.forEach(key => {
+          if (key === "context_id") excludedCounts.missing_context++;
+          else if (key === "reality_status") excludedCounts.missing_reality_status++;
+          else if (key === "perspective") excludedCounts.missing_perspective++;
+          else if (key === "included_context") excludedCounts.wrong_context++;
+          else excludedCounts.unknown_context++;
+        });
+        return {
+          blocked: true,
+          blocked_reason: `Missing or unsafe export metadata: ${blockingMetadata.join(", ")}`,
+          export_policy_id: policy.export_policy_id,
+          target_context_id: policy.target_context_id,
+          export_type: policy.export_type,
+          exported_at: nowIso(),
+          excluded_counts: excludedCounts
+        };
+      }
+      const blockedApprovals = incompleteRelationshipApprovals(scoped.governance, allowedVisibility);
+      if (blockedApprovals.length) {
+        excludedCounts.unapproved_relationship += blockedApprovals.length;
+        return {
+          blocked: true,
+          blockedApprovals,
+          export_policy_id: policy.export_policy_id,
+          target_context_id: policy.target_context_id,
+          export_type: policy.export_type,
+          exported_at: nowIso(),
+          excluded_counts: excludedCounts
+        };
+      }
+      const approvedIds = approvedRelationshipIds(scoped.governance, allowedVisibility);
       scoped.identity = scoped.identity || {};
       delete scoped.identity.real_name_optional;
       delete scoped.identity.optional_contact;
@@ -1148,9 +1445,15 @@
         delete scoped.consent.consent_notes;
         delete scoped.consent.sensitive_topics_to_avoid;
       }
-      scoped.relationship_graph = (scoped.relationship_graph || []).filter(row => allowedVisibility.has(row.visibility || scoped.consent.relationship_visibility || "private"));
+      scoped.relationship_graph = (scoped.relationship_graph || []).filter(row => {
+        if (!canExportEpistemicItem(row, policy, excludedCounts, exportFallback)) return false;
+        const allowed = relationshipIsExportable(row, allowedVisibility, approvedIds, scoped.consent.relationship_visibility || "private");
+        if (!allowed) excludedCounts.unapproved_relationship++;
+        return allowed;
+      });
       scoped.asset_library = scoped.asset_library || {};
       scoped.asset_library.assets = (scoped.asset_library.assets || []).filter(asset => {
+        if (!canExportEpistemicItem(asset, policy, excludedCounts, exportFallback)) return false;
         const consent = asset.consent_status || "unknown";
         if (["private_only", "internal_only", "do_not_use"].includes(consent)) return false;
         if (scope === "public" && consent !== "approved") return false;
@@ -1168,40 +1471,87 @@
       scoped.asset_library.asset_groups = (scoped.asset_library.asset_groups || []).map(group => ({ ...group, asset_ids: (group.asset_ids || []).filter(id => allowedAssetIds.has(id)) }));
       scoped.knowledge_graph = scoped.knowledge_graph || {};
       scoped.knowledge_graph.relationship_entities = (scoped.knowledge_graph.relationship_entities || []).filter(rel => {
-        const visibility = rel.requested_visibility || rel.visibility || scoped.consent.relationship_visibility || "private";
-        if (!allowedVisibility.has(visibility)) return false;
-        return !blockedApprovals.some(approval => approval.relationship_id === rel.relationship_id);
+        if (!canExportEpistemicItem(rel, policy, excludedCounts, exportFallback)) return false;
+        const allowed = relationshipIsExportable(rel, allowedVisibility, approvedIds, scoped.consent.relationship_visibility || "private");
+        if (!allowed) excludedCounts.unapproved_relationship++;
+        return allowed;
       });
       scoped.knowledge_graph.assets = (scoped.knowledge_graph.assets || []).filter(asset => allowedAssetIds.has(asset.entity_id || asset.asset_ref));
-      scoped.knowledge_graph.entities = (scoped.knowledge_graph.entities || []).filter(entity => entity.entity_type !== "asset" || allowedAssetIds.has(entity.entity_id || entity.asset_ref));
+      scoped.knowledge_graph.timeline = (scoped.knowledge_graph.timeline || []).filter(item => item.type !== "relationship" || approvedIds.has(item.entity_id));
+      scoped.knowledge_graph.links = (scoped.knowledge_graph.links || []).filter(link => !link.relationship_id || approvedIds.has(link.relationship_id));
+      scoped.knowledge_graph.entities = (scoped.knowledge_graph.entities || []).filter(entity => {
+        if (entity.entity_type === "asset") return allowedAssetIds.has(entity.entity_id || entity.asset_ref);
+        if (scope === "public") return explicitPublicVisibility(entity) && canExportEpistemicItem(entity, policy, excludedCounts, exportFallback);
+        return true;
+      });
+      if (scope === "public") {
+        const allowedEntityIds = new Set([
+          ...scoped.knowledge_graph.entities.map(entity => entity.entity_id).filter(Boolean),
+          ...scoped.knowledge_graph.relationship_entities.map(rel => rel.relationship_id).filter(Boolean),
+          ...scoped.knowledge_graph.assets.map(asset => asset.entity_id || asset.asset_ref).filter(Boolean)
+        ]);
+        scoped.knowledge_graph.entities = scoped.knowledge_graph.entities.map(scrubPublicGraphObject);
+        scoped.knowledge_graph.relationship_entities = scoped.knowledge_graph.relationship_entities.map(scrubPublicGraphObject);
+        scoped.knowledge_graph.organizations = (scoped.knowledge_graph.organizations || []).filter(explicitPublicVisibility).map(scrubPublicGraphObject);
+        scoped.knowledge_graph.factions = (scoped.knowledge_graph.factions || []).filter(explicitPublicVisibility).map(scrubPublicGraphObject);
+        scoped.knowledge_graph.locations = (scoped.knowledge_graph.locations || []).filter(explicitPublicVisibility).map(scrubPublicGraphObject);
+        scoped.knowledge_graph.events = (scoped.knowledge_graph.events || []).filter(explicitPublicVisibility).map(scrubPublicGraphObject);
+        scoped.knowledge_graph.story_objects = (scoped.knowledge_graph.story_objects || []).filter(explicitPublicVisibility).map(scrubPublicGraphObject);
+        scoped.knowledge_graph.projects = (scoped.knowledge_graph.projects || []).filter(explicitPublicVisibility).map(scrubPublicGraphObject);
+        scoped.knowledge_graph.concepts = (scoped.knowledge_graph.concepts || []).filter(explicitPublicVisibility).map(scrubPublicGraphObject);
+        scoped.knowledge_graph.links = (scoped.knowledge_graph.links || []).filter(link => explicitPublicVisibility(link) && allowedEntityIds.has(link.source_entity_id || link.source || scoped.knowledge_graph.root_entity_id) && allowedEntityIds.has(link.target_entity_id || link.target));
+        scoped.knowledge_graph.timeline = (scoped.knowledge_graph.timeline || []).filter(item => explicitPublicVisibility(item) && allowedEntityIds.has(item.entity_id)).map(scrubPublicGraphObject);
+        scoped.knowledge_graph.generated = {};
+      }
+      scoped.narrative_engine = scoped.narrative_engine || {};
+      scoped.narrative_engine.story_provenance = filterEpistemicArray(scoped.narrative_engine.story_provenance, policy, excludedCounts, exportFallback);
+      scoped.knowledge_graph.events = filterEpistemicArray(scoped.knowledge_graph.events, policy, excludedCounts, exportFallback);
+      scoped.knowledge_graph.projects = filterEpistemicArray(scoped.knowledge_graph.projects, policy, excludedCounts, exportFallback);
+      scoped.knowledge_graph.timeline = filterEpistemicArray(scoped.knowledge_graph.timeline, policy, excludedCounts, exportFallback);
+      scoped.knowledge_graph.links = filterEpistemicArray(scoped.knowledge_graph.links, policy, excludedCounts, exportFallback);
       scoped.source_notes = scope === "public" ? {} : {
         source_notes: scoped.source_notes?.source_notes || "",
         contributors: scoped.source_notes?.contributors || [],
         last_reviewed: scoped.source_notes?.last_reviewed || "",
         accuracy_confidence: scoped.source_notes?.accuracy_confidence || ""
       };
+      if (!policy.include_claim_requests && scoped.governance?.claim_requests?.length) excludedCounts.claim_requests_excluded += scoped.governance.claim_requests.length;
+      if (!policy.include_audit_history && scoped.governance?.audit_trail?.length) excludedCounts.audit_history_excluded += scoped.governance.audit_trail.length;
       scoped.governance = {
-        profile_owner: scoped.governance?.profile_owner || "",
-        review_owner: scoped.governance?.review_owner || "",
         archive_status: scoped.governance?.archive_status || "",
         export_permissions: scoped.governance?.export_permissions || [],
         allowed_export_targets: scoped.governance?.allowed_export_targets || [],
-        relationship_approvals: (scoped.governance?.relationship_approvals || []).filter(approval => allowedVisibility.has(approval.requested_visibility) && approval.person_a_approval === "approved" && approval.person_b_approval === "approved")
+        relationship_approvals: (scoped.governance?.relationship_approvals || []).filter(approval => allowedVisibility.has(approval.requested_visibility) && approvalIsComplete(approval))
       };
       scoped.profile_evolution = {
         model_version: scoped.profile_evolution?.model_version || "1.0.0",
         stable_identity_paths: scoped.profile_evolution?.stable_identity_paths || [],
         living_record_paths: scoped.profile_evolution?.living_record_paths || []
       };
+      scoped.export_policy_id = policy.export_policy_id;
+      scoped.target_context_id = policy.target_context_id;
+      scoped.export_type = policy.export_type;
       scoped.export_scope = scope;
       scoped.exported_at = nowIso();
+      scoped.excluded_counts = excludedCounts;
+      scoped.export_audit_event = {
+        date: scoped.exported_at,
+        actor: "local export",
+        action: "export_generated",
+        target: scoped.profile_id || "",
+        summary: `Generated ${policy.export_type} export with ${policy.export_policy_id}`,
+        export_policy_id: policy.export_policy_id,
+        target_context_id: policy.target_context_id
+      };
       return scoped;
     }
 
     function downloadScopedJson(scope) {
       const result = scopedProfile(scope);
       if (result.blocked) {
-        setStatus(`${scope} export blocked: ${result.blockedApprovals.length} relationship approval${result.blockedApprovals.length === 1 ? "" : "s"} unresolved.`, "warn");
+        const approvalCount = result.blockedApprovals?.length || 0;
+        const reason = result.blocked_reason || `${approvalCount} relationship approval${approvalCount === 1 ? "" : "s"} unresolved`;
+        setStatus(`${scope} export blocked: ${reason}.`, "warn");
         return;
       }
       const files = [
@@ -2133,7 +2483,7 @@
         flattenLegacy(source, set);
       }
       importedExtensions.profile_id = source.profile_id || source.metadata?.profile_id || "";
-      const knownTop = new Set(["schema_version", "schema_id", "schema_name", "profile_id", "created_at", "updated_at", "metadata", "entity", "knowledge_graph", "consent", "identity", "appearance", "asset_library", "personality", "motivation", "motivation_values", "decision_making", "social_model", "social_relationship_model", "relationship_graph", "knowledge_domains", "humor_and_voice", "humor_communication", "conflict_and_stress", "conflict_stress_response", "signature_behaviors", "narrative_engine", "game_mechanics", "ai_generation", "ai_generation_metadata", "project_usage", "source_notes", "specialized_profiles", "governance", "profile_evolution", "generated_content", "privacy", "exports", "generated", "character_core", "voice_and_behavior", "narrative_design", "extensions"]);
+      const knownTop = new Set(["schema_version", "schema_id", "schema_name", "profile_id", "created_at", "updated_at", "metadata", "entity", "knowledge_graph", "consent", "identity", "appearance", "asset_library", "personality", "motivation", "motivation_values", "decision_making", "social_model", "social_relationship_model", "relationship_graph", "knowledge_domains", "humor_and_voice", "humor_communication", "conflict_and_stress", "conflict_stress_response", "signature_behaviors", "narrative_engine", "game_mechanics", "ai_generation", "ai_generation_metadata", "project_usage", "epistemic_metadata", "context_registry", "export_policy_id", "target_context_id", "export_type", "exported_at", "excluded_counts", "export_audit_event", "source_notes", "specialized_profiles", "governance", "profile_evolution", "generated_content", "privacy", "exports", "generated", "character_core", "voice_and_behavior", "narrative_design", "extensions"]);
       const existingExtensions = source.extensions && typeof source.extensions === "object" && !Array.isArray(source.extensions) ? source.extensions : {};
       const unknownTopLevel = Object.fromEntries(Object.entries(source).filter(([key]) => !knownTop.has(key)));
       importedExtensions.unknown_fields = { ...existingExtensions, ...unknownTopLevel };
@@ -2157,13 +2507,18 @@
       return "";
     }
     function flattenModern(source, set) {
-      Object.assign(set, source.identity, source.appearance, source.personality, source.motivation, source.motivation_values, source.decision_making, source.social_model, source.social_relationship_model, source.humor_and_voice, source.humor_communication, source.conflict_and_stress, source.conflict_stress_response, source.narrative_engine, source.game_mechanics, source.ai_generation, source.ai_generation_metadata, source.project_usage, source.source_notes, source.specialized_profiles, source.generated_content);
+      Object.assign(set, source.identity, source.appearance, source.personality, source.motivation, source.motivation_values, source.decision_making, source.social_model, source.social_relationship_model, source.humor_and_voice, source.humor_communication, source.conflict_and_stress, source.conflict_stress_response, source.narrative_engine, source.game_mechanics, source.ai_generation, source.ai_generation_metadata, source.project_usage, source.epistemic_metadata, source.source_notes, source.specialized_profiles, source.generated_content);
       if (source.profile_evolution) {
+        const { model_version, stable_identity_paths, living_record_paths, pending_changes, applied_versions, audit_events, ...profileEvolutionExtensions } = source.profile_evolution;
+        importedExtensions.profile_evolution_extensions = profileEvolutionExtensions;
+        importedExtensions.projection_id = source.profile_evolution.identity_layers?.projection_id || "";
         set.change_requests = source.profile_evolution.pending_changes || [];
         set.version_history_entries = source.profile_evolution.applied_versions || [];
         set.audit_trail_entries = source.profile_evolution.audit_events || [];
       }
       if (source.governance) {
+        const { profile_owner, owner_contact, review_owner, editors, reviewers, permission_rules, claim_status, claim_requests, change_requests, relationship_approvals, version_history, audit_trail, approval_history, change_log, retention_policy, expiration_date, archive_status, export_permissions, allowed_export_targets, ...governanceExtensions } = source.governance;
+        importedExtensions.governance_extensions = governanceExtensions;
         Object.assign(set, source.governance);
         set.editor_entries = source.governance.editors || [];
         set.reviewer_entries = source.governance.reviewers || [];

@@ -21,7 +21,7 @@ function extractFormModel() {
   const end = indexHtml.indexOf("const flatFields");
   if (start === -1 || end === -1) throw new Error("Could not locate form model in index.html.");
   const source = indexHtml.slice(start, end);
-  return Function(`${source}\nreturn { FIELD_SECTIONS, SIMPLE_FIELD_IDS, SIMPLE_SECTION_IDS, ASSET_TYPES, ENTITY_TYPES, PROFILE_CLASSIFICATIONS, ENTITY_SUBTYPES, CONSENT_BASES, MINOR_STATUSES, RELATIONSHIP_VISIBILITY, STORY_SOURCE_TYPES, CANON_TRUTH_STATUSES, RELATIONSHIP_TYPES };`)();
+  return Function(`${source}\nreturn { FIELD_SECTIONS, SIMPLE_FIELD_IDS, SIMPLE_SECTION_IDS, ASSET_TYPES, ENTITY_TYPES, PROFILE_CLASSIFICATIONS, ENTITY_SUBTYPES, CONSENT_BASES, MINOR_STATUSES, RELATIONSHIP_VISIBILITY, STORY_SOURCE_TYPES, CANON_TRUTH_STATUSES, RELATIONSHIP_TYPES, CONTEXT_REGISTRY, EXPORT_POLICIES };`)();
 }
 
 function stripHtml(html) {
@@ -148,6 +148,8 @@ function buildPacket() {
       canon_truth_statuses: model.CANON_TRUTH_STATUSES,
       relationship_types: model.RELATIONSHIP_TYPES
     },
+    context_registry: model.CONTEXT_REGISTRY,
+    export_policies: model.EXPORT_POLICIES,
     sample_profile: example
   };
 
@@ -190,6 +192,14 @@ function buildMarkdown(packet) {
     "## Controlled Vocabularies",
     "",
     mdValue(packet.controlled_vocabularies),
+    "",
+    "## Context Registry",
+    "",
+    mdValue(packet.context_registry),
+    "",
+    "## Export Policies",
+    "",
+    mdValue(packet.export_policies),
     "",
     "## Sample Profile JSON",
     "",
