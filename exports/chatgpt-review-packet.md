@@ -8,10 +8,10 @@ You are reviewing a static, local-first universal profile intake and review syst
 
 ## Public Links
 
-- Intake form: https://lonnie-tisdale.github.io/friend-character-intake/index.html?cachebust=5eb2894
-- Review dashboard: https://lonnie-tisdale.github.io/friend-character-intake/review.html?cachebust=5eb2894
-- Markdown packet: https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.md?cachebust=5eb2894
-- JSON packet: https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.json?cachebust=5eb2894
+- Intake form: https://lonnie-tisdale.github.io/friend-character-intake/index.html?cachebust=ef2cea3
+- Review dashboard: https://lonnie-tisdale.github.io/friend-character-intake/review.html?cachebust=ef2cea3
+- Markdown packet: https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.md?cachebust=ef2cea3
+- JSON packet: https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.json?cachebust=ef2cea3
 
 ## App Summary
 

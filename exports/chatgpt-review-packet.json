@@ -1,13 +1,13 @@
 {
   "packet_schema": "chatgpt_review_packet.v1",
-  "generated_at": "2026-06-06T05:12:57.405Z",
-  "commit": "5eb2894",
+  "generated_at": "2026-06-06T05:13:31.750Z",
+  "commit": "ef2cea3",
   "purpose": "Portable context for AI systems that cannot browse the live GitHub Pages app.",
   "public_links": {
-    "intake_form": "https://lonnie-tisdale.github.io/friend-character-intake/index.html?cachebust=5eb2894",
-    "review_dashboard": "https://lonnie-tisdale.github.io/friend-character-intake/review.html?cachebust=5eb2894",
-    "markdown_packet": "https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.md?cachebust=5eb2894",
-    "json_packet": "https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.json?cachebust=5eb2894"
+    "intake_form": "https://lonnie-tisdale.github.io/friend-character-intake/index.html?cachebust=ef2cea3",
+    "review_dashboard": "https://lonnie-tisdale.github.io/friend-character-intake/review.html?cachebust=ef2cea3",
+    "markdown_packet": "https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.md?cachebust=ef2cea3",
+    "json_packet": "https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.json?cachebust=ef2cea3"
   },
   "review_prompt": "You are reviewing a static, local-first universal profile intake and review system. Do not assume you can browse the live URL. Use this packet as the source of truth. Evaluate whether the language is clear for nontechnical users and whether the schema remains powerful enough for advanced canon, asset, graph, AI, game, and export workflows. Flag corporate/HR/personality-test/fantasy-only language, privacy risks, confusing required fields, missing consent guardrails, and any gaps for reviewing real people, fictional characters, NPCs, historical figures, AI agents, family members, partners, children, collaborators, and pets.",
   "app_summary": {
