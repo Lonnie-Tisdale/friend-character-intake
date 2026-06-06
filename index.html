@@ -22,7 +22,7 @@
     }
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--bg); color: var(--ink); line-height: 1.45; }
-    header { background: var(--terminal); color: #fff; padding: 20px clamp(14px, 4vw, 40px); border-bottom: 5px solid var(--accent); }
+    header { background: var(--terminal); color: #fff; padding: 16px clamp(14px, 4vw, 40px); border-bottom: 5px solid var(--accent); }
     h1 { margin: 0 0 4px; font-size: clamp(1.35rem, 2.4vw, 2.2rem); letter-spacing: 0; }
     header p { margin: 0; color: #e8efec; max-width: 980px; }
     .mode-nav { position: sticky; top: 0; z-index: 8; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px clamp(10px, 3vw, 28px); background: #fffdf7f2; border-bottom: 1px solid var(--line); backdrop-filter: blur(10px); }
@@ -32,7 +32,7 @@
     main > * { min-width: 0; }
     .toolbar, .export-panel, details, aside { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
     .toolbar { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; margin-bottom: 14px; }
-    .intro-card { background: #fffdf7; border: 1px solid var(--line); border-left: 5px solid var(--accent); border-radius: var(--radius); padding: 14px; margin-bottom: 12px; }
+    .intro-card { background: #fffdf7; border: 1px solid var(--line); border-left: 5px solid var(--accent); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 12px; }
     .intro-card p { margin: 6px 0; color: #36403e; }
     .outline { position: sticky; top: 66px; display: grid; gap: 8px; padding: 12px; background: var(--terminal); color: #e8f5f1; border-radius: var(--radius); border: 1px solid #31413f; }
     .outline h2 { margin: 0 0 4px; font-size: .94rem; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
@@ -75,6 +75,12 @@
     .status { min-height: 24px; color: var(--muted); font-weight: 760; margin-bottom: 8px; }
     .status.ok { color: var(--ok); }
     .status.warn { color: var(--warn); }
+    .draft-indicator { display: inline-flex; align-items: center; min-height: 38px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 6px; background: #f6fbfa; color: var(--accent-dark); font-size: .86rem; font-weight: 800; }
+    .draft-indicator.unsaved { border-color: #d8bc81; background: #fff8e8; color: var(--warn); }
+    .simple-start-section { border-color: #9dbdbc; background: #fbfffd; }
+    .simple-start-section summary { font-size: 1.12rem; }
+    .advanced-settings-section:not([open]) { background: #f8f6ee; }
+    .json-preview summary { cursor: pointer; font-weight: 850; color: var(--accent-dark); }
     .warnings { color: var(--warn); font-size: .86rem; margin: 8px 0 0; }
     .validation-list { margin: 8px 0 0; padding-left: 18px; color: var(--warn); font-size: .88rem; }
     .meter { display: grid; gap: 6px; margin-bottom: 10px; }
@@ -124,6 +130,10 @@
       .grid { grid-template-columns: 1fr; }
       .mode-nav, .toolbar { position: static; }
       .mode-nav { align-items: stretch; }
+      .mode-nav strong, .draft-indicator { width: 100%; }
+      header p { font-size: .92rem; }
+      .outline { display: none; }
+      details { padding: 10px; }
       button, .file-button { width: 100%; }
       .asset-gallery { grid-template-columns: 1fr; }
       .asset-table { min-width: 720px; }
@@ -134,16 +144,17 @@
 <body data-mode="simple">
   <header>
     <h1>HTF / K Street Character Database</h1>
-    <p>This shared profile system turns real group lore into consistent characters, dialogue, art prompts, NPCs, relationship maps, and project memory across HTF, K Street, West Coast Crypto Cruise, and future weird ambitious builds. Person schema <strong>3.0.0</strong> with Knowledge Graph v4 foundation.</p>
+    <p>Build a reusable character/profile by describing the person, the project, and the stories people remember.</p>
   </header>
   <nav class="mode-nav" aria-label="Interface modes">
-    <strong>MODE</strong>
+    <strong>View</strong>
     <button type="button" class="mode-button" data-mode-target="simple" aria-pressed="true">Simple Intake</button>
-    <button type="button" class="mode-button" data-mode-target="advanced" aria-pressed="false">Advanced Canon</button>
-    <button type="button" class="mode-button" data-mode-target="agent" aria-pressed="false">Agent Export</button>
+    <button type="button" class="mode-button" data-mode-target="advanced" aria-pressed="false">Advanced</button>
+    <button type="button" class="mode-button" data-mode-target="agent" aria-pressed="false">Tools</button>
     <button type="button" id="saveLocalBtn">Save Locally</button>
     <button type="button" id="loadLocalBtn">Load Locally</button>
-    <a class="file-button" href="review.html">Review Submissions</a>
+    <span id="localDraftStatus" class="draft-indicator">No local draft saved</span>
+    <a class="file-button advanced-only" href="review.html">Review Submissions</a>
   </nav>
 
   <main>
@@ -153,11 +164,8 @@
     </nav>
     <div>
       <section class="intro-card simple-only">
-        <h2>Simple Member Intake</h2>
-        <p>Fill in what feels easy. The point is to capture what makes you recognizable in the group lore: your vibe, voice, obsessions, road-trip energy, Discord behavior, questionable superpowers, and how you show up when a plan gets weird.</p>
-        <p><strong>What will this be used for?</strong> Approved answers may help create consistent characters, dialogue, art prompts, NPC behavior, project memory, and relationship maps for shared HTF / K Street projects. Consent fields decide what can be stored, fictionalized, simulated, or reused.</p>
-        <p><strong>Easy path:</strong> add your display name, three-word vibe, current obsession, legendary story, visual description, voice style, group/project context, and consent choices. Then click <strong>Submit Descriptor</strong>. If you want to share a reference photo, describe where the reviewer can find it or send it privately.</p>
-        <p>Public repos should not contain real private images unless explicitly approved.</p>
+        <h2>Start Your Character</h2>
+        <p>Start with a name, a short description, a project, and whether this is real, fictional, or somewhere in between. Add whatever feels vivid first.</p>
       </section>
       <section class="intro-card advanced-only">
         <h2>Advanced Canon Editing</h2>
@@ -168,8 +176,10 @@
         <p>Generate clean JSON, Markdown, visual references, graph files, and one bundled context block for ChatGPT, Claude, Gemini, local agents, game tools, and project imports.</p>
       </section>
 
+      <form id="profileForm"></form>
+
       <div class="toolbar primary-toolbar" aria-label="Primary actions">
-        <button type="button" class="primary" id="submitBtn">Submit Descriptor</button>
+        <button type="button" class="primary" id="submitBtn">Submit Profile</button>
         <button type="button" id="generateSummaryBtn">Generate Character Summary</button>
         <button type="button" id="copyShareableProfileBtn">Copy Shareable Profile</button>
         <button type="button" class="advanced-only" id="generateAiBtn">Generate AI Context</button>
@@ -188,8 +198,6 @@
         <input id="importFile" type="file" accept="application/json,.json">
         <button type="button" class="warning" id="resetBtn">Reset</button>
       </div>
-
-      <form id="profileForm"></form>
 
       <section class="export-panel" id="asset-manager">
         <h2>Asset Library Manager</h2>
@@ -343,13 +351,16 @@
     </div>
 
     <aside>
-      <h2>Live JSON Preview</h2>
+      <h2>Draft Status</h2>
       <div class="meter">
         <strong id="completenessLabel">Completeness: 0%</strong>
         <div class="meter-bar"><div class="meter-fill" id="completenessFill"></div></div>
       </div>
       <div id="status" class="status">Ready.</div>
-      <pre id="jsonPreview" aria-live="polite"></pre>
+      <details class="json-preview">
+        <summary>Show JSON Preview</summary>
+        <pre id="jsonPreview" aria-live="polite"></pre>
+      </details>
     </aside>
   </main>
 
@@ -452,7 +463,7 @@
     const CHANGE_REQUEST_TYPES = ["field_update", "add_story", "add_event", "add_relationship", "add_asset", "add_project_participation", "visibility_change", "consent_update", "ownership_update", "correction", "archive_request"];
     const CHANGE_REQUEST_STATUSES = ["draft", "submitted", "needs_owner_review", "needs_bilateral_approval", "reviewer_pending", "approved", "rejected", "applied", "withdrawn"];
     const CHANGE_OPERATIONS = ["add", "replace", "append", "remove", "merge"];
-    const SIMPLE_SECTION_IDS = new Set(["consent", "identity", "appearance", "personality", "social_model", "relationship_graph", "humor_and_voice", "narrative_engine", "project_usage", "source_notes", "governance", "generated_content"]);
+    const SIMPLE_SECTION_IDS = new Set(["simple_start", "simple_story", "simple_traits", "simple_look_voice", "advanced_settings"]);
     const SIMPLE_FIELD_IDS = new Set([
       "permission_to_store", "permission_to_fictionalize", "permission_for_ai_dialogue", "permission_for_art_generation", "permission_for_cross_project_reuse", "permission_for_relationship_simulation", "consent_basis", "minor_status", "guardian_consent_required", "guardian_consent_confirmed", "consent_source", "consent_date", "consent_method", "restricted_uses", "relationship_visibility", "consent_notes",
       "display_name", "profile_classification", "optional_contact", "in_world_name", "pronouns", "short_bio", "three_word_vibe", "animal_affinity", "current_obsession", "current_location",
@@ -464,6 +475,28 @@
       "profile_owner", "owner_contact", "claim_status", "claim_requests", "change_requests", "relationship_approval_entries",
       "character_summary", "ai_context_output"
     ]);
+    const SIMPLE_START_FIELD_IDS = ["display_name", "short_bio", "context_id", "profile_classification", "three_word_vibe", "current_obsession"];
+    const SIMPLE_STORY_FIELD_IDS = ["legendary_story", "most_chaotic_moment", "running_joke", "relationship_to_group_network", "project_relevance_notes"];
+    const SIMPLE_TRAIT_FIELD_IDS = ["personality_traits", "custom_traits", "strengths", "flaws", "character_archetype", "signature_ability", "friendship_style", "how_they_show_care"];
+    const SIMPLE_LOOK_VOICE_FIELD_IDS = ["image_prompt_notes", "everyday_clothing", "signature_item", "default_expression", "movement_body_language", "voice_rhythm", "typical_phrases", "example_quotes"];
+    const SIMPLE_COMPLETENESS_FIELD_IDS = new Set([...SIMPLE_START_FIELD_IDS, ...SIMPLE_STORY_FIELD_IDS, ...SIMPLE_TRAIT_FIELD_IDS.slice(0, 4), ...SIMPLE_LOOK_VOICE_FIELD_IDS.slice(0, 4)]);
+    const SIMPLE_LABEL_OVERRIDES = {
+      display_name: "Name",
+      short_bio: "Description",
+      context_id: "Project",
+      profile_classification: "Real / Fictional / Mixed"
+    };
+    const SIMPLE_TIP_OVERRIDES = {
+      display_name: "Use the name, handle, or nickname people should recognize.",
+      short_bio: "Describe yourself or this character like you are introducing them to a friend.",
+      context_id: "Pick the project or world this profile is for. Not sure is fine.",
+      profile_classification: "Real Person means mostly real; Fictionalized Person is the mixed option; NPC is fully fictional."
+    };
+    const SIMPLE_PLACEHOLDER_OVERRIDES = {
+      display_name: "Tommy, Doomien, Packet Ghost, the name people actually use",
+      short_bio: "A funny, loyal, sleep-deprived builder who turns Discord bits into real plans.",
+      current_obsession: "AI workflows, road-trip lore, game dev, karaoke, AMTX, Basecamp, workout programming"
+    };
 
     const FIELD_SECTIONS = [
       {
@@ -966,41 +999,127 @@
     }
     function timestampSlug() { return nowIso().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z"); }
 
-    function renderForm() {
+    function currentFieldSnapshot() {
+      return Object.fromEntries(flatFields.map(field => [field.id, el(field.id) ? fieldValue(field.id) : undefined]));
+    }
+
+    function restoreFieldSnapshot(snapshot = {}) {
+      flatFields.forEach(field => {
+        if (Object.prototype.hasOwnProperty.call(snapshot, field.id) && snapshot[field.id] !== undefined) setField(field.id, snapshot[field.id]);
+      });
+    }
+
+    function fieldList(ids) {
+      return ids.map(id => fieldsById[id]).filter(Boolean);
+    }
+
+    function simpleSections() {
+      const used = new Set([...SIMPLE_START_FIELD_IDS, ...SIMPLE_STORY_FIELD_IDS, ...SIMPLE_TRAIT_FIELD_IDS, ...SIMPLE_LOOK_VOICE_FIELD_IDS]);
+      const advancedFields = flatFields.filter(field => !used.has(field.id));
+      return [
+        {
+          id: "simple_start",
+          title: "Start Here",
+          note: "A usable profile can begin with these first four answers. Keep it rough; vivid beats polished.",
+          fields: fieldList(SIMPLE_START_FIELD_IDS),
+          open: true,
+          classes: "simple-start-section"
+        },
+        {
+          id: "simple_story",
+          title: "Stories And Project Fit",
+          note: "Moments, inside jokes, and project context that make the profile feel alive.",
+          fields: fieldList(SIMPLE_STORY_FIELD_IDS),
+          open: true
+        },
+        {
+          id: "simple_traits",
+          title: "Personality And Relationships",
+          note: "How they act, what friends notice, and how they show up in the group.",
+          fields: fieldList(SIMPLE_TRAIT_FIELD_IDS),
+          open: true
+        },
+        {
+          id: "simple_look_voice",
+          title: "Look And Voice",
+          note: "Recognizable visual details, props, body language, and speech patterns.",
+          fields: fieldList(SIMPLE_LOOK_VOICE_FIELD_IDS),
+          open: false
+        },
+        {
+          id: "advanced_settings",
+          title: "Advanced Settings",
+          note: "Optional review, consent, visibility, source, export, and metadata controls. First-time users can leave these for a reviewer.",
+          fields: advancedFields,
+          open: false,
+          classes: "advanced-settings-section"
+        }
+      ];
+    }
+
+    function activeSections() {
+      return (document.body.dataset.mode || "simple") === "simple" ? simpleSections() : FIELD_SECTIONS;
+    }
+
+    function renderForm(snapshot = currentFieldSnapshot()) {
       const form = el("profileForm");
-      form.innerHTML = FIELD_SECTIONS.map((section, index) => `
-        <details ${index < 3 || SIMPLE_SECTION_IDS.has(section.id) ? "open" : ""} id="section-${section.id}" class="${SIMPLE_SECTION_IDS.has(section.id) ? "simple-section" : "advanced-section"}">
+      const mode = document.body.dataset.mode || "simple";
+      form.innerHTML = activeSections().map((section, index) => {
+        const isSimple = mode === "simple";
+        const open = isSimple ? section.open : index < 3;
+        const classes = isSimple ? `simple-section ${section.classes || ""}` : "advanced-section";
+        return `
+        <details ${open ? "open" : ""} id="section-${section.id}" class="${classes}">
           <summary>${section.title}</summary>
           <p class="section-note">${section.note}</p>
           <div class="grid">
-            ${section.fields.map(renderField).join("")}
+            ${section.fields.map(field => renderField(field, mode)).join("")}
           </div>
         </details>
-      `).join("");
+      `;
+      }).join("");
+      restoreFieldSnapshot(snapshot);
       if (el("ranked_values") && !el("ranked_values").value) el("ranked_values").value = DEFAULT_VALUE_ORDER.join("\n");
       updateCounters();
       renderOutline();
     }
 
-    function renderField(field) {
-      const tip = `<span class="tip" title="${escapeHtml(field.tip)}">?</span>`;
-      const placeholder = field.placeholder ? ` placeholder="${escapeHtml(field.placeholder)}"` : "";
-      const simpleClass = SIMPLE_FIELD_IDS.has(field.id) ? " simple-field" : "";
+    function optionLabel(id, option, mode) {
+      if (mode === "simple" && id === "profile_classification") {
+        return {
+          "Real Person": "Real",
+          "Fictionalized Person": "Mixed / fictionalized",
+          "NPC": "Fictional / NPC"
+        }[option] || option;
+      }
+      if (mode === "simple" && id === "context_id") {
+        return CONTEXT_REGISTRY.find(context => context.context_id === option)?.display_name || option;
+      }
+      return option;
+    }
+
+    function renderField(field, mode = document.body.dataset.mode || "simple") {
+      const label = mode === "simple" && SIMPLE_LABEL_OVERRIDES[field.id] ? SIMPLE_LABEL_OVERRIDES[field.id] : field.label;
+      const tipText = mode === "simple" && SIMPLE_TIP_OVERRIDES[field.id] ? SIMPLE_TIP_OVERRIDES[field.id] : field.tip;
+      const placeholderText = mode === "simple" && SIMPLE_PLACEHOLDER_OVERRIDES[field.id] ? SIMPLE_PLACEHOLDER_OVERRIDES[field.id] : field.placeholder;
+      const tip = `<span class="tip" title="${escapeHtml(tipText)}">?</span>`;
+      const placeholder = placeholderText ? ` placeholder="${escapeHtml(placeholderText)}"` : "";
+      const simpleClass = mode === "simple" || SIMPLE_FIELD_IDS.has(field.id) ? " simple-field" : "";
       if (field.type === "boolean") {
-        return `<label class="check-row full${simpleClass}"><input type="checkbox" id="${field.id}"><span>${field.label} ${tip}<span class="hint">${escapeHtml(field.tip)}</span></span></label>`;
+        return `<label class="check-row full${simpleClass}"><input type="checkbox" id="${field.id}"><span>${label} ${tip}<span class="hint">${escapeHtml(tipText)}</span></span></label>`;
       }
       if (field.type === "select") {
-        return `<label class="${simpleClass.trim()}">${field.label} ${tip}<select id="${field.id}">${field.options.map(option => `<option value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("")}</select></label>`;
+        return `<label class="${simpleClass.trim()}">${label} ${tip}<select id="${field.id}">${field.options.map(option => `<option value="${escapeHtml(option)}">${escapeHtml(optionLabel(field.id, option, mode))}</option>`).join("")}</select></label>`;
       }
-      if (field.type === "text") return `<label class="${simpleClass.trim()}">${field.label} ${tip}<input id="${field.id}" maxlength="${field.max}"${placeholder}></label>`;
+      if (field.type === "text") return `<label class="${simpleClass.trim()}">${label} ${tip}<input id="${field.id}" maxlength="${field.max}"${placeholder}></label>`;
       const classes = `${field.type === "rows" ? "full" : ""}${simpleClass}`;
       const rowHint = field.format ? `<span class="hint">Format: ${escapeHtml(field.format)}</span>` : "";
-      return `<label class="${classes}">${field.label} ${tip}${rowHint}<textarea id="${field.id}" maxlength="${field.max}"${placeholder}></textarea><span class="counter"></span></label>`;
+      return `<label class="${classes}">${label} ${tip}${rowHint}<textarea id="${field.id}" maxlength="${field.max}"${placeholder}></textarea><span class="counter"></span></label>`;
     }
 
     function renderOutline() {
       const mode = document.body.dataset.mode || "simple";
-      const visibleSections = FIELD_SECTIONS.filter(section => mode !== "simple" || SIMPLE_SECTION_IDS.has(section.id));
+      const visibleSections = mode === "simple" ? simpleSections() : FIELD_SECTIONS;
       el("sectionOutline").innerHTML = visibleSections.map(section => `<a href="#section-${section.id}">${escapeHtml(section.title)}</a>`).join("");
     }
 
@@ -1579,7 +1698,7 @@
     }
     function updateCompleteness(profile = buildProfile()) {
       const mode = document.body.dataset.mode || "simple";
-      const scored = flatFields.filter(field => !["boolean"].includes(field.type) && (mode !== "simple" || SIMPLE_FIELD_IDS.has(field.id)));
+      const scored = flatFields.filter(field => !["boolean"].includes(field.type) && (mode !== "simple" || SIMPLE_COMPLETENESS_FIELD_IDS.has(field.id)));
       const filled = scored.filter(field => {
         const value = fieldValue(field.id);
         return Array.isArray(value) ? value.length > 0 : Boolean(value);
@@ -1593,6 +1712,20 @@
         const counter = area.parentElement.querySelector(".counter");
         if (counter) counter.textContent = `${area.value.length}/${area.maxLength}`;
       });
+    }
+
+    function updateLocalDraftIndicator(message = "") {
+      const node = el("localDraftStatus");
+      if (!node) return;
+      if (message) {
+        node.textContent = message;
+      } else if (dirty) {
+        node.textContent = "Unsaved changes";
+      } else {
+        const savedAt = localStorage.getItem("kstreet_person_profile_draft_saved_at");
+        node.textContent = savedAt ? `Draft saved ${new Date(savedAt).toLocaleString()}` : "No local draft saved";
+      }
+      node.classList.toggle("unsaved", dirty);
     }
 
     function generateSummary() {
@@ -2441,11 +2574,14 @@
     }
 
     function setMode(mode) {
+      const snapshot = currentFieldSnapshot();
       document.body.dataset.mode = mode;
       document.querySelectorAll("[data-mode-target]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.modeTarget === mode)));
+      renderForm(snapshot);
       renderOutline();
       updatePreview();
       setStatus(mode === "simple" ? "Simple intake mode." : mode === "advanced" ? "Advanced canon mode." : "Agent export mode.", "ok");
+      updateLocalDraftIndicator();
     }
 
     function saveLocal() {
@@ -2454,6 +2590,7 @@
       localStorage.setItem("kstreet_person_profile_draft_saved_at", nowIso());
       dirty = false;
       setStatus("Saved draft in this browser.", "ok");
+      updateLocalDraftIndicator("Draft saved just now");
     }
 
     function loadLocal() {
@@ -2465,7 +2602,9 @@
       if (dirty && !confirm("Load the local draft and replace the current form values?")) return;
       try {
         migrateImport(JSON.parse(raw));
-        setStatus(`Loaded local draft saved ${localStorage.getItem("kstreet_person_profile_draft_saved_at") || ""}.`, "ok");
+        const savedAt = localStorage.getItem("kstreet_person_profile_draft_saved_at") || "";
+        setStatus(`Loaded local draft saved ${savedAt}.`, "ok");
+        updateLocalDraftIndicator(savedAt ? `Loaded draft from ${new Date(savedAt).toLocaleString()}` : "Loaded local draft");
       } catch (error) {
         setStatus(`Local draft load failed: ${error.message}`, "warn");
       }
@@ -2498,6 +2637,7 @@
       renderGraphView();
       dirty = false;
       setStatus("Imported and migrated profile.", "ok");
+      updateLocalDraftIndicator();
     }
     function defaultForField(field) {
       if (field.id === "ranked_values") return DEFAULT_VALUE_ORDER;
@@ -2714,6 +2854,7 @@
       renderGraphView();
       renderAssetLibrary();
       setStatus("Form reset.", "ok");
+      updateLocalDraftIndicator();
     }
     function filterFields(query) {
       const needle = query.trim().toLowerCase();
@@ -2750,8 +2891,8 @@
     ENTITY_TYPES.forEach(type => el("graph_filter_type").insertAdjacentHTML("beforeend", `<option value="${type}">${type}</option>`));
     renderAssetLibrary();
     renderGraphView();
-    document.addEventListener("input", () => { dirty = true; updatePreview(); });
-    document.addEventListener("change", () => { dirty = true; updatePreview(); });
+    document.addEventListener("input", () => { dirty = true; updatePreview(); updateLocalDraftIndicator(); });
+    document.addEventListener("change", () => { dirty = true; updatePreview(); updateLocalDraftIndicator(); });
     document.querySelectorAll("[data-mode-target]").forEach(button => button.addEventListener("click", () => setMode(button.dataset.modeTarget)));
     el("saveLocalBtn").addEventListener("click", saveLocal);
     el("loadLocalBtn").addEventListener("click", loadLocal);
