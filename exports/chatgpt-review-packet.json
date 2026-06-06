@@ -1,13 +1,13 @@
 {
   "packet_schema": "chatgpt_review_packet.v1",
-  "generated_at": "2026-06-01T15:08:03.121Z",
-  "commit": "b71b641",
+  "generated_at": "2026-06-06T05:12:57.405Z",
+  "commit": "5eb2894",
   "purpose": "Portable context for AI systems that cannot browse the live GitHub Pages app.",
   "public_links": {
-    "intake_form": "https://lonnie-tisdale.github.io/friend-character-intake/index.html?cachebust=b71b641",
-    "review_dashboard": "https://lonnie-tisdale.github.io/friend-character-intake/review.html?cachebust=b71b641",
-    "markdown_packet": "https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.md?cachebust=b71b641",
-    "json_packet": "https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.json?cachebust=b71b641"
+    "intake_form": "https://lonnie-tisdale.github.io/friend-character-intake/index.html?cachebust=5eb2894",
+    "review_dashboard": "https://lonnie-tisdale.github.io/friend-character-intake/review.html?cachebust=5eb2894",
+    "markdown_packet": "https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.md?cachebust=5eb2894",
+    "json_packet": "https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.json?cachebust=5eb2894"
   },
   "review_prompt": "You are reviewing a static, local-first universal profile intake and review system. Do not assume you can browse the live URL. Use this packet as the source of truth. Evaluate whether the language is clear for nontechnical users and whether the schema remains powerful enough for advanced canon, asset, graph, AI, game, and export workflows. Flag corporate/HR/personality-test/fantasy-only language, privacy risks, confusing required fields, missing consent guardrails, and any gaps for reviewing real people, fictional characters, NPCs, historical figures, AI agents, family members, partners, children, collaborators, and pets.",
   "app_summary": {
@@ -88,6 +88,8 @@
       "ai_generation",
       "project_usage",
       "source_notes",
+      "specialized_profiles",
+      "governance",
       "generated_content",
       "extensions"
     ],
@@ -116,7 +118,7 @@
     {
       "id": "consent",
       "title": "Consent",
-      "note": "The yes/no stuff that keeps the group from accidentally turning private lore into public canon.",
+      "note": "Plain consent controls. These decide what can be stored, adapted, exported, simulated, or kept private.",
       "fields": [
         {
           "id": "permission_to_store",
@@ -134,9 +136,9 @@
         },
         {
           "id": "permission_for_ai_dialogue",
-          "label": "Okay to use my vibe for AI dialogue",
+          "label": "Okay to generate AI-written dialogue that imitates how I communicate",
           "type": "boolean",
-          "help": "Allows voice/dialogue simulation.",
+          "help": "Higher-risk permission for voice/dialogue simulation.",
           "placeholder": ""
         },
         {
@@ -148,24 +150,109 @@
         },
         {
           "id": "permission_for_cross_project_reuse",
-          "label": "Okay to reuse across group projects",
+          "label": "Okay to reuse across approved projects",
           "type": "boolean",
-          "help": "Useful for shared HTF / K Street profiles.",
+          "help": "Allows reuse beyond the first project listed below.",
           "placeholder": ""
         },
         {
           "id": "permission_for_relationship_simulation",
-          "label": "Okay to map relationships and dynamics",
+          "label": "Okay to store information about friendships, collaborations, and social connections",
           "type": "boolean",
-          "help": "Allows graph and social model simulation.",
+          "help": "Higher-risk permission for relationship graph and social model data.",
           "placeholder": ""
         },
         {
+          "id": "consent_basis",
+          "label": "Why is this profile allowed to exist?",
+          "type": "select",
+          "help": "Explains whether consent came from the person, guardian, public record, estate, fictional creation, or another source.",
+          "placeholder": "",
+          "options": [
+            "self_submitted",
+            "guardian_submitted",
+            "public_domain_person",
+            "historical_record",
+            "estate_permission",
+            "community_documentation",
+            "fictional_creation",
+            "organization_authorized",
+            "unknown"
+          ]
+        },
+        {
+          "id": "minor_status",
+          "label": "Minor / child status",
+          "type": "select",
+          "help": "Profiles for children need stricter review and usually should not allow dialogue, relationship, or art simulation without guardian approval.",
+          "placeholder": "",
+          "options": [
+            "not_minor",
+            "minor",
+            "unknown"
+          ]
+        },
+        {
+          "id": "guardian_consent_required",
+          "label": "Guardian approval required",
+          "type": "boolean",
+          "help": "Use for child/minor profiles or profiles submitted by a guardian.",
+          "placeholder": ""
+        },
+        {
+          "id": "guardian_consent_confirmed",
+          "label": "Guardian approval confirmed",
+          "type": "boolean",
+          "help": "Reviewer confirms guardian permission is present before approving restricted uses.",
+          "placeholder": ""
+        },
+        {
+          "id": "consent_source",
+          "label": "Consent source",
+          "type": "text",
+          "help": "Where the consent information came from.",
+          "placeholder": "self-submitted form, guardian email, public-domain source, estate approval"
+        },
+        {
+          "id": "consent_date",
+          "label": "Consent date",
+          "type": "text",
+          "help": "Date consent was granted or reviewed.",
+          "placeholder": "2026-06-05"
+        },
+        {
+          "id": "consent_method",
+          "label": "Consent method",
+          "type": "text",
+          "help": "How consent was collected.",
+          "placeholder": "public form checkbox, written message, signed release, reviewer note"
+        },
+        {
+          "id": "relationship_visibility",
+          "label": "Relationship details visibility",
+          "type": "select",
+          "help": "Controls whether relationship details stay private, reviewer-only, project-only, or exportable.",
+          "placeholder": "",
+          "options": [
+            "private",
+            "reviewer_only",
+            "project_only",
+            "exportable"
+          ]
+        },
+        {
+          "id": "restricted_uses",
+          "label": "Do not use this profile for",
+          "type": "list",
+          "help": "Global use restrictions that apply across exports and projects.",
+          "placeholder": "romance\ndating_sim\nadvertising\npolitical_content\ntraining_data\npublic_release\ncommercial_use"
+        },
+        {
           "id": "consent_notes",
-          "label": "Consent notes / weird edge cases",
+          "label": "Consent notes / edge cases",
           "type": "textarea",
           "help": "Records usage limits, approvals, and review context.",
-          "placeholder": "Okay for fictionalized group lore; keep real names, family details, and private relationship stuff out of public exports."
+          "placeholder": "Okay for fictionalized project use; keep real names, family details, and private relationship data out of public exports."
         }
       ]
     },
@@ -182,6 +269,29 @@
           "placeholder": "Maya / @packetghost / whatever people actually call me"
         },
         {
+          "id": "entity_subtype",
+          "label": "What kind of profile is this?",
+          "type": "select",
+          "help": "Helps the database handle real people, fictional characters, NPCs, AI agents, pets, historical figures, family members, children, and organizations differently.",
+          "placeholder": "",
+          "options": [
+            "real_person",
+            "fictional_character",
+            "npc",
+            "ai_agent",
+            "organization",
+            "pet",
+            "historical_figure",
+            "deceased_person",
+            "public_figure",
+            "family_member",
+            "partner_spouse",
+            "child_minor",
+            "collaborator",
+            "other"
+          ]
+        },
+        {
           "id": "optional_contact",
           "label": "Best way to ask follow-up questions",
           "type": "text",
@@ -190,9 +300,9 @@
         },
         {
           "id": "in_world_name",
-          "label": "Character handle / codename",
+          "label": "Optional nickname, codename, or fictional version",
           "type": "text",
-          "help": "Reusable character handle for fiction, games, and prompts.",
+          "help": "Reusable nickname or adaptation handle for fiction, games, and prompts. Leave blank if there is not one.",
           "placeholder": "Terminal Wizard, Roadtrip Bard, Meme Archaeologist"
         },
         {
@@ -564,7 +674,7 @@
     {
       "id": "consent",
       "title": "Consent",
-      "note": "The yes/no stuff that keeps the group from accidentally turning private lore into public canon.",
+      "note": "Plain consent controls. These decide what can be stored, adapted, exported, simulated, or kept private.",
       "fields": [
         {
           "id": "permission_to_store",
@@ -582,9 +692,9 @@
         },
         {
           "id": "permission_for_ai_dialogue",
-          "label": "Okay to use my vibe for AI dialogue",
+          "label": "Okay to generate AI-written dialogue that imitates how I communicate",
           "type": "boolean",
-          "help": "Allows voice/dialogue simulation.",
+          "help": "Higher-risk permission for voice/dialogue simulation.",
           "placeholder": ""
         },
         {
@@ -596,16 +706,16 @@
         },
         {
           "id": "permission_for_cross_project_reuse",
-          "label": "Okay to reuse across group projects",
+          "label": "Okay to reuse across approved projects",
           "type": "boolean",
-          "help": "Useful for shared HTF / K Street profiles.",
+          "help": "Allows reuse beyond the first project listed below.",
           "placeholder": ""
         },
         {
           "id": "permission_for_relationship_simulation",
-          "label": "Okay to map relationships and dynamics",
+          "label": "Okay to store information about friendships, collaborations, and social connections",
           "type": "boolean",
-          "help": "Allows graph and social model simulation.",
+          "help": "Higher-risk permission for relationship graph and social model data.",
           "placeholder": ""
         },
         {
@@ -616,6 +726,105 @@
           "placeholder": ""
         },
         {
+          "id": "consent_basis",
+          "label": "Why is this profile allowed to exist?",
+          "type": "select",
+          "help": "Explains whether consent came from the person, guardian, public record, estate, fictional creation, or another source.",
+          "placeholder": "",
+          "options": [
+            "self_submitted",
+            "guardian_submitted",
+            "public_domain_person",
+            "historical_record",
+            "estate_permission",
+            "community_documentation",
+            "fictional_creation",
+            "organization_authorized",
+            "unknown"
+          ]
+        },
+        {
+          "id": "minor_status",
+          "label": "Minor / child status",
+          "type": "select",
+          "help": "Profiles for children need stricter review and usually should not allow dialogue, relationship, or art simulation without guardian approval.",
+          "placeholder": "",
+          "options": [
+            "not_minor",
+            "minor",
+            "unknown"
+          ]
+        },
+        {
+          "id": "guardian_consent_required",
+          "label": "Guardian approval required",
+          "type": "boolean",
+          "help": "Use for child/minor profiles or profiles submitted by a guardian.",
+          "placeholder": ""
+        },
+        {
+          "id": "guardian_consent_confirmed",
+          "label": "Guardian approval confirmed",
+          "type": "boolean",
+          "help": "Reviewer confirms guardian permission is present before approving restricted uses.",
+          "placeholder": ""
+        },
+        {
+          "id": "consent_source",
+          "label": "Consent source",
+          "type": "text",
+          "help": "Where the consent information came from.",
+          "placeholder": "self-submitted form, guardian email, public-domain source, estate approval"
+        },
+        {
+          "id": "consent_date",
+          "label": "Consent date",
+          "type": "text",
+          "help": "Date consent was granted or reviewed.",
+          "placeholder": "2026-06-05"
+        },
+        {
+          "id": "consent_method",
+          "label": "Consent method",
+          "type": "text",
+          "help": "How consent was collected.",
+          "placeholder": "public form checkbox, written message, signed release, reviewer note"
+        },
+        {
+          "id": "withdrawal_requested",
+          "label": "Removal / withdrawal requested",
+          "type": "boolean",
+          "help": "Marks that consent has been withdrawn or the profile should be removed from active use.",
+          "placeholder": ""
+        },
+        {
+          "id": "withdrawal_date",
+          "label": "Removal request date",
+          "type": "text",
+          "help": "Date consent was withdrawn or removal was requested.",
+          "placeholder": "2026-06-05"
+        },
+        {
+          "id": "relationship_visibility",
+          "label": "Relationship details visibility",
+          "type": "select",
+          "help": "Controls whether relationship details stay private, reviewer-only, project-only, or exportable.",
+          "placeholder": "",
+          "options": [
+            "private",
+            "reviewer_only",
+            "project_only",
+            "exportable"
+          ]
+        },
+        {
+          "id": "restricted_uses",
+          "label": "Do not use this profile for",
+          "type": "list",
+          "help": "Global use restrictions that apply across exports and projects.",
+          "placeholder": "romance\ndating_sim\nadvertising\npolitical_content\ntraining_data\npublic_release\ncommercial_use"
+        },
+        {
           "id": "sensitive_topics_to_avoid",
           "label": "Stuff that should stay out of canon",
           "type": "list",
@@ -624,10 +833,10 @@
         },
         {
           "id": "consent_notes",
-          "label": "Consent notes / weird edge cases",
+          "label": "Consent notes / edge cases",
           "type": "textarea",
           "help": "Records usage limits, approvals, and review context.",
-          "placeholder": "Okay for fictionalized group lore; keep real names, family details, and private relationship stuff out of public exports."
+          "placeholder": "Okay for fictionalized project use; keep real names, family details, and private relationship data out of public exports."
         }
       ]
     },
@@ -642,6 +851,29 @@
           "type": "text",
           "help": "Public-safe display name, handle, or nickname.",
           "placeholder": "Maya / @packetghost / whatever people actually call me"
+        },
+        {
+          "id": "entity_subtype",
+          "label": "What kind of profile is this?",
+          "type": "select",
+          "help": "Helps the database handle real people, fictional characters, NPCs, AI agents, pets, historical figures, family members, children, and organizations differently.",
+          "placeholder": "",
+          "options": [
+            "real_person",
+            "fictional_character",
+            "npc",
+            "ai_agent",
+            "organization",
+            "pet",
+            "historical_figure",
+            "deceased_person",
+            "public_figure",
+            "family_member",
+            "partner_spouse",
+            "child_minor",
+            "collaborator",
+            "other"
+          ]
         },
         {
           "id": "real_name_optional",
@@ -659,9 +891,9 @@
         },
         {
           "id": "in_world_name",
-          "label": "Character handle / codename",
+          "label": "Optional nickname, codename, or fictional version",
           "type": "text",
-          "help": "Reusable character handle for fiction, games, and prompts.",
+          "help": "Reusable nickname or adaptation handle for fiction, games, and prompts. Leave blank if there is not one.",
           "placeholder": "Terminal Wizard, Roadtrip Bard, Meme Archaeologist"
         },
         {
@@ -1159,6 +1391,13 @@
       "title": "Personality",
       "note": "Vibe, useful chaos, recurring patterns, and the things the group already knows are true.",
       "fields": [
+        {
+          "id": "classification_note",
+          "label": "Fast descriptive shortcuts note",
+          "type": "textarea",
+          "help": "Reminder that these are not psychological assessments.",
+          "placeholder": "These tags are descriptive shortcuts for writing and search, not psychological assessments or diagnoses."
+        },
         {
           "id": "primary_social_energy",
           "label": "Primary social energy",
@@ -2195,6 +2434,197 @@
       ]
     },
     {
+      "id": "specialized_profiles",
+      "title": "Specialized Profile Types",
+      "note": "Optional fields for AI agents, historical figures, pets, public figures, deceased people, organizations, and other profiles that are not a living friend filling out their own form.",
+      "fields": [
+        {
+          "id": "agent_capabilities",
+          "label": "AI agent capabilities",
+          "type": "list",
+          "help": "What an AI agent profile can do.",
+          "placeholder": "summarize project memory\nanswer lore questions\ngenerate NPC dialogue\ntriage source notes"
+        },
+        {
+          "id": "agent_limitations",
+          "label": "AI agent limitations",
+          "type": "list",
+          "help": "What an AI agent profile cannot or should not do.",
+          "placeholder": "cannot claim to be the real person\ncannot invent consent\ncannot expose private source notes"
+        },
+        {
+          "id": "agent_memory_scope",
+          "label": "AI agent memory scope",
+          "type": "textarea",
+          "help": "What the agent is allowed to remember or retrieve.",
+          "placeholder": "May use approved profile fields, approved project notes, and public-safe relationship summaries only."
+        },
+        {
+          "id": "agent_tool_access",
+          "label": "AI agent tool access",
+          "type": "list",
+          "help": "Allowed tools or integrations.",
+          "placeholder": "read approved profile JSON\nsearch project archive\nexport markdown summaries"
+        },
+        {
+          "id": "agent_operating_instructions",
+          "label": "AI agent operating instructions",
+          "type": "textarea",
+          "help": "Behavior rules for agent simulations.",
+          "placeholder": "Be useful, cautious with private data, cite source notes when uncertain, and respect restricted uses."
+        },
+        {
+          "id": "historical_sources",
+          "label": "Historical sources",
+          "type": "list",
+          "help": "Sources for historical/public/deceased profiles.",
+          "placeholder": "public archive link\nbook citation\ninterview transcript\nfamily-approved notes"
+        },
+        {
+          "id": "historical_confidence",
+          "label": "Historical confidence",
+          "type": "select",
+          "help": "Confidence in historical/public-figure claims.",
+          "placeholder": "",
+          "options": [
+            "Unreviewed",
+            "Low",
+            "Medium",
+            "High",
+            "Contested"
+          ]
+        },
+        {
+          "id": "contested_claims",
+          "label": "Contested claims",
+          "type": "list",
+          "help": "Claims that need careful sourcing or should be presented as uncertain.",
+          "placeholder": "birth date disputed\nstory appears in one source only\nfamily accounts disagree"
+        },
+        {
+          "id": "scholarly_consensus",
+          "label": "Scholarly / source consensus",
+          "type": "textarea",
+          "help": "Current consensus for historical/public profiles.",
+          "placeholder": "Most reliable sources agree on the broad timeline, but details of the event are contested."
+        },
+        {
+          "id": "species",
+          "label": "Species",
+          "type": "text",
+          "help": "For pet or non-human profiles.",
+          "placeholder": "dog, cat, parrot, horse"
+        },
+        {
+          "id": "breed",
+          "label": "Breed / type",
+          "type": "text",
+          "help": "Optional animal breed or type.",
+          "placeholder": "mutt, orange tabby, border collie mix"
+        },
+        {
+          "id": "handler_relationship",
+          "label": "Handler / caretaker relationship",
+          "type": "textarea",
+          "help": "Who is responsible for a pet/non-human profile and how consent/review works.",
+          "placeholder": "Submitted by caretaker; use only family-approved photos and light fictionalization."
+        },
+        {
+          "id": "behavioral_traits",
+          "label": "Behavioral traits",
+          "type": "list",
+          "help": "Animal/non-human behavior notes.",
+          "placeholder": "steals socks\nguards the door\nknows who needs comfort\nhates skateboards"
+        },
+        {
+          "id": "care_requirements",
+          "label": "Care requirements",
+          "type": "list",
+          "help": "Sensitive care notes for pets or dependent profiles.",
+          "placeholder": "do not depict unsafe food\navoid medical details unless approved\nask caretaker before public use"
+        }
+      ]
+    },
+    {
+      "id": "governance",
+      "title": "Governance And Lifecycle",
+      "note": "Ownership, review history, retention, and export permissions for serious long-term profile management.",
+      "fields": [
+        {
+          "id": "profile_owner",
+          "label": "Profile owner",
+          "type": "text",
+          "help": "Person or group responsible for this profile record.",
+          "placeholder": "self, guardian, project archive, estate, public-source reviewer"
+        },
+        {
+          "id": "review_owner",
+          "label": "Review owner",
+          "type": "text",
+          "help": "Person or team responsible for approval decisions.",
+          "placeholder": "trusted reviewer / project archivist"
+        },
+        {
+          "id": "approval_history_entries",
+          "label": "Approval history",
+          "type": "rows",
+          "help": "Repeatable entries. Format: date | reviewer | status | notes",
+          "placeholder": "2026-06-05 | reviewer_name | reviewed | consent checked; relationship details reviewer-only",
+          "format": "date | reviewer | status | notes"
+        },
+        {
+          "id": "change_log_entries",
+          "label": "Change log",
+          "type": "rows",
+          "help": "Repeatable entries. Format: date | editor | change summary | reason",
+          "placeholder": "2026-06-05 | reviewer_name | added restricted uses | privacy hardening",
+          "format": "date | editor | change summary | reason"
+        },
+        {
+          "id": "retention_policy",
+          "label": "Retention policy",
+          "type": "textarea",
+          "help": "How long the profile should be kept and why.",
+          "placeholder": "Keep while approved project use is active; re-review yearly or when consent changes."
+        },
+        {
+          "id": "expiration_date",
+          "label": "Expiration / re-review date",
+          "type": "text",
+          "help": "Date this profile should expire or be re-reviewed.",
+          "placeholder": "2027-06-05"
+        },
+        {
+          "id": "archive_status",
+          "label": "Archive status",
+          "type": "select",
+          "help": "Lifecycle state for project archives.",
+          "placeholder": "",
+          "options": [
+            "active",
+            "needs_review",
+            "archived",
+            "withdrawn",
+            "do_not_use"
+          ]
+        },
+        {
+          "id": "export_permissions",
+          "label": "Export permissions",
+          "type": "list",
+          "help": "Specific export rules.",
+          "placeholder": "markdown_profile allowed\nagent_context reviewer_only\nrelationship_graph private"
+        },
+        {
+          "id": "allowed_export_targets",
+          "label": "Allowed export targets",
+          "type": "list",
+          "help": "Where this profile can be exported.",
+          "placeholder": "private project archive\napproved game build\nreview packet\nlocal AI workspace"
+        }
+      ]
+    },
+    {
       "id": "generated_content",
       "title": "Generated Content",
       "note": "Editable generated outputs. Buttons at the top can fill these from the structured fields.",
@@ -2289,6 +2719,44 @@
       "faction",
       "concept"
     ],
+    "entity_subtypes": [
+      "real_person",
+      "fictional_character",
+      "npc",
+      "ai_agent",
+      "organization",
+      "pet",
+      "historical_figure",
+      "deceased_person",
+      "public_figure",
+      "family_member",
+      "partner_spouse",
+      "child_minor",
+      "collaborator",
+      "other"
+    ],
+    "consent_bases": [
+      "self_submitted",
+      "guardian_submitted",
+      "public_domain_person",
+      "historical_record",
+      "estate_permission",
+      "community_documentation",
+      "fictional_creation",
+      "organization_authorized",
+      "unknown"
+    ],
+    "minor_statuses": [
+      "not_minor",
+      "minor",
+      "unknown"
+    ],
+    "relationship_visibility": [
+      "private",
+      "reviewer_only",
+      "project_only",
+      "exportable"
+    ],
     "relationship_types": [
       "friend",
       "family",
@@ -2313,6 +2781,7 @@
     "entity": {
       "entity_id": "person_example",
       "entity_type": "person",
+      "entity_subtype": "real_person",
       "display_name": "Packet Ghost",
       "created_at": "2026-06-01T00:00:00.000Z",
       "updated_at": "2026-06-01T00:00:00.000Z",
@@ -2341,6 +2810,22 @@
       "permission_for_cross_project_reuse": true,
       "permission_for_relationship_simulation": true,
       "contact_for_questions": false,
+      "consent_basis": "fictional_creation",
+      "minor_status": "not_minor",
+      "guardian_consent_required": false,
+      "guardian_consent_confirmed": false,
+      "consent_source": "sample self-submission",
+      "consent_date": "2026-06-01",
+      "consent_method": "example JSON record",
+      "withdrawal_requested": false,
+      "withdrawal_date": "",
+      "relationship_visibility": "reviewer_only",
+      "restricted_uses": [
+        "romance",
+        "dating_sim",
+        "public ads",
+        "training_data"
+      ],
       "sensitive_topics_to_avoid": [
         "private family details"
       ],
@@ -2348,6 +2833,7 @@
     },
     "identity": {
       "display_name": "Packet Ghost",
+      "entity_subtype": "real_person",
       "real_name_optional": "",
       "optional_contact": "",
       "in_world_name": "Packet Ghost",
@@ -2497,6 +2983,7 @@
         {
           "entity_id": "person_example",
           "entity_type": "person",
+          "entity_subtype": "real_person",
           "display_name": "Packet Ghost",
           "created_at": "2026-06-01T00:00:00.000Z",
           "updated_at": "2026-06-01T00:00:00.000Z",
@@ -2741,6 +3228,7 @@
       }
     },
     "personality": {
+      "classification_note": "These tags are descriptive shortcuts for writing and search, not psychological assessments or diagnoses.",
       "primary_social_energy": "Chaotic Instigator",
       "secondary_social_energy": "Deadpan Commentator",
       "personality_traits": [
@@ -3115,6 +3603,66 @@
       "last_reviewed": "2026-06-01",
       "accuracy_confidence": "High",
       "unresolved_questions": []
+    },
+    "specialized_profiles": {
+      "agent_capabilities": [
+        "summarize approved project memory",
+        "generate public-safe NPC dialogue",
+        "answer lore questions with source caveats"
+      ],
+      "agent_limitations": [
+        "cannot claim to be the real person",
+        "cannot invent consent",
+        "cannot expose private source notes"
+      ],
+      "agent_memory_scope": "May use approved profile fields, approved project notes, and public-safe relationship summaries only.",
+      "agent_tool_access": [
+        "read approved profile JSON",
+        "export markdown summaries"
+      ],
+      "agent_operating_instructions": "Be useful, cautious with private data, cite source notes when uncertain, and respect restricted uses.",
+      "historical_sources": [],
+      "historical_confidence": "Unreviewed",
+      "contested_claims": [],
+      "scholarly_consensus": "",
+      "species": "",
+      "breed": "",
+      "handler_relationship": "",
+      "behavioral_traits": [],
+      "care_requirements": []
+    },
+    "governance": {
+      "profile_owner": "sample archive",
+      "review_owner": "trusted reviewer / project archivist",
+      "approval_history": [
+        {
+          "date": "2026-06-01",
+          "reviewer": "sample reviewer",
+          "status": "reviewed",
+          "notes": "Consent checked; relationship details reviewer-only."
+        }
+      ],
+      "change_log": [
+        {
+          "date": "2026-06-01",
+          "editor": "sample reviewer",
+          "change_summary": "Created sample profile with restricted uses.",
+          "reason": "Review packet example."
+        }
+      ],
+      "retention_policy": "Keep as public-safe sample while the tool needs an example export.",
+      "expiration_date": "2027-06-01",
+      "archive_status": "active",
+      "export_permissions": [
+        "markdown_profile allowed",
+        "agent_context allowed",
+        "relationship_graph reviewer_only"
+      ],
+      "allowed_export_targets": [
+        "public example",
+        "review packet",
+        "local AI workspace"
+      ]
     },
     "generated_content": {
       "character_summary": "Packet Ghost is a sleep-deprived fixer whose road-trip instincts, weird internet memory, and deadpan timing turn group chaos into usable lore.",

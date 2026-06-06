@@ -21,7 +21,7 @@ function extractFormModel() {
   const end = indexHtml.indexOf("const flatFields");
   if (start === -1 || end === -1) throw new Error("Could not locate form model in index.html.");
   const source = indexHtml.slice(start, end);
-  return Function(`${source}\nreturn { FIELD_SECTIONS, SIMPLE_FIELD_IDS, SIMPLE_SECTION_IDS, ASSET_TYPES, ENTITY_TYPES, RELATIONSHIP_TYPES };`)();
+  return Function(`${source}\nreturn { FIELD_SECTIONS, SIMPLE_FIELD_IDS, SIMPLE_SECTION_IDS, ASSET_TYPES, ENTITY_TYPES, ENTITY_SUBTYPES, CONSENT_BASES, MINOR_STATUSES, RELATIONSHIP_VISIBILITY, RELATIONSHIP_TYPES };`)();
 }
 
 function stripHtml(html) {
@@ -139,6 +139,10 @@ function buildPacket() {
     controlled_vocabularies: {
       asset_types: model.ASSET_TYPES,
       entity_types: model.ENTITY_TYPES,
+      entity_subtypes: model.ENTITY_SUBTYPES,
+      consent_bases: model.CONSENT_BASES,
+      minor_statuses: model.MINOR_STATUSES,
+      relationship_visibility: model.RELATIONSHIP_VISIBILITY,
       relationship_types: model.RELATIONSHIP_TYPES
     },
     sample_profile: example

@@ -7,6 +7,7 @@
   "entity": {
     "entity_id": "person_example",
     "entity_type": "person",
+    "entity_subtype": "real_person",
     "display_name": "Packet Ghost",
     "created_at": "2026-06-01T00:00:00.000Z",
     "updated_at": "2026-06-01T00:00:00.000Z",
@@ -29,11 +30,23 @@
     "permission_for_cross_project_reuse": true,
     "permission_for_relationship_simulation": true,
     "contact_for_questions": false,
+    "consent_basis": "fictional_creation",
+    "minor_status": "not_minor",
+    "guardian_consent_required": false,
+    "guardian_consent_confirmed": false,
+    "consent_source": "sample self-submission",
+    "consent_date": "2026-06-01",
+    "consent_method": "example JSON record",
+    "withdrawal_requested": false,
+    "withdrawal_date": "",
+    "relationship_visibility": "reviewer_only",
+    "restricted_uses": ["romance", "dating_sim", "public ads", "training_data"],
     "sensitive_topics_to_avoid": ["private family details"],
     "consent_notes": "Sample record only. Do not treat as a real submission. Keep private contact, real names, source images, and boundaries out of public exports unless explicitly approved."
   },
   "identity": {
     "display_name": "Packet Ghost",
+    "entity_subtype": "real_person",
     "real_name_optional": "",
     "optional_contact": "",
     "in_world_name": "Packet Ghost",
@@ -136,6 +149,7 @@
       {
         "entity_id": "person_example",
         "entity_type": "person",
+        "entity_subtype": "real_person",
         "display_name": "Packet Ghost",
         "created_at": "2026-06-01T00:00:00.000Z",
         "updated_at": "2026-06-01T00:00:00.000Z",
@@ -311,6 +325,7 @@
     }
   },
   "personality": {
+    "classification_note": "These tags are descriptive shortcuts for writing and search, not psychological assessments or diagnoses.",
     "primary_social_energy": "Chaotic Instigator",
     "secondary_social_energy": "Deadpan Commentator",
     "personality_traits": ["curious", "stubborn", "reliable", "chaotic", "caffeinated"],
@@ -469,6 +484,47 @@
     "last_reviewed": "2026-06-01",
     "accuracy_confidence": "High",
     "unresolved_questions": []
+  },
+  "specialized_profiles": {
+    "agent_capabilities": ["summarize approved project memory", "generate public-safe NPC dialogue", "answer lore questions with source caveats"],
+    "agent_limitations": ["cannot claim to be the real person", "cannot invent consent", "cannot expose private source notes"],
+    "agent_memory_scope": "May use approved profile fields, approved project notes, and public-safe relationship summaries only.",
+    "agent_tool_access": ["read approved profile JSON", "export markdown summaries"],
+    "agent_operating_instructions": "Be useful, cautious with private data, cite source notes when uncertain, and respect restricted uses.",
+    "historical_sources": [],
+    "historical_confidence": "Unreviewed",
+    "contested_claims": [],
+    "scholarly_consensus": "",
+    "species": "",
+    "breed": "",
+    "handler_relationship": "",
+    "behavioral_traits": [],
+    "care_requirements": []
+  },
+  "governance": {
+    "profile_owner": "sample archive",
+    "review_owner": "trusted reviewer / project archivist",
+    "approval_history": [
+      {
+        "date": "2026-06-01",
+        "reviewer": "sample reviewer",
+        "status": "reviewed",
+        "notes": "Consent checked; relationship details reviewer-only."
+      }
+    ],
+    "change_log": [
+      {
+        "date": "2026-06-01",
+        "editor": "sample reviewer",
+        "change_summary": "Created sample profile with restricted uses.",
+        "reason": "Review packet example."
+      }
+    ],
+    "retention_policy": "Keep as public-safe sample while the tool needs an example export.",
+    "expiration_date": "2027-06-01",
+    "archive_status": "active",
+    "export_permissions": ["markdown_profile allowed", "agent_context allowed", "relationship_graph reviewer_only"],
+    "allowed_export_targets": ["public example", "review packet", "local AI workspace"]
   },
   "generated_content": {
     "character_summary": "Packet Ghost is a sleep-deprived fixer whose road-trip instincts, weird internet memory, and deadpan timing turn group chaos into usable lore.",

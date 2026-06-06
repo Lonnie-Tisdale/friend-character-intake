@@ -112,6 +112,8 @@
     "ai_generation": { "$ref": "#/$defs/object" },
     "project_usage": { "$ref": "#/$defs/object" },
     "source_notes": { "$ref": "#/$defs/object" },
+    "specialized_profiles": { "$ref": "#/$defs/object" },
+    "governance": { "$ref": "#/$defs/object" },
     "generated_content": { "$ref": "#/$defs/object" },
     "extensions": {
       "type": "object",
@@ -144,6 +146,7 @@
           "type": "string",
           "enum": ["person", "relationship", "organization", "location", "event", "asset", "story_object", "project", "faction", "concept"]
         },
+        "entity_subtype": { "type": "string" },
         "display_name": { "type": "string" },
         "created_at": { "type": "string" },
         "updated_at": { "type": "string" },

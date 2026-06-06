@@ -8,10 +8,10 @@ You are reviewing a static, local-first universal profile intake and review syst
 
 ## Public Links
 
-- Intake form: https://lonnie-tisdale.github.io/friend-character-intake/index.html?cachebust=b71b641
-- Review dashboard: https://lonnie-tisdale.github.io/friend-character-intake/review.html?cachebust=b71b641
-- Markdown packet: https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.md?cachebust=b71b641
-- JSON packet: https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.json?cachebust=b71b641
+- Intake form: https://lonnie-tisdale.github.io/friend-character-intake/index.html?cachebust=5eb2894
+- Review dashboard: https://lonnie-tisdale.github.io/friend-character-intake/review.html?cachebust=5eb2894
+- Markdown packet: https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.md?cachebust=5eb2894
+- JSON packet: https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.json?cachebust=5eb2894
 
 ## App Summary
 
@@ -99,6 +99,8 @@ You are reviewing a static, local-first universal profile intake and review syst
     "ai_generation",
     "project_usage",
     "source_notes",
+    "specialized_profiles",
+    "governance",
     "generated_content",
     "extensions"
   ],
@@ -129,7 +131,7 @@ You are reviewing a static, local-first universal profile intake and review syst
 
 ## Consent
 
-The yes/no stuff that keeps the group from accidentally turning private lore into public canon.
+Plain consent controls. These decide what can be stored, adapted, exported, simulated, or kept private.
 
 ### Okay to save this profile
 Field ID: `permission_to_store`
@@ -139,7 +141,7 @@ Type: `boolean`
 Field ID: `permission_to_fictionalize`
 Type: `boolean`
 
-### Okay to use my vibe for AI dialogue
+### Okay to generate AI-written dialogue that imitates how I communicate
 Field ID: `permission_for_ai_dialogue`
 Type: `boolean`
 
@@ -147,22 +149,110 @@ Type: `boolean`
 Field ID: `permission_for_art_generation`
 Type: `boolean`
 
-### Okay to reuse across group projects
+### Okay to reuse across approved projects
 Field ID: `permission_for_cross_project_reuse`
 Type: `boolean`
 
-### Okay to map relationships and dynamics
+### Okay to store information about friendships, collaborations, and social connections
 Field ID: `permission_for_relationship_simulation`
 Type: `boolean`
 
-### Consent notes / weird edge cases
+### Why is this profile allowed to exist?
+Field ID: `consent_basis`
+Type: `select`
+
+Options:
+- self_submitted
+- guardian_submitted
+- public_domain_person
+- historical_record
+- estate_permission
+- community_documentation
+- fictional_creation
+- organization_authorized
+- unknown
+
+### Minor / child status
+Field ID: `minor_status`
+Type: `select`
+
+Options:
+- not_minor
+- minor
+- unknown
+
+### Guardian approval required
+Field ID: `guardian_consent_required`
+Type: `boolean`
+
+### Guardian approval confirmed
+Field ID: `guardian_consent_confirmed`
+Type: `boolean`
+
+### Consent source
+Field ID: `consent_source`
+Type: `text`
+
+Example / placeholder:
+
+```text
+self-submitted form, guardian email, public-domain source, estate approval
+```
+
+### Consent date
+Field ID: `consent_date`
+Type: `text`
+
+Example / placeholder:
+
+```text
+2026-06-05
+```
+
+### Consent method
+Field ID: `consent_method`
+Type: `text`
+
+Example / placeholder:
+
+```text
+public form checkbox, written message, signed release, reviewer note
+```
+
+### Relationship details visibility
+Field ID: `relationship_visibility`
+Type: `select`
+
+Options:
+- private
+- reviewer_only
+- project_only
+- exportable
+
+### Do not use this profile for
+Field ID: `restricted_uses`
+Type: `list`
+
+Example / placeholder:
+
+```text
+romance
+dating_sim
+advertising
+political_content
+training_data
+public_release
+commercial_use
+```
+
+### Consent notes / edge cases
 Field ID: `consent_notes`
 Type: `textarea`
 
 Example / placeholder:
 
 ```text
-Okay for fictionalized group lore; keep real names, family details, and private relationship stuff out of public exports.
+Okay for fictionalized project use; keep real names, family details, and private relationship data out of public exports.
 ```
 
 ## Identity
@@ -179,6 +269,26 @@ Example / placeholder:
 Maya / @packetghost / whatever people actually call me
 ```
 
+### What kind of profile is this?
+Field ID: `entity_subtype`
+Type: `select`
+
+Options:
+- real_person
+- fictional_character
+- npc
+- ai_agent
+- organization
+- pet
+- historical_figure
+- deceased_person
+- public_figure
+- family_member
+- partner_spouse
+- child_minor
+- collaborator
+- other
+
 ### Best way to ask follow-up questions
 Field ID: `optional_contact`
 Type: `text`
@@ -189,7 +299,7 @@ Example / placeholder:
 Discord handle, Signal, email, or 'ask me in the group chat'
 ```
 
-### Character handle / codename
+### Optional nickname, codename, or fictional version
 Field ID: `in_world_name`
 Type: `text`
 
@@ -667,7 +777,7 @@ Type: `textarea`
 
 ## Consent
 
-The yes/no stuff that keeps the group from accidentally turning private lore into public canon.
+Plain consent controls. These decide what can be stored, adapted, exported, simulated, or kept private.
 
 ### Okay to save this profile
 Field ID: `permission_to_store`
@@ -677,7 +787,7 @@ Type: `boolean`
 Field ID: `permission_to_fictionalize`
 Type: `boolean`
 
-### Okay to use my vibe for AI dialogue
+### Okay to generate AI-written dialogue that imitates how I communicate
 Field ID: `permission_for_ai_dialogue`
 Type: `boolean`
 
@@ -685,17 +795,119 @@ Type: `boolean`
 Field ID: `permission_for_art_generation`
 Type: `boolean`
 
-### Okay to reuse across group projects
+### Okay to reuse across approved projects
 Field ID: `permission_for_cross_project_reuse`
 Type: `boolean`
 
-### Okay to map relationships and dynamics
+### Okay to store information about friendships, collaborations, and social connections
 Field ID: `permission_for_relationship_simulation`
 Type: `boolean`
 
 ### Okay to ask me follow-up questions
 Field ID: `contact_for_questions`
 Type: `boolean`
+
+### Why is this profile allowed to exist?
+Field ID: `consent_basis`
+Type: `select`
+
+Options:
+- self_submitted
+- guardian_submitted
+- public_domain_person
+- historical_record
+- estate_permission
+- community_documentation
+- fictional_creation
+- organization_authorized
+- unknown
+
+### Minor / child status
+Field ID: `minor_status`
+Type: `select`
+
+Options:
+- not_minor
+- minor
+- unknown
+
+### Guardian approval required
+Field ID: `guardian_consent_required`
+Type: `boolean`
+
+### Guardian approval confirmed
+Field ID: `guardian_consent_confirmed`
+Type: `boolean`
+
+### Consent source
+Field ID: `consent_source`
+Type: `text`
+
+Example / placeholder:
+
+```text
+self-submitted form, guardian email, public-domain source, estate approval
+```
+
+### Consent date
+Field ID: `consent_date`
+Type: `text`
+
+Example / placeholder:
+
+```text
+2026-06-05
+```
+
+### Consent method
+Field ID: `consent_method`
+Type: `text`
+
+Example / placeholder:
+
+```text
+public form checkbox, written message, signed release, reviewer note
+```
+
+### Removal / withdrawal requested
+Field ID: `withdrawal_requested`
+Type: `boolean`
+
+### Removal request date
+Field ID: `withdrawal_date`
+Type: `text`
+
+Example / placeholder:
+
+```text
+2026-06-05
+```
+
+### Relationship details visibility
+Field ID: `relationship_visibility`
+Type: `select`
+
+Options:
+- private
+- reviewer_only
+- project_only
+- exportable
+
+### Do not use this profile for
+Field ID: `restricted_uses`
+Type: `list`
+
+Example / placeholder:
+
+```text
+romance
+dating_sim
+advertising
+political_content
+training_data
+public_release
+commercial_use
+```
 
 ### Stuff that should stay out of canon
 Field ID: `sensitive_topics_to_avoid`
@@ -710,14 +922,14 @@ old drama
 anything involving actual legal trouble
 ```
 
-### Consent notes / weird edge cases
+### Consent notes / edge cases
 Field ID: `consent_notes`
 Type: `textarea`
 
 Example / placeholder:
 
 ```text
-Okay for fictionalized group lore; keep real names, family details, and private relationship stuff out of public exports.
+Okay for fictionalized project use; keep real names, family details, and private relationship data out of public exports.
 ```
 
 ## Identity
@@ -733,6 +945,26 @@ Example / placeholder:
 ```text
 Maya / @packetghost / whatever people actually call me
 ```
+
+### What kind of profile is this?
+Field ID: `entity_subtype`
+Type: `select`
+
+Options:
+- real_person
+- fictional_character
+- npc
+- ai_agent
+- organization
+- pet
+- historical_figure
+- deceased_person
+- public_figure
+- family_member
+- partner_spouse
+- child_minor
+- collaborator
+- other
 
 ### Real name, only if you want it stored
 Field ID: `real_name_optional`
@@ -754,7 +986,7 @@ Example / placeholder:
 Discord handle, Signal, email, or 'ask me in the group chat'
 ```
 
-### Character handle / codename
+### Optional nickname, codename, or fictional version
 Field ID: `in_world_name`
 Type: `text`
 
@@ -1398,6 +1630,16 @@ Type: `textarea`
 ## Personality
 
 Vibe, useful chaos, recurring patterns, and the things the group already knows are true.
+
+### Fast descriptive shortcuts note
+Field ID: `classification_note`
+Type: `textarea`
+
+Example / placeholder:
+
+```text
+These tags are descriptive shortcuts for writing and search, not psychological assessments or diagnoses.
+```
 
 ### Primary social energy
 Field ID: `primary_social_energy`
@@ -2869,6 +3111,272 @@ Ask if the legendary taco story is public-safe
 Check whether WCCC can use this as an NPC cameo
 ```
 
+## Specialized Profile Types
+
+Optional fields for AI agents, historical figures, pets, public figures, deceased people, organizations, and other profiles that are not a living friend filling out their own form.
+
+### AI agent capabilities
+Field ID: `agent_capabilities`
+Type: `list`
+
+Example / placeholder:
+
+```text
+summarize project memory
+answer lore questions
+generate NPC dialogue
+triage source notes
+```
+
+### AI agent limitations
+Field ID: `agent_limitations`
+Type: `list`
+
+Example / placeholder:
+
+```text
+cannot claim to be the real person
+cannot invent consent
+cannot expose private source notes
+```
+
+### AI agent memory scope
+Field ID: `agent_memory_scope`
+Type: `textarea`
+
+Example / placeholder:
+
+```text
+May use approved profile fields, approved project notes, and public-safe relationship summaries only.
+```
+
+### AI agent tool access
+Field ID: `agent_tool_access`
+Type: `list`
+
+Example / placeholder:
+
+```text
+read approved profile JSON
+search project archive
+export markdown summaries
+```
+
+### AI agent operating instructions
+Field ID: `agent_operating_instructions`
+Type: `textarea`
+
+Example / placeholder:
+
+```text
+Be useful, cautious with private data, cite source notes when uncertain, and respect restricted uses.
+```
+
+### Historical sources
+Field ID: `historical_sources`
+Type: `list`
+
+Example / placeholder:
+
+```text
+public archive link
+book citation
+interview transcript
+family-approved notes
+```
+
+### Historical confidence
+Field ID: `historical_confidence`
+Type: `select`
+
+Options:
+- Unreviewed
+- Low
+- Medium
+- High
+- Contested
+
+### Contested claims
+Field ID: `contested_claims`
+Type: `list`
+
+Example / placeholder:
+
+```text
+birth date disputed
+story appears in one source only
+family accounts disagree
+```
+
+### Scholarly / source consensus
+Field ID: `scholarly_consensus`
+Type: `textarea`
+
+Example / placeholder:
+
+```text
+Most reliable sources agree on the broad timeline, but details of the event are contested.
+```
+
+### Species
+Field ID: `species`
+Type: `text`
+
+Example / placeholder:
+
+```text
+dog, cat, parrot, horse
+```
+
+### Breed / type
+Field ID: `breed`
+Type: `text`
+
+Example / placeholder:
+
+```text
+mutt, orange tabby, border collie mix
+```
+
+### Handler / caretaker relationship
+Field ID: `handler_relationship`
+Type: `textarea`
+
+Example / placeholder:
+
+```text
+Submitted by caretaker; use only family-approved photos and light fictionalization.
+```
+
+### Behavioral traits
+Field ID: `behavioral_traits`
+Type: `list`
+
+Example / placeholder:
+
+```text
+steals socks
+guards the door
+knows who needs comfort
+hates skateboards
+```
+
+### Care requirements
+Field ID: `care_requirements`
+Type: `list`
+
+Example / placeholder:
+
+```text
+do not depict unsafe food
+avoid medical details unless approved
+ask caretaker before public use
+```
+
+## Governance And Lifecycle
+
+Ownership, review history, retention, and export permissions for serious long-term profile management.
+
+### Profile owner
+Field ID: `profile_owner`
+Type: `text`
+
+Example / placeholder:
+
+```text
+self, guardian, project archive, estate, public-source reviewer
+```
+
+### Review owner
+Field ID: `review_owner`
+Type: `text`
+
+Example / placeholder:
+
+```text
+trusted reviewer / project archivist
+```
+
+### Approval history
+Field ID: `approval_history_entries`
+Type: `rows`
+
+Example / placeholder:
+
+```text
+2026-06-05 | reviewer_name | reviewed | consent checked; relationship details reviewer-only
+```
+
+Row format: `date | reviewer | status | notes`
+
+### Change log
+Field ID: `change_log_entries`
+Type: `rows`
+
+Example / placeholder:
+
+```text
+2026-06-05 | reviewer_name | added restricted uses | privacy hardening
+```
+
+Row format: `date | editor | change summary | reason`
+
+### Retention policy
+Field ID: `retention_policy`
+Type: `textarea`
+
+Example / placeholder:
+
+```text
+Keep while approved project use is active; re-review yearly or when consent changes.
+```
+
+### Expiration / re-review date
+Field ID: `expiration_date`
+Type: `text`
+
+Example / placeholder:
+
+```text
+2027-06-05
+```
+
+### Archive status
+Field ID: `archive_status`
+Type: `select`
+
+Options:
+- active
+- needs_review
+- archived
+- withdrawn
+- do_not_use
+
+### Export permissions
+Field ID: `export_permissions`
+Type: `list`
+
+Example / placeholder:
+
+```text
+markdown_profile allowed
+agent_context reviewer_only
+relationship_graph private
+```
+
+### Allowed export targets
+Field ID: `allowed_export_targets`
+Type: `list`
+
+Example / placeholder:
+
+```text
+private project archive
+approved game build
+review packet
+local AI workspace
+```
+
 ## Generated Content
 
 Editable generated outputs. Buttons at the top can fill these from the structured fields.
@@ -2945,6 +3453,44 @@ Type: `textarea`
     "faction",
     "concept"
   ],
+  "entity_subtypes": [
+    "real_person",
+    "fictional_character",
+    "npc",
+    "ai_agent",
+    "organization",
+    "pet",
+    "historical_figure",
+    "deceased_person",
+    "public_figure",
+    "family_member",
+    "partner_spouse",
+    "child_minor",
+    "collaborator",
+    "other"
+  ],
+  "consent_bases": [
+    "self_submitted",
+    "guardian_submitted",
+    "public_domain_person",
+    "historical_record",
+    "estate_permission",
+    "community_documentation",
+    "fictional_creation",
+    "organization_authorized",
+    "unknown"
+  ],
+  "minor_statuses": [
+    "not_minor",
+    "minor",
+    "unknown"
+  ],
+  "relationship_visibility": [
+    "private",
+    "reviewer_only",
+    "project_only",
+    "exportable"
+  ],
   "relationship_types": [
     "friend",
     "family",
@@ -2974,6 +3520,7 @@ Type: `textarea`
   "entity": {
     "entity_id": "person_example",
     "entity_type": "person",
+    "entity_subtype": "real_person",
     "display_name": "Packet Ghost",
     "created_at": "2026-06-01T00:00:00.000Z",
     "updated_at": "2026-06-01T00:00:00.000Z",
@@ -3002,6 +3549,22 @@ Type: `textarea`
     "permission_for_cross_project_reuse": true,
     "permission_for_relationship_simulation": true,
     "contact_for_questions": false,
+    "consent_basis": "fictional_creation",
+    "minor_status": "not_minor",
+    "guardian_consent_required": false,
+    "guardian_consent_confirmed": false,
+    "consent_source": "sample self-submission",
+    "consent_date": "2026-06-01",
+    "consent_method": "example JSON record",
+    "withdrawal_requested": false,
+    "withdrawal_date": "",
+    "relationship_visibility": "reviewer_only",
+    "restricted_uses": [
+      "romance",
+      "dating_sim",
+      "public ads",
+      "training_data"
+    ],
     "sensitive_topics_to_avoid": [
       "private family details"
     ],
@@ -3009,6 +3572,7 @@ Type: `textarea`
   },
   "identity": {
     "display_name": "Packet Ghost",
+    "entity_subtype": "real_person",
     "real_name_optional": "",
     "optional_contact": "",
     "in_world_name": "Packet Ghost",
@@ -3158,6 +3722,7 @@ Type: `textarea`
       {
         "entity_id": "person_example",
         "entity_type": "person",
+        "entity_subtype": "real_person",
         "display_name": "Packet Ghost",
         "created_at": "2026-06-01T00:00:00.000Z",
         "updated_at": "2026-06-01T00:00:00.000Z",
@@ -3402,6 +3967,7 @@ Type: `textarea`
     }
   },
   "personality": {
+    "classification_note": "These tags are descriptive shortcuts for writing and search, not psychological assessments or diagnoses.",
     "primary_social_energy": "Chaotic Instigator",
     "secondary_social_energy": "Deadpan Commentator",
     "personality_traits": [
@@ -3776,6 +4342,66 @@ Type: `textarea`
     "last_reviewed": "2026-06-01",
     "accuracy_confidence": "High",
     "unresolved_questions": []
+  },
+  "specialized_profiles": {
+    "agent_capabilities": [
+      "summarize approved project memory",
+      "generate public-safe NPC dialogue",
+      "answer lore questions with source caveats"
+    ],
+    "agent_limitations": [
+      "cannot claim to be the real person",
+      "cannot invent consent",
+      "cannot expose private source notes"
+    ],
+    "agent_memory_scope": "May use approved profile fields, approved project notes, and public-safe relationship summaries only.",
+    "agent_tool_access": [
+      "read approved profile JSON",
+      "export markdown summaries"
+    ],
+    "agent_operating_instructions": "Be useful, cautious with private data, cite source notes when uncertain, and respect restricted uses.",
+    "historical_sources": [],
+    "historical_confidence": "Unreviewed",
+    "contested_claims": [],
+    "scholarly_consensus": "",
+    "species": "",
+    "breed": "",
+    "handler_relationship": "",
+    "behavioral_traits": [],
+    "care_requirements": []
+  },
+  "governance": {
+    "profile_owner": "sample archive",
+    "review_owner": "trusted reviewer / project archivist",
+    "approval_history": [
+      {
+        "date": "2026-06-01",
+        "reviewer": "sample reviewer",
+        "status": "reviewed",
+        "notes": "Consent checked; relationship details reviewer-only."
+      }
+    ],
+    "change_log": [
+      {
+        "date": "2026-06-01",
+        "editor": "sample reviewer",
+        "change_summary": "Created sample profile with restricted uses.",
+        "reason": "Review packet example."
+      }
+    ],
+    "retention_policy": "Keep as public-safe sample while the tool needs an example export.",
+    "expiration_date": "2027-06-01",
+    "archive_status": "active",
+    "export_permissions": [
+      "markdown_profile allowed",
+      "agent_context allowed",
+      "relationship_graph reviewer_only"
+    ],
+    "allowed_export_targets": [
+      "public example",
+      "review packet",
+      "local AI workspace"
+    ]
   },
   "generated_content": {
     "character_summary": "Packet Ghost is a sleep-deprived fixer whose road-trip instincts, weird internet memory, and deadpan timing turn group chaos into usable lore.",

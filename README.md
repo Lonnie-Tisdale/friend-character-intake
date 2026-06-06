@@ -163,6 +163,8 @@ The form is organized into collapsible sections:
 - AI Generation
 - Project Usage
 - Source Notes
+- Specialized Profile Types
+- Governance And Lifecycle
 - Generated Content
 - Export / Import
 
@@ -183,7 +185,7 @@ Supported entity types are `person`, `relationship`, `organization`, `location`,
 
 Existing v3 exports automatically become `entity_type: "person"` on import. Unknown fields are still preserved under `extensions`.
 
-Recent UX/schema additions include `identity.short_bio`, `social_model.relationship_to_group_network` for group/project/community relationship context, `project_usage.project_relevance_notes`, per-asset `linked_entity_id` / `linked_project`, and relationship metadata for confidence, canon, and consent.
+Recent UX/schema additions include `identity.short_bio`, `identity.entity_subtype` / `entity.entity_subtype`, `social_model.relationship_to_group_network` for group/project/community relationship context, revocation and consent-basis fields, minor/guardian safeguards, global restricted uses, relationship visibility, `project_usage.project_relevance_notes`, `specialized_profiles` for agents/historical figures/pets, `governance` lifecycle fields, per-asset `linked_entity_id` / `linked_project`, and relationship metadata for confidence, canon, and consent.
 
 ## Migration
 

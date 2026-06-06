@@ -42,6 +42,8 @@ Prompt labels, placeholders, and sample values should sound native to the actual
 - `ai_generation`
 - `project_usage`
 - `source_notes`
+- `specialized_profiles`
+- `governance`
 - `generated_content`
 - `extensions`
 
@@ -52,6 +54,7 @@ Unknown imported fields must be preserved under `extensions`.
 UX-facing additions that remain JSON-portable:
 
 - `identity.short_bio` - friendly intake bio for nontechnical submitters
+- `identity.entity_subtype` / `entity.entity_subtype` - explicit profile subtype such as `real_person`, `fictional_character`, `npc`, `ai_agent`, `pet`, `historical_figure`, `deceased_person`, `public_figure`, `family_member`, `partner_spouse`, or `child_minor`
 - `identity.three_word_vibe` - quick recognizable vibe phrase
 - `identity.animal_affinity` - optional mascot/totem/group-bit field
 - `identity.current_obsession` - current topic eating the person's browser tabs
@@ -61,6 +64,11 @@ UX-facing additions that remain JSON-portable:
 - `humor_and_voice.battle_intro_quote` and `humor_and_voice.battle_victory_quote` - heightened game lines that still sound like the real person
 - `narrative_engine.legendary_story` and `narrative_engine.most_chaotic_moment` - public-safe lore people retell
 - `social_model.relationship_to_group_network` - plain-language group/project/community relationship context
+- `consent.consent_basis` - why the profile is allowed to exist, such as self submission, guardian submission, public-domain/historical record, estate permission, community documentation, fictional creation, or organization authorization
+- `consent.withdrawal_requested` / `consent.withdrawal_date` - revocation/removal tracking
+- `consent.minor_status`, `consent.guardian_consent_required`, and `consent.guardian_consent_confirmed` - child/minor protections
+- `consent.restricted_uses` - global restrictions such as romance, advertising, political content, training data, public release, or commercial use
+- `consent.relationship_visibility` - relationship data visibility: private, reviewer-only, project-only, or exportable
 - `project_usage.project_relevance_notes` - why the profile matters to projects
 - `asset_library.assets[].linked_entity_id`
 - `asset_library.assets[].linked_project`
@@ -69,6 +77,25 @@ UX-facing additions that remain JSON-portable:
 - `knowledge_graph.relationship_entities[].consent_status`
 
 See `docs/asset-library-schema.md` for the asset library object, asset types, canon levels, consent status values, groups, and style guides.
+
+## Consent And Governance
+
+Consent is not one-way. Profiles should support withdrawal, lifecycle review, and restricted uses. High-risk profile types need extra care:
+
+- Minor/child profiles should not enable dialogue simulation, relationship simulation, or art generation unless guardian approval is confirmed.
+- Deceased people, historical figures, and public figures need a clear `consent_basis` and stronger source notes.
+- Relationship graph details should default to private or reviewer-only unless explicitly approved for export.
+- `governance.approval_history` and `governance.change_log` track who approved or changed a profile.
+- `governance.retention_policy`, `expiration_date`, and `archive_status` define when a profile should be re-reviewed, archived, or withdrawn.
+- `governance.export_permissions` and `allowed_export_targets` define where profile data may go.
+
+## Specialized Profiles
+
+`specialized_profiles` contains optional fields for entity types that do not behave like a living person filling out their own form:
+
+- AI agents: `agent_capabilities`, `agent_limitations`, `agent_memory_scope`, `agent_tool_access`, and `agent_operating_instructions`
+- Historical/public/deceased profiles: `historical_sources`, `historical_confidence`, `contested_claims`, and `scholarly_consensus`
+- Pets/non-human profiles: `species`, `breed`, `handler_relationship`, `behavioral_traits`, and `care_requirements`
 
 ## Repeatable Entries
 

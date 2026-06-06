@@ -362,11 +362,15 @@
     const ASSET_CONSENT_STATUSES = ["approved", "limited_use", "private_only", "internal_only", "do_not_use", "unknown"];
     const ASSET_USE_CASES = ["portrait_generation", "art_generation", "sprite_generation", "npc_generation", "dialogue_generation", "relationship_system", "historical_reference", "worldbuilding", "animation_reference", "voice_reference", "3d_model_reference", "marketing", "documentation"];
     const ENTITY_TYPES = ["person", "relationship", "organization", "location", "event", "asset", "story_object", "project", "faction", "concept"];
+    const ENTITY_SUBTYPES = ["real_person", "fictional_character", "npc", "ai_agent", "organization", "pet", "historical_figure", "deceased_person", "public_figure", "family_member", "partner_spouse", "child_minor", "collaborator", "other"];
+    const CONSENT_BASES = ["self_submitted", "guardian_submitted", "public_domain_person", "historical_record", "estate_permission", "community_documentation", "fictional_creation", "organization_authorized", "unknown"];
+    const MINOR_STATUSES = ["not_minor", "minor", "unknown"];
+    const RELATIONSHIP_VISIBILITY = ["private", "reviewer_only", "project_only", "exportable"];
     const RELATIONSHIP_TYPES = ["friend", "family", "collaborator", "mentor", "rival", "ex", "project_member", "location_association", "event_participant", "organization_member", "inspiration_source", "fictionalized_as"];
     const SIMPLE_SECTION_IDS = new Set(["consent", "identity", "appearance", "personality", "social_model", "humor_and_voice", "project_usage", "source_notes", "generated_content"]);
     const SIMPLE_FIELD_IDS = new Set([
-      "permission_to_store", "permission_to_fictionalize", "permission_for_ai_dialogue", "permission_for_art_generation", "permission_for_cross_project_reuse", "permission_for_relationship_simulation", "consent_notes",
-      "display_name", "optional_contact", "in_world_name", "pronouns", "short_bio", "three_word_vibe", "animal_affinity", "current_obsession", "current_location",
+      "permission_to_store", "permission_to_fictionalize", "permission_for_ai_dialogue", "permission_for_art_generation", "permission_for_cross_project_reuse", "permission_for_relationship_simulation", "consent_basis", "minor_status", "guardian_consent_required", "guardian_consent_confirmed", "consent_source", "consent_date", "consent_method", "restricted_uses", "relationship_visibility", "consent_notes",
+      "display_name", "entity_subtype", "optional_contact", "in_world_name", "pronouns", "short_bio", "three_word_vibe", "animal_affinity", "current_obsession", "current_location",
       "image_prompt_notes", "everyday_clothing", "default_expression", "movement_body_language", "signature_item", "source_images",
       "primary_social_energy", "secondary_social_energy", "personality_traits", "custom_traits", "strengths", "flaws", "character_archetype", "signature_ability",
       "voice_rhythm", "typical_phrases", "example_quotes", "battle_intro_quote", "battle_victory_quote", "dialogue_dos", "dialogue_donts",
@@ -379,17 +383,28 @@
       {
         id: "consent",
         title: "Consent",
-        note: "The yes/no stuff that keeps the group from accidentally turning private lore into public canon.",
+        note: "Plain consent controls. These decide what can be stored, adapted, exported, simulated, or kept private.",
         fields: [
           b("permission_to_store", "Okay to save this profile", "Required before keeping submissions."),
           b("permission_to_fictionalize", "Okay to fictionalize me", "Required before adapting into stories, games, or NPCs."),
-          b("permission_for_ai_dialogue", "Okay to use my vibe for AI dialogue", "Allows voice/dialogue simulation."),
+          b("permission_for_ai_dialogue", "Okay to generate AI-written dialogue that imitates how I communicate", "Higher-risk permission for voice/dialogue simulation."),
           b("permission_for_art_generation", "Okay to use visual notes for art prompts", "Controls whether visual prompt fields can be reused."),
-          b("permission_for_cross_project_reuse", "Okay to reuse across group projects", "Useful for shared HTF / K Street profiles."),
-          b("permission_for_relationship_simulation", "Okay to map relationships and dynamics", "Allows graph and social model simulation."),
+          b("permission_for_cross_project_reuse", "Okay to reuse across approved projects", "Allows reuse beyond the first project listed below."),
+          b("permission_for_relationship_simulation", "Okay to store information about friendships, collaborations, and social connections", "Higher-risk permission for relationship graph and social model data."),
           b("contact_for_questions", "Okay to ask me follow-up questions", "Allows follow-up questions."),
+          s("consent_basis", "Why is this profile allowed to exist?", CONSENT_BASES, "Explains whether consent came from the person, guardian, public record, estate, fictional creation, or another source."),
+          s("minor_status", "Minor / child status", MINOR_STATUSES, "Profiles for children need stricter review and usually should not allow dialogue, relationship, or art simulation without guardian approval."),
+          b("guardian_consent_required", "Guardian approval required", "Use for child/minor profiles or profiles submitted by a guardian."),
+          b("guardian_consent_confirmed", "Guardian approval confirmed", "Reviewer confirms guardian permission is present before approving restricted uses."),
+          f("consent_source", "Consent source", "text", "Where the consent information came from.", "self-submitted form, guardian email, public-domain source, estate approval"),
+          f("consent_date", "Consent date", "text", "Date consent was granted or reviewed.", "2026-06-05"),
+          f("consent_method", "Consent method", "text", "How consent was collected.", "public form checkbox, written message, signed release, reviewer note"),
+          b("withdrawal_requested", "Removal / withdrawal requested", "Marks that consent has been withdrawn or the profile should be removed from active use."),
+          f("withdrawal_date", "Removal request date", "text", "Date consent was withdrawn or removal was requested.", "2026-06-05"),
+          s("relationship_visibility", "Relationship details visibility", RELATIONSHIP_VISIBILITY, "Controls whether relationship details stay private, reviewer-only, project-only, or exportable."),
+          l("restricted_uses", "Do not use this profile for", "Global use restrictions that apply across exports and projects.", "romance\ndating_sim\nadvertising\npolitical_content\ntraining_data\npublic_release\ncommercial_use"),
           l("sensitive_topics_to_avoid", "Stuff that should stay out of canon", "Private topics that should not appear in generated content.", "family details\nmedical specifics\nold drama\nanything involving actual legal trouble"),
-          f("consent_notes", "Consent notes / weird edge cases", "textarea", "Records usage limits, approvals, and review context.", "Okay for fictionalized group lore; keep real names, family details, and private relationship stuff out of public exports.")
+          f("consent_notes", "Consent notes / edge cases", "textarea", "Records usage limits, approvals, and review context.", "Okay for fictionalized project use; keep real names, family details, and private relationship data out of public exports.")
         ]
       },
       {
@@ -398,9 +413,10 @@
         note: "The public-safe handle, vibe, obsessions, and table-intro version of the person.",
         fields: [
           f("display_name", "What should we call you?", "text", "Public-safe display name, handle, or nickname.", "Maya / @packetghost / whatever people actually call me"),
+          s("entity_subtype", "What kind of profile is this?", ENTITY_SUBTYPES, "Helps the database handle real people, fictional characters, NPCs, AI agents, pets, historical figures, family members, children, and organizations differently."),
           f("real_name_optional", "Real name, only if you want it stored", "text", "Only collect if useful and approved. Keep private.", "Full legal name optional, usually not needed"),
           f("optional_contact", "Best way to ask follow-up questions", "text", "Private follow-up contact if the person permits clarification.", "Discord handle, Signal, email, or 'ask me in the group chat'"),
-          f("in_world_name", "Character handle / codename", "text", "Reusable character handle for fiction, games, and prompts.", "Terminal Wizard, Roadtrip Bard, Meme Archaeologist"),
+          f("in_world_name", "Optional nickname, codename, or fictional version", "text", "Reusable nickname or adaptation handle for fiction, games, and prompts. Leave blank if there is not one.", "Terminal Wizard, Roadtrip Bard, Meme Archaeologist"),
           f("short_bio", "Two-sentence lore intro", "textarea", "A friendly one-paragraph intro in the person's own words.", "I fix weird problems, ask too many questions, and somehow become useful during chaos. I am usually holding coffee and three unfinished ideas."),
           f("three_word_vibe", "Three words that describe you", "text", "Fast vibe check for people, writers, and NPC systems.", "Chaotic, creative, caffeinated"),
           f("animal_affinity", "Animal you identify with", "text", "Totem, mascot, self-own, or recurring group bit.", "Crow, raccoon, wolf, octopus, coyote, house cat, honey badger, pigeon of destiny"),
@@ -492,6 +508,7 @@
         title: "Personality",
         note: "Vibe, useful chaos, recurring patterns, and the things the group already knows are true.",
         fields: [
+          f("classification_note", "Fast descriptive shortcuts note", "textarea", "Reminder that these are not psychological assessments.", "These tags are descriptive shortcuts for writing and search, not psychological assessments or diagnoses."),
           s("primary_social_energy", "Primary social energy", ["Warm Stabilizer", "Thoughtful Mentor", "Curious Guide", "Practical Fixer", "Chaotic Instigator", "Deadpan Commentator", "Magnetic Performer", "Quiet Observer", "Community Builder", "Explorer", "Storyteller", "Scholar", "Philosopher", "Connector", "Visionary", "Trusted Advisor", "Trickster Sage", "Reluctant Leader", "Investigator", "Catalyst"], "Primary recognizable social presence."),
           s("secondary_social_energy", "Secondary social energy", ["Warm Stabilizer", "Thoughtful Mentor", "Curious Guide", "Practical Fixer", "Chaotic Instigator", "Deadpan Commentator", "Magnetic Performer", "Quiet Observer", "Community Builder", "Explorer", "Storyteller", "Scholar", "Philosopher", "Connector", "Visionary", "Trusted Advisor", "Trickster Sage", "Reluctant Leader", "Investigator", "Catalyst"], "Secondary social flavor."),
           l("personality_traits", "Vibe tags", "Useful trait tags for filtering and generation.", "curious\nstubborn\nreliable\nchaotic\ncreative\ncaffeinated\nquiet\nanalytical\ndangerous"),
@@ -705,6 +722,43 @@
         ]
       },
       {
+        id: "specialized_profiles",
+        title: "Specialized Profile Types",
+        note: "Optional fields for AI agents, historical figures, pets, public figures, deceased people, organizations, and other profiles that are not a living friend filling out their own form.",
+        fields: [
+          l("agent_capabilities", "AI agent capabilities", "What an AI agent profile can do.", "summarize project memory\nanswer lore questions\ngenerate NPC dialogue\ntriage source notes"),
+          l("agent_limitations", "AI agent limitations", "What an AI agent profile cannot or should not do.", "cannot claim to be the real person\ncannot invent consent\ncannot expose private source notes"),
+          f("agent_memory_scope", "AI agent memory scope", "textarea", "What the agent is allowed to remember or retrieve.", "May use approved profile fields, approved project notes, and public-safe relationship summaries only."),
+          l("agent_tool_access", "AI agent tool access", "Allowed tools or integrations.", "read approved profile JSON\nsearch project archive\nexport markdown summaries"),
+          f("agent_operating_instructions", "AI agent operating instructions", "textarea", "Behavior rules for agent simulations.", "Be useful, cautious with private data, cite source notes when uncertain, and respect restricted uses."),
+          l("historical_sources", "Historical sources", "Sources for historical/public/deceased profiles.", "public archive link\nbook citation\ninterview transcript\nfamily-approved notes"),
+          s("historical_confidence", "Historical confidence", ["Unreviewed", "Low", "Medium", "High", "Contested"], "Confidence in historical/public-figure claims."),
+          l("contested_claims", "Contested claims", "Claims that need careful sourcing or should be presented as uncertain.", "birth date disputed\nstory appears in one source only\nfamily accounts disagree"),
+          f("scholarly_consensus", "Scholarly / source consensus", "textarea", "Current consensus for historical/public profiles.", "Most reliable sources agree on the broad timeline, but details of the event are contested."),
+          f("species", "Species", "text", "For pet or non-human profiles.", "dog, cat, parrot, horse"),
+          f("breed", "Breed / type", "text", "Optional animal breed or type.", "mutt, orange tabby, border collie mix"),
+          f("handler_relationship", "Handler / caretaker relationship", "textarea", "Who is responsible for a pet/non-human profile and how consent/review works.", "Submitted by caretaker; use only family-approved photos and light fictionalization."),
+          l("behavioral_traits", "Behavioral traits", "Animal/non-human behavior notes.", "steals socks\nguards the door\nknows who needs comfort\nhates skateboards"),
+          l("care_requirements", "Care requirements", "Sensitive care notes for pets or dependent profiles.", "do not depict unsafe food\navoid medical details unless approved\nask caretaker before public use")
+        ]
+      },
+      {
+        id: "governance",
+        title: "Governance And Lifecycle",
+        note: "Ownership, review history, retention, and export permissions for serious long-term profile management.",
+        fields: [
+          f("profile_owner", "Profile owner", "text", "Person or group responsible for this profile record.", "self, guardian, project archive, estate, public-source reviewer"),
+          f("review_owner", "Review owner", "text", "Person or team responsible for approval decisions.", "trusted reviewer / project archivist"),
+          rows("approval_history_entries", "Approval history", "date | reviewer | status | notes", "2026-06-05 | reviewer_name | reviewed | consent checked; relationship details reviewer-only"),
+          rows("change_log_entries", "Change log", "date | editor | change summary | reason", "2026-06-05 | reviewer_name | added restricted uses | privacy hardening"),
+          f("retention_policy", "Retention policy", "textarea", "How long the profile should be kept and why.", "Keep while approved project use is active; re-review yearly or when consent changes."),
+          f("expiration_date", "Expiration / re-review date", "text", "Date this profile should expire or be re-reviewed.", "2027-06-05"),
+          s("archive_status", "Archive status", ["active", "needs_review", "archived", "withdrawn", "do_not_use"], "Lifecycle state for project archives."),
+          l("export_permissions", "Export permissions", "Specific export rules.", "markdown_profile allowed\nagent_context reviewer_only\nrelationship_graph private"),
+          l("allowed_export_targets", "Allowed export targets", "Where this profile can be exported.", "private project archive\napproved game build\nreview packet\nlocal AI workspace")
+        ]
+      },
+      {
         id: "generated_content",
         title: "Generated Content",
         note: "Editable generated outputs. Buttons at the top can fill these from the structured fields.",
@@ -785,7 +839,9 @@
         story_object_entries: ["entity_id", "title", "summary", "participants", "related_events", "related_locations", "related_people", "related_assets", "importance", "canonical_status"],
         project_entity_entries: ["entity_id", "project_name", "description", "contributors", "organizations", "assets", "related_people", "related_events", "status", "repository_links"],
         concept_entity_entries: ["entity_id", "concept_name", "definition", "summary", "related_people", "related_projects", "related_stories", "related_assets"],
-        timeline_entries: ["date", "entity_id", "timeline_type", "title", "summary", "related_entities"]
+        timeline_entries: ["date", "entity_id", "timeline_type", "title", "summary", "related_entities"],
+        approval_history_entries: ["date", "reviewer", "status", "notes"],
+        change_log_entries: ["date", "editor", "change_summary", "reason"]
       }[id] || ["value"];
     }
     function setStatus(message, type = "") {
@@ -855,10 +911,21 @@
           permission_for_cross_project_reuse: values.permission_for_cross_project_reuse,
           permission_for_relationship_simulation: values.permission_for_relationship_simulation,
           contact_for_questions: values.contact_for_questions,
+          consent_basis: values.consent_basis,
+          minor_status: values.minor_status,
+          guardian_consent_required: values.guardian_consent_required,
+          guardian_consent_confirmed: values.guardian_consent_confirmed,
+          consent_source: values.consent_source,
+          consent_date: values.consent_date,
+          consent_method: values.consent_method,
+          withdrawal_requested: values.withdrawal_requested,
+          withdrawal_date: values.withdrawal_date,
+          relationship_visibility: values.relationship_visibility,
+          restricted_uses: values.restricted_uses,
           sensitive_topics_to_avoid: values.sensitive_topics_to_avoid,
           consent_notes: values.consent_notes
         },
-        identity: pick(values, ["display_name", "real_name_optional", "optional_contact", "in_world_name", "short_bio", "three_word_vibe", "animal_affinity", "current_obsession", "nicknames", "pronouns", "age_range", "current_location", "origin_location", "communities", "roles", "professions", "identity_tags"]),
+        identity: pick(values, ["display_name", "entity_subtype", "real_name_optional", "optional_contact", "in_world_name", "short_bio", "three_word_vibe", "animal_affinity", "current_obsession", "nicknames", "pronouns", "age_range", "current_location", "origin_location", "communities", "roles", "professions", "identity_tags"]),
         appearance: pick(values, ["height_build", "hair", "eyes", "face_features", "skin_tone", "distinguishing_marks", "silhouette", "everyday_clothing", "iconic_outfit", "accessories", "carried_items", "signature_item", "default_expression", "movement_body_language", "image_prompt_notes", "negative_image_prompt_notes"]),
         asset_library: {
           primary_reference_asset_id: values.primary_reference_asset_id,
@@ -876,7 +943,7 @@
           visual_reference_sheet: values.visual_reference_sheet
         },
         knowledge_graph: buildKnowledgeGraph(values),
-        personality: pick(values, ["primary_social_energy", "secondary_social_energy", "personality_traits", "custom_traits", "strengths", "flaws", "character_archetype", "signature_ability", "temperament", "biggest_contradiction"]),
+        personality: pick(values, ["classification_note", "primary_social_energy", "secondary_social_energy", "personality_traits", "custom_traits", "strengths", "flaws", "character_archetype", "signature_ability", "temperament", "biggest_contradiction"]),
         motivation: pick(values, ["core_motivation", "ranked_values", "what_they_optimize_for", "what_they_refuse_to_compromise", "what_tempts_them", "what_they_are_trying_to_become", "greatest_need", "greatest_fear", "moral_center", "shadow_desire"]),
         decision_making: pick(values, ["decision_style", "risk_tolerance", "planning_horizon", "under_pressure_behavior", "common_blind_spot", "failure_mode", "recovery_pattern", "what_makes_them_act", "what_makes_them_freeze"]),
         social_model: pick(values, ["group_role", "friendship_style", "relationship_to_group_network", "how_they_show_care", "how_they_receive_care", "how_they_ask_for_help", "trust_builders", "trust_breakers", "disagreement_style", "apology_style", "boundary_style", "loyalty_triggers", "betrayal_triggers"]),
@@ -890,6 +957,18 @@
         ai_generation: pick(values, ["canonical_short_description", "canonical_long_description", "art_prompt_summary", "dialogue_prompt_summary", "behavioral_prompt_summary", "game_design_summary", "do_not_misrepresent", "sensitive_topics", "safe_exaggerations", "unsafe_exaggerations", "prompt_tags", "negative_prompt_tags"]),
         project_usage: pick(values, ["approved_projects", "project_relevance_notes", "project_specific_notes", "canon_level"]),
         source_notes: pick(values, ["source_images", "source_interviews", "source_notes", "contributors", "reviewers", "last_reviewed", "accuracy_confidence", "unresolved_questions"]),
+        specialized_profiles: pick(values, ["agent_capabilities", "agent_limitations", "agent_memory_scope", "agent_tool_access", "agent_operating_instructions", "historical_sources", "historical_confidence", "contested_claims", "scholarly_consensus", "species", "breed", "handler_relationship", "behavioral_traits", "care_requirements"]),
+        governance: {
+          profile_owner: values.profile_owner,
+          review_owner: values.review_owner,
+          approval_history: values.approval_history_entries,
+          change_log: values.change_log_entries,
+          retention_policy: values.retention_policy,
+          expiration_date: values.expiration_date,
+          archive_status: values.archive_status,
+          export_permissions: values.export_permissions,
+          allowed_export_targets: values.allowed_export_targets
+        },
         generated_content: pick(values, ["character_summary", "ai_context_output", "art_prompt_output", "dialogue_prompt_output", "npc_summary", "relationship_summary", "character_context_output", "organization_summary_output", "project_summary_output", "timeline_summary", "lore_summary", "ai_agent_context"]),
         extensions: importedExtensions.unknown_fields || {}
       };
@@ -902,6 +981,7 @@
       return {
         entity_id: personEntityId,
         entity_type: values.entity_type || "person",
+        entity_subtype: values.entity_subtype || "",
         display_name: values.display_name || values.in_world_name || personEntityId,
         created_at: createdAt,
         updated_at: nowIso(),
@@ -1147,7 +1227,9 @@
         ["Humor And Voice", profile.humor_and_voice], ["Conflict And Stress", profile.conflict_and_stress],
         ["Signature Behaviors", profile.signature_behaviors], ["Narrative Engine", profile.narrative_engine],
         ["Game Mechanics", profile.game_mechanics], ["AI Generation", profile.ai_generation],
-        ["Project Usage", profile.project_usage], ["Source Notes", profile.source_notes], ["Generated Content", profile.generated_content]
+        ["Project Usage", profile.project_usage], ["Source Notes", profile.source_notes],
+        ["Specialized Profiles", profile.specialized_profiles], ["Governance", profile.governance],
+        ["Generated Content", profile.generated_content]
       ];
       sectionMap.forEach(([title, data]) => {
         lines.push(`## ${title}`, "");
@@ -1847,6 +1929,13 @@
       if (!profile.identity?.short_bio && !profile.generated_content?.character_summary) warnings.push("Simple intake: short bio or generated character summary is missing.");
       if (!profile.consent?.permission_to_store) warnings.push("Consent: permission to store is not checked.");
       if (!profile.consent?.permission_to_fictionalize) warnings.push("Consent: permission to fictionalize is not checked.");
+      if (profile.consent?.withdrawal_requested) warnings.push("Consent: removal/withdrawal is requested; profile should not be approved for new use.");
+      if (profile.consent?.minor_status === "minor" || profile.identity?.entity_subtype === "child_minor") {
+        if (!profile.consent?.guardian_consent_confirmed) warnings.push("Consent: minor profile needs confirmed guardian approval.");
+        if (profile.consent?.permission_for_ai_dialogue || profile.consent?.permission_for_art_generation || profile.consent?.permission_for_relationship_simulation) warnings.push("Consent: minor profile has high-risk simulation/art permissions enabled; review carefully.");
+      }
+      if (["deceased_person", "historical_figure", "public_figure"].includes(profile.identity?.entity_subtype) && !profile.consent?.consent_basis) warnings.push("Consent: public/deceased/historical profiles need a consent basis or source basis.");
+      if (profile.consent?.relationship_visibility === "exportable" && !profile.consent?.permission_for_relationship_simulation) warnings.push("Consent: relationship details are exportable but relationship permission is not checked.");
       if (!profile.project_usage?.approved_projects?.length) warnings.push("Project usage: no approved projects listed.");
       return warnings;
     }
@@ -1899,7 +1988,7 @@
         importedWarnings.push(`Imported ${source.schema_version || source.schema || "legacy"} and migrated safely to 3.0.0.`);
         flattenLegacy(source, set);
       }
-      const knownTop = new Set(["schema_version", "schema_id", "schema_name", "profile_id", "created_at", "updated_at", "metadata", "entity", "knowledge_graph", "consent", "identity", "appearance", "asset_library", "personality", "motivation", "motivation_values", "decision_making", "social_model", "social_relationship_model", "relationship_graph", "knowledge_domains", "humor_and_voice", "humor_communication", "conflict_and_stress", "conflict_stress_response", "signature_behaviors", "narrative_engine", "game_mechanics", "ai_generation", "ai_generation_metadata", "project_usage", "source_notes", "generated_content", "privacy", "exports", "generated", "character_core", "voice_and_behavior", "narrative_design", "extensions"]);
+      const knownTop = new Set(["schema_version", "schema_id", "schema_name", "profile_id", "created_at", "updated_at", "metadata", "entity", "knowledge_graph", "consent", "identity", "appearance", "asset_library", "personality", "motivation", "motivation_values", "decision_making", "social_model", "social_relationship_model", "relationship_graph", "knowledge_domains", "humor_and_voice", "humor_communication", "conflict_and_stress", "conflict_stress_response", "signature_behaviors", "narrative_engine", "game_mechanics", "ai_generation", "ai_generation_metadata", "project_usage", "source_notes", "specialized_profiles", "governance", "generated_content", "privacy", "exports", "generated", "character_core", "voice_and_behavior", "narrative_design", "extensions"]);
       const existingExtensions = source.extensions && typeof source.extensions === "object" && !Array.isArray(source.extensions) ? source.extensions : {};
       const unknownTopLevel = Object.fromEntries(Object.entries(source).filter(([key]) => !knownTop.has(key)));
       importedExtensions.unknown_fields = { ...existingExtensions, ...unknownTopLevel };
@@ -1923,7 +2012,12 @@
       return "";
     }
     function flattenModern(source, set) {
-      Object.assign(set, source.identity, source.appearance, source.personality, source.motivation, source.motivation_values, source.decision_making, source.social_model, source.social_relationship_model, source.humor_and_voice, source.humor_communication, source.conflict_and_stress, source.conflict_stress_response, source.narrative_engine, source.game_mechanics, source.ai_generation, source.ai_generation_metadata, source.project_usage, source.source_notes, source.generated_content);
+      Object.assign(set, source.identity, source.appearance, source.personality, source.motivation, source.motivation_values, source.decision_making, source.social_model, source.social_relationship_model, source.humor_and_voice, source.humor_communication, source.conflict_and_stress, source.conflict_stress_response, source.narrative_engine, source.game_mechanics, source.ai_generation, source.ai_generation_metadata, source.project_usage, source.source_notes, source.specialized_profiles, source.generated_content);
+      if (source.governance) {
+        Object.assign(set, source.governance);
+        set.approval_history_entries = source.governance.approval_history || [];
+        set.change_log_entries = source.governance.change_log || [];
+      }
       set.relationship_to_group_network = source.social_model?.relationship_to_group_network || source.social_model?.relationship_to_kstreet_circle || source.social_model?.relationship_to_lonnie_kstreet || set.relationship_to_group_network || "";
       if (source.asset_library) {
         Object.assign(set, source.asset_library);
@@ -1934,6 +2028,7 @@
       if (source.entity) {
         set.entity_id = source.entity.entity_id || "";
         set.entity_type = source.entity.entity_type || "person";
+        set.entity_subtype = source.entity.entity_subtype || set.entity_subtype || "";
         set.graph_tags = source.entity.tags || [];
         set.graph_notes = source.entity.notes || "";
         set.graph_link_entries = source.entity.relationships || [];
@@ -1974,6 +2069,17 @@
       set.permission_for_cross_project_reuse = source.consent?.permission_for_cross_project_reuse || source.consent?.permission_to_reuse_across_projects || false;
       set.permission_for_relationship_simulation = source.consent?.permission_for_relationship_simulation || false;
       set.contact_for_questions = source.consent?.contact_for_questions || source.consent?.permission_to_contact_for_clarification || false;
+      set.consent_basis = source.consent?.consent_basis || set.consent_basis || "self_submitted";
+      set.minor_status = source.consent?.minor_status || set.minor_status || "unknown";
+      set.guardian_consent_required = source.consent?.guardian_consent_required || false;
+      set.guardian_consent_confirmed = source.consent?.guardian_consent_confirmed || false;
+      set.consent_source = source.consent?.consent_source || "";
+      set.consent_date = source.consent?.consent_date || "";
+      set.consent_method = source.consent?.consent_method || "";
+      set.withdrawal_requested = source.consent?.withdrawal_requested || false;
+      set.withdrawal_date = source.consent?.withdrawal_date || "";
+      set.relationship_visibility = source.consent?.relationship_visibility || "private";
+      set.restricted_uses = source.consent?.restricted_uses || [];
       importedExtensions.created_at = source.created_at || source.metadata?.created_at;
     }
     function flattenLegacy(source, set) {

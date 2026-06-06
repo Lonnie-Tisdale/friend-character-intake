@@ -300,6 +300,13 @@
       const warnings = [];
       if (!p?.consent?.permission_to_store) warnings.push("Missing permission to store.");
       if (!p?.consent?.permission_to_fictionalize) warnings.push("Missing permission to fictionalize.");
+      if (p?.consent?.withdrawal_requested) warnings.push("Removal/withdrawal requested; do not approve new use.");
+      if (p?.consent?.minor_status === "minor" || p?.identity?.entity_subtype === "child_minor") {
+        if (!p?.consent?.guardian_consent_confirmed) warnings.push("Minor profile needs confirmed guardian approval.");
+        if (p?.consent?.permission_for_ai_dialogue || p?.consent?.permission_for_art_generation || p?.consent?.permission_for_relationship_simulation) warnings.push("Minor profile has high-risk simulation/art permissions enabled.");
+      }
+      if (["deceased_person", "historical_figure", "public_figure"].includes(p?.identity?.entity_subtype) && !p?.consent?.consent_basis) warnings.push("Public/deceased/historical profile needs a consent or source basis.");
+      if (p?.consent?.relationship_visibility === "exportable" && !p?.consent?.permission_for_relationship_simulation) warnings.push("Relationship details are exportable but relationship permission is not checked.");
       if (!p?.identity?.display_name) warnings.push("Missing display name.");
       if (!p?.project_usage?.approved_projects?.length) warnings.push("No approved projects selected.");
       if ((p?.source_notes?.source_images || []).length) warnings.push("Source image references may be private; keep actual files in the private project archive.");
