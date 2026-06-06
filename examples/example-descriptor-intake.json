@@ -544,7 +544,109 @@
   },
   "governance": {
     "profile_owner": "sample archive",
+    "owner_contact": "sample reviewer only",
     "review_owner": "trusted reviewer / project archivist",
+    "editors": [
+      {
+        "editor_id": "sample-editor",
+        "role": "editor",
+        "permissions": ["suggest_changes", "add_stories", "add_assets"],
+        "scope": "sample profile",
+        "added_by": "sample reviewer",
+        "added_at": "2026-06-01",
+        "notes": "Can propose updates but cannot approve their own changes."
+      }
+    ],
+    "reviewers": [
+      {
+        "reviewer_id": "sample-reviewer",
+        "role": "reviewer",
+        "permissions": ["approve_changes", "resolve_claims", "export_approved"],
+        "scope": "sample profile",
+        "added_by": "sample archive",
+        "added_at": "2026-06-01",
+        "notes": "Trusted local reviewer."
+      }
+    ],
+    "permission_rules": [
+      {
+        "role": "owner",
+        "action": "suggest_change",
+        "scope": "own_profile",
+        "review_required": "yes",
+        "notes": "Owner edits still enter history before export."
+      },
+      {
+        "role": "reviewer",
+        "action": "approve_change",
+        "scope": "assigned_profile",
+        "review_required": "no",
+        "notes": "Reviewer should not approve changes they proposed."
+      }
+    ],
+    "claim_status": "approved",
+    "claim_requests": [
+      {
+        "claim_id": "claim_sample_archive",
+        "claimant": "sample archive",
+        "verification_method": "sample record",
+        "evidence_summary": "Fictional sample owner for documentation.",
+        "status": "approved",
+        "submitted_at": "2026-06-01",
+        "reviewed_by": "sample reviewer",
+        "reviewed_at": "2026-06-01",
+        "reviewer_notes": "Safe fictional example."
+      }
+    ],
+    "change_requests": [
+      {
+        "change_id": "chg_sample_story_update",
+        "type": "add_story",
+        "operation": "append",
+        "target_path": "narrative_engine.story_provenance",
+        "proposed_by": "sample-editor",
+        "status": "reviewer_pending",
+        "submitted_at": "2026-06-01",
+        "reviewer": "",
+        "reviewed_at": "",
+        "summary": "Add a public-safe WCCC hallway story.",
+        "visibility": "project_only",
+        "payload_notes": "Story is sample lore only; confirm before export in a real record.",
+        "payload_json": "{\"story_id_title\":\"story_wccc_hallway\",\"who_told_it\":\"sample-editor\",\"source_type\":\"Self-Reported\",\"confidence_canon\":\"Likely\",\"witnesses\":[\"Kai\"],\"notes\":\"Public-safe hallway story.\"}"
+      }
+    ],
+    "relationship_approvals": [
+      {
+        "relationship_id": "rel_example_friend",
+        "person_a": "person_example",
+        "person_b": "person_friend",
+        "requested_visibility": "project_only",
+        "person_a_approval": "approved",
+        "person_b_approval": "pending",
+        "reviewer_status": "needs_bilateral_approval",
+        "notes": "Keep relationship details reviewer-only until both sides approve export."
+      }
+    ],
+    "version_history": [
+      {
+        "version": "1.0.0",
+        "date": "2026-06-01",
+        "modified_by": "sample reviewer",
+        "change_summary": "Created sample profile with living-record governance.",
+        "source_change_id": "initial_review",
+        "exportable": "yes"
+      }
+    ],
+    "audit_trail": [
+      {
+        "date": "2026-06-01",
+        "actor": "sample reviewer",
+        "action": "created_profile",
+        "target": "example-person",
+        "summary": "Initialized public-safe sample profile.",
+        "notes": "No real private data included."
+      }
+    ],
     "approval_history": [
       {
         "date": "2026-06-01",
@@ -566,6 +668,46 @@
     "archive_status": "active",
     "export_permissions": ["markdown_profile allowed", "agent_context allowed", "relationship_graph reviewer_only"],
     "allowed_export_targets": ["public example", "review packet", "local AI workspace"]
+  },
+  "profile_evolution": {
+    "model_version": "1.0.0",
+    "stable_identity_paths": ["profile_id", "entity.entity_id", "identity.display_name", "identity.profile_classification", "identity.entity_subtype"],
+    "living_record_paths": ["narrative_engine", "relationship_graph", "knowledge_graph", "asset_library", "project_usage", "source_notes"],
+    "pending_changes": [
+      {
+        "change_id": "chg_sample_story_update",
+        "type": "add_story",
+        "operation": "append",
+        "target_path": "narrative_engine.story_provenance",
+        "proposed_by": "sample-editor",
+        "status": "reviewer_pending",
+        "submitted_at": "2026-06-01",
+        "summary": "Add a public-safe WCCC hallway story.",
+        "visibility": "project_only",
+        "payload_notes": "Story is sample lore only; confirm before export in a real record.",
+        "payload_json": "{\"story_id_title\":\"story_wccc_hallway\",\"who_told_it\":\"sample-editor\",\"source_type\":\"Self-Reported\",\"confidence_canon\":\"Likely\",\"witnesses\":[\"Kai\"],\"notes\":\"Public-safe hallway story.\"}"
+      }
+    ],
+    "applied_versions": [
+      {
+        "version": "1.0.0",
+        "date": "2026-06-01",
+        "modified_by": "sample reviewer",
+        "change_summary": "Created sample profile with living-record governance.",
+        "source_change_id": "initial_review",
+        "exportable": "yes"
+      }
+    ],
+    "audit_events": [
+      {
+        "date": "2026-06-01",
+        "actor": "sample reviewer",
+        "action": "created_profile",
+        "target": "example-person",
+        "summary": "Initialized public-safe sample profile.",
+        "notes": "No real private data included."
+      }
+    ]
   },
   "generated_content": {
     "character_summary": "Packet Ghost is a sleep-deprived fixer whose road-trip instincts, weird internet memory, and deadpan timing turn group chaos into usable lore.",

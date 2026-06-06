@@ -29,9 +29,11 @@ Use `review.html` for a non-database review pass:
 2. Open the review dashboard from the public GitHub Pages site or local repo.
 3. Import one or more JSON files.
 4. Review consent, source image notes, project approvals, and private fields.
-5. Mark each record as `raw`, `reviewed`, or `approved`.
-6. Export the review JSON/Markdown or approved package.
-7. Store exports in the private drive:
+5. Review unresolved ownership claims, pending profile changes, relationship approvals, and visibility controls.
+6. Approve, reject, apply, or hold individual pending changes for owner/bilateral review.
+7. Mark each record as `raw`, `reviewed`, or `approved`.
+8. Export the review JSON/Markdown or approved package.
+9. Store exports in the private drive:
 
 ```text
 Submitted Descriptors/
@@ -41,6 +43,19 @@ Submitted Descriptors/
 ```
 
 The review dashboard stores its working queue only in the current browser when you click `Save Review Queue Locally`. It does not write to GitHub, Formspree, or a backend.
+
+## Living Profile Update Workflow
+
+Existing profiles should not be resubmitted from scratch when one detail changes.
+
+1. Start from the latest approved profile JSON.
+2. Import it into `index.html`.
+3. Add one or more `governance.change_requests` rows, such as a new story, event, relationship, asset, project participation note, visibility change, or correction.
+4. If claiming ownership, add a `governance.claim_requests` row with a verification method and evidence summary.
+5. If adding a relationship involving another real person, add a `governance.relationship_approvals` row and keep visibility restricted until approval is resolved.
+6. Export the updated JSON and send it to review.
+7. Reviewers approve, reject, or apply pending changes locally in `review.html`, then export the next canonical profile package.
+8. Use project-scoped or public/exportable packages only after visibility and relationship approval warnings are clear.
 
 ## Recommended Workflow
 

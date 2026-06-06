@@ -8,17 +8,17 @@ You are reviewing a static, local-first universal profile intake and review syst
 
 ## Public Links
 
-- Intake form: https://lonnie-tisdale.github.io/friend-character-intake/index.html?cachebust=2d6dbe1
-- Review dashboard: https://lonnie-tisdale.github.io/friend-character-intake/review.html?cachebust=2d6dbe1
-- Markdown packet: https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.md?cachebust=2d6dbe1
-- JSON packet: https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.json?cachebust=2d6dbe1
+- Intake form: https://lonnie-tisdale.github.io/friend-character-intake/index.html?cachebust=128dd67
+- Review dashboard: https://lonnie-tisdale.github.io/friend-character-intake/review.html?cachebust=128dd67
+- Markdown packet: https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.md?cachebust=128dd67
+- JSON packet: https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.json?cachebust=128dd67
 
 ## App Summary
 
 ```json
 {
   "title": "Universal Profile Intake + Review System",
-  "intake_page_visible_text": "HTF / K Street Character Database HTF / K Street Character Database This shared profile system turns real group lore into consistent characters, dialogue, art prompts, NPCs, relationship maps, and project memory across HTF, K Street, West Coast Crypto Cruise, and future weird ambitious builds. Person schema 3.0.0 with Knowledge Graph v4 foundation. MODE Simple Intake Advanced Canon Agent Export Save Locally Load Locally Review Submissions Sections Simple Member Intake Fill in what feels easy. The point is to capture what makes you recognizable in the group lore: your vibe, voice, obsessions, road-trip energy, Discord behavior, questionable superpowers, and how you show up when a plan gets weird. What will this be used for? Approved answers may help create consistent characters, dialogue, art prompts, NPC behavior, project memory, and relationship maps for shared HTF / K Street projects. Consent fields decide what can be stored, fictionalized, simulated, or reused. Easy path: add your display name, three-word vibe, current obsession, legendary story, visual description, voice style, group/project context, and consent choices. Then click Submit Descriptor . If you want to share a reference photo, describe where the reviewer can find it or send it privately. Public repos should not contain real private images unless explicitly approved. Advanced Canon Editing Full person schema, asset/reference metadata, canon controls, source notes, timeline entries, and graph-aware entity linking for HTF / K Street maintainers and collaborators. Agent Export Console Generate clean JSON, Markdown, visual references, graph files, and one bundled context block for ChatGPT, Claude, Gemini, local agents, game tools, and project imports. Submit Descriptor Generate Character Summary Copy Shareable Profile Generate AI Context Generate Art Prompt Generate Dialogue Prompt Generate NPC Summary Generate Relationship Summary Generate Visual Reference Sheet Generate Character Context Generate Organization Summary Generate Project Summary Generate Timeline Summary Generate Lore Summary Generate AI Agent Context Import JSON Reset Asset Library Manager Drag files here or choose files to add asset metadata Choose Asset Files Asset search Filter by type All types Filter by canon All canon levels Filter by consent All consent statuses Filter by project Filter by tag Filter by creator Filter by date Gallery View Table View Bulk Tag All Filtered Bulk Set Consent/Canon Bulk Delete Filtered Select an asset to preview metadata. Knowledge Graph Graph search Entity type filter All entity types Network View Timeline View Entity Explorer Select a node or relationship to inspect it. Agent Export / Import Profile JSON Profile JSON Compact JSON Copy JSON Markdown And Agent Context Markdown Profile AI Context Copy Markdown Copy All Agent Context Game, Art, Dialogue Game Design Summary Art Prompt Dialogue Prompt NPC Summary Relationship Summary Visual Reference Sheet Art Reference Pack Sprite Reference Assets And Graph Relationships JSON Assets JSON Asset Manifest Graph JSON Graph People Graph Relationships Graph Organizations Graph Locations Graph Events Graph Assets Graph Projects Validation, Sharing, Import Download Everything Validate JSON Copy Share Link Import JSON Search fields Schema version Migration report GitHub Pages base URL Latest share link Submission status Live JSON Preview Completeness: 0% Ready.",
+  "intake_page_visible_text": "HTF / K Street Character Database HTF / K Street Character Database This shared profile system turns real group lore into consistent characters, dialogue, art prompts, NPCs, relationship maps, and project memory across HTF, K Street, West Coast Crypto Cruise, and future weird ambitious builds. Person schema 3.0.0 with Knowledge Graph v4 foundation. MODE Simple Intake Advanced Canon Agent Export Save Locally Load Locally Review Submissions Sections Simple Member Intake Fill in what feels easy. The point is to capture what makes you recognizable in the group lore: your vibe, voice, obsessions, road-trip energy, Discord behavior, questionable superpowers, and how you show up when a plan gets weird. What will this be used for? Approved answers may help create consistent characters, dialogue, art prompts, NPC behavior, project memory, and relationship maps for shared HTF / K Street projects. Consent fields decide what can be stored, fictionalized, simulated, or reused. Easy path: add your display name, three-word vibe, current obsession, legendary story, visual description, voice style, group/project context, and consent choices. Then click Submit Descriptor . If you want to share a reference photo, describe where the reviewer can find it or send it privately. Public repos should not contain real private images unless explicitly approved. Advanced Canon Editing Full person schema, asset/reference metadata, canon controls, source notes, timeline entries, and graph-aware entity linking for HTF / K Street maintainers and collaborators. Agent Export Console Generate clean JSON, Markdown, visual references, graph files, and one bundled context block for ChatGPT, Claude, Gemini, local agents, game tools, and project imports. Submit Descriptor Generate Character Summary Copy Shareable Profile Generate AI Context Generate Art Prompt Generate Dialogue Prompt Generate NPC Summary Generate Relationship Summary Generate Visual Reference Sheet Generate Character Context Generate Organization Summary Generate Project Summary Generate Timeline Summary Generate Lore Summary Generate AI Agent Context Import JSON Reset Asset Library Manager Drag files here or choose files to add asset metadata Choose Asset Files Asset search Filter by type All types Filter by canon All canon levels Filter by consent All consent statuses Filter by project Filter by tag Filter by creator Filter by date Gallery View Table View Bulk Tag All Filtered Bulk Set Consent/Canon Bulk Delete Filtered Select an asset to preview metadata. Knowledge Graph Graph search Entity type filter All entity types Network View Timeline View Entity Explorer Select a node or relationship to inspect it. Agent Export / Import Profile JSON Profile JSON Compact JSON Project Package Public Package Copy JSON Markdown And Agent Context Markdown Profile AI Context Copy Markdown Copy All Agent Context Game, Art, Dialogue Game Design Summary Art Prompt Dialogue Prompt NPC Summary Relationship Summary Visual Reference Sheet Art Reference Pack Sprite Reference Assets And Graph Relationships JSON Assets JSON Asset Manifest Graph JSON Graph People Graph Relationships Graph Organizations Graph Locations Graph Events Graph Assets Graph Projects Validation, Sharing, Import Download Everything Validate JSON Copy Share Link Import JSON Search fields Schema version Migration report GitHub Pages base URL Latest share link Submission status Live JSON Preview Completeness: 0% Ready.",
   "review_page_visible_text": "Profile Review Dashboard Profile Review Dashboard Private review workflow for moving profiles from Raw to Reviewed to Approved for Use. Static, local-first, JSON/Markdown portable. Open Intake Form Import JSON Files Save Review Queue Locally Load Local Queue Clear Queue Profiles Import downloaded Formspree/profile JSON files. Consent first, privacy second, canon/project approval third. Drag JSON profiles here All statuses Raw Reviewed Approved Review Checklist Confirm consent before any real person becomes reusable canon. Keep optional contact, real names, boundaries, and private source image notes private. Confirm which projects can use the profile and how visible the adaptation can be. Add reviewer notes, confidence, canon level, and final status. Export Raw, Reviewed, or Approved packages into the private project archive. Ready. Selected Profile Select a profile from the left. Nothing here writes to GitHub or a server.",
   "modes": [
     "Simple Intake",
@@ -101,6 +101,7 @@ You are reviewing a static, local-first universal profile intake and review syst
     "source_notes",
     "specialized_profiles",
     "governance",
+    "profile_evolution",
     "generated_content",
     "extensions"
   ],
@@ -122,7 +123,17 @@ You are reviewing a static, local-first universal profile intake and review syst
     "signature_behavior",
     "asset",
     "asset_group",
-    "style_guide"
+    "style_guide",
+    "visibility",
+    "profile_evolution",
+    "governance",
+    "profile_actor",
+    "permission_rule",
+    "claim_request",
+    "change_request",
+    "relationship_approval",
+    "version_history_entry",
+    "audit_event"
   ]
 }
 ```
@@ -868,6 +879,79 @@ Example / placeholder:
 ```text
 Source Images/Packet Ghost/approved-conference-reference.jpg
 ```
+
+## Governance And Lifecycle
+
+Ownership, review history, retention, and export permissions for serious long-term profile management.
+
+### Profile owner
+Field ID: `profile_owner`
+Type: `text`
+
+Example / placeholder:
+
+```text
+self, guardian, project archive, estate, public-source reviewer
+```
+
+### Owner contact / verification route
+Field ID: `owner_contact`
+Type: `text`
+
+Example / placeholder:
+
+```text
+Discord handle, email, guardian contact, project archivist
+```
+
+### Current claim status
+Field ID: `claim_status`
+Type: `select`
+
+Options:
+- draft
+- submitted
+- needs_verification
+- reviewer_pending
+- approved
+- rejected
+- withdrawn
+
+### Claim requests
+Field ID: `claim_requests`
+Type: `rows`
+
+Example / placeholder:
+
+```text
+claim_20260605_maya | Maya | known Discord account + self-confirmed profile details | confirmed by private message | reviewer_pending | 2026-06-05 |  |  | waiting on owner confirmation
+```
+
+Row format: `claim id | claimant | verification method | evidence summary | status | submitted_at | reviewed_by | reviewed_at | reviewer notes`
+
+### Pending / historical change requests
+Field ID: `change_requests`
+Type: `rows`
+
+Example / placeholder:
+
+```text
+chg_story_001 | add_story | append | narrative_engine.story_provenance | maya | reviewer_pending | 2026-06-05 |  |  | add WCCC hallway story | project_only | structured story payload | {"story_id_title":"story_wccc_hallway","who_told_it":"Maya","source_type":"Self-Reported","confidence_canon":"Likely","witnesses":["Kai"],"notes":"Public-safe hallway story."}
+```
+
+Row format: `change id | type | operation | target path | proposed by | status | submitted_at | reviewer | reviewed_at | summary | visibility | payload/notes | payload JSON`
+
+### Relationship approvals
+Field ID: `relationship_approval_entries`
+Type: `rows`
+
+Example / placeholder:
+
+```text
+rel_maya_kai | person_maya | person_kai | project_only | approved | pending | needs_bilateral_approval | do not export until both sides approve
+```
+
+Row format: `relationship id | person/entity A | person/entity B | requested visibility | A approval | B approval | reviewer status | notes`
 
 ## Generated Content
 
@@ -1624,10 +1708,10 @@ Type: `rows`
 Example / placeholder:
 
 ```text
-rel_packetghost_crew | person_packetghost | person_crew | friend | 8 | 2 | 7 | 6 | frequent | healthy | starts projects from jokes | airport floor lore | Discord-to-road-trip friendship | public-safe relationship summary only | high | semi_canon | approved
+rel_packetghost_crew | person_packetghost | person_crew | friend | 8 | 2 | 7 | 6 | frequent | healthy | starts projects from jokes | airport floor lore | Discord-to-road-trip friendship | public-safe relationship summary only | high | semi_canon | approved | project_only | approved | pending | needs_bilateral_approval
 ```
 
-Row format: `relationship_id | person_a | person_b | relationship_type | trust level | conflict level | history level | influence level | communication frequency | relationship health | running dynamic | inside jokes | shared history | relationship notes | confidence level | canon level | consent status`
+Row format: `relationship_id | person_a | person_b | relationship_type | trust level | conflict level | history level | influence level | communication frequency | relationship health | running dynamic | inside jokes | shared history | relationship notes | confidence level | canon level | consent status | requested visibility | person A approval | person B approval | reviewer status`
 
 ### Organization entities
 Field ID: `organization_entity_entries`
@@ -3483,6 +3567,16 @@ Example / placeholder:
 self, guardian, project archive, estate, public-source reviewer
 ```
 
+### Owner contact / verification route
+Field ID: `owner_contact`
+Type: `text`
+
+Example / placeholder:
+
+```text
+Discord handle, email, guardian contact, project archivist
+```
+
 ### Review owner
 Field ID: `review_owner`
 Type: `text`
@@ -3492,6 +3586,117 @@ Example / placeholder:
 ```text
 trusted reviewer / project archivist
 ```
+
+### Editors
+Field ID: `editor_entries`
+Type: `rows`
+
+Example / placeholder:
+
+```text
+maya | editor | suggest_changes,add_assets,add_stories | HTF,WCCC | profile owner | 2026-06-05 | can submit updates, not approve own changes
+```
+
+Row format: `editor id/name | role | permissions comma-list | scope | added_by | added_at | notes`
+
+### Reviewers
+Field ID: `reviewer_entries`
+Type: `rows`
+
+Example / placeholder:
+
+```text
+archive-reviewer | reviewer | approve_changes,resolve_claims,export_approved | all projects | review owner | 2026-06-05 | trusted local reviewer
+```
+
+Row format: `reviewer id/name | role | permissions comma-list | scope | added_by | added_at | notes`
+
+### Permission rules
+Field ID: `permission_rule_entries`
+Type: `rows`
+
+Example / placeholder:
+
+```text
+owner | suggest_change | own_profile | no | owner changes still enter history
+editor | add_story | assigned_profile | yes | reviewer approves before export
+reviewer | approve_change | assigned_project | no | cannot approve changes they proposed
+```
+
+Row format: `role | action | scope | review required yes/no | notes`
+
+### Current claim status
+Field ID: `claim_status`
+Type: `select`
+
+Options:
+- draft
+- submitted
+- needs_verification
+- reviewer_pending
+- approved
+- rejected
+- withdrawn
+
+### Claim requests
+Field ID: `claim_requests`
+Type: `rows`
+
+Example / placeholder:
+
+```text
+claim_20260605_maya | Maya | known Discord account + self-confirmed profile details | confirmed by private message | reviewer_pending | 2026-06-05 |  |  | waiting on owner confirmation
+```
+
+Row format: `claim id | claimant | verification method | evidence summary | status | submitted_at | reviewed_by | reviewed_at | reviewer notes`
+
+### Pending / historical change requests
+Field ID: `change_requests`
+Type: `rows`
+
+Example / placeholder:
+
+```text
+chg_story_001 | add_story | append | narrative_engine.story_provenance | maya | reviewer_pending | 2026-06-05 |  |  | add WCCC hallway story | project_only | structured story payload | {"story_id_title":"story_wccc_hallway","who_told_it":"Maya","source_type":"Self-Reported","confidence_canon":"Likely","witnesses":["Kai"],"notes":"Public-safe hallway story."}
+```
+
+Row format: `change id | type | operation | target path | proposed by | status | submitted_at | reviewer | reviewed_at | summary | visibility | payload/notes | payload JSON`
+
+### Relationship approvals
+Field ID: `relationship_approval_entries`
+Type: `rows`
+
+Example / placeholder:
+
+```text
+rel_maya_kai | person_maya | person_kai | project_only | approved | pending | needs_bilateral_approval | do not export until both sides approve
+```
+
+Row format: `relationship id | person/entity A | person/entity B | requested visibility | A approval | B approval | reviewer status | notes`
+
+### Version history
+Field ID: `version_history_entries`
+Type: `rows`
+
+Example / placeholder:
+
+```text
+1.0.0 | 2026-06-05 | reviewer_name | initial approved profile | initial_review | yes
+```
+
+Row format: `version | date | modified by | change summary | source change id | exportable yes/no`
+
+### Audit trail
+Field ID: `audit_trail_entries`
+Type: `rows`
+
+Example / placeholder:
+
+```text
+2026-06-05 | reviewer_name | approved_change | chg_story_001 | added WCCC hallway story | source confirmed by owner
+```
+
+Row format: `date | actor | action | target | summary | notes`
 
 ### Approval history
 Field ID: `approval_history_entries`
@@ -4642,7 +4847,117 @@ Type: `textarea`
   },
   "governance": {
     "profile_owner": "sample archive",
+    "owner_contact": "sample reviewer only",
     "review_owner": "trusted reviewer / project archivist",
+    "editors": [
+      {
+        "editor_id": "sample-editor",
+        "role": "editor",
+        "permissions": [
+          "suggest_changes",
+          "add_stories",
+          "add_assets"
+        ],
+        "scope": "sample profile",
+        "added_by": "sample reviewer",
+        "added_at": "2026-06-01",
+        "notes": "Can propose updates but cannot approve their own changes."
+      }
+    ],
+    "reviewers": [
+      {
+        "reviewer_id": "sample-reviewer",
+        "role": "reviewer",
+        "permissions": [
+          "approve_changes",
+          "resolve_claims",
+          "export_approved"
+        ],
+        "scope": "sample profile",
+        "added_by": "sample archive",
+        "added_at": "2026-06-01",
+        "notes": "Trusted local reviewer."
+      }
+    ],
+    "permission_rules": [
+      {
+        "role": "owner",
+        "action": "suggest_change",
+        "scope": "own_profile",
+        "review_required": "yes",
+        "notes": "Owner edits still enter history before export."
+      },
+      {
+        "role": "reviewer",
+        "action": "approve_change",
+        "scope": "assigned_profile",
+        "review_required": "no",
+        "notes": "Reviewer should not approve changes they proposed."
+      }
+    ],
+    "claim_status": "approved",
+    "claim_requests": [
+      {
+        "claim_id": "claim_sample_archive",
+        "claimant": "sample archive",
+        "verification_method": "sample record",
+        "evidence_summary": "Fictional sample owner for documentation.",
+        "status": "approved",
+        "submitted_at": "2026-06-01",
+        "reviewed_by": "sample reviewer",
+        "reviewed_at": "2026-06-01",
+        "reviewer_notes": "Safe fictional example."
+      }
+    ],
+    "change_requests": [
+      {
+        "change_id": "chg_sample_story_update",
+        "type": "add_story",
+        "operation": "append",
+        "target_path": "narrative_engine.story_provenance",
+        "proposed_by": "sample-editor",
+        "status": "reviewer_pending",
+        "submitted_at": "2026-06-01",
+        "reviewer": "",
+        "reviewed_at": "",
+        "summary": "Add a public-safe WCCC hallway story.",
+        "visibility": "project_only",
+        "payload_notes": "Story is sample lore only; confirm before export in a real record.",
+        "payload_json": "{\"story_id_title\":\"story_wccc_hallway\",\"who_told_it\":\"sample-editor\",\"source_type\":\"Self-Reported\",\"confidence_canon\":\"Likely\",\"witnesses\":[\"Kai\"],\"notes\":\"Public-safe hallway story.\"}"
+      }
+    ],
+    "relationship_approvals": [
+      {
+        "relationship_id": "rel_example_friend",
+        "person_a": "person_example",
+        "person_b": "person_friend",
+        "requested_visibility": "project_only",
+        "person_a_approval": "approved",
+        "person_b_approval": "pending",
+        "reviewer_status": "needs_bilateral_approval",
+        "notes": "Keep relationship details reviewer-only until both sides approve export."
+      }
+    ],
+    "version_history": [
+      {
+        "version": "1.0.0",
+        "date": "2026-06-01",
+        "modified_by": "sample reviewer",
+        "change_summary": "Created sample profile with living-record governance.",
+        "source_change_id": "initial_review",
+        "exportable": "yes"
+      }
+    ],
+    "audit_trail": [
+      {
+        "date": "2026-06-01",
+        "actor": "sample reviewer",
+        "action": "created_profile",
+        "target": "example-person",
+        "summary": "Initialized public-safe sample profile.",
+        "notes": "No real private data included."
+      }
+    ],
     "approval_history": [
       {
         "date": "2026-06-01",
@@ -4671,6 +4986,59 @@ Type: `textarea`
       "public example",
       "review packet",
       "local AI workspace"
+    ]
+  },
+  "profile_evolution": {
+    "model_version": "1.0.0",
+    "stable_identity_paths": [
+      "profile_id",
+      "entity.entity_id",
+      "identity.display_name",
+      "identity.profile_classification",
+      "identity.entity_subtype"
+    ],
+    "living_record_paths": [
+      "narrative_engine",
+      "relationship_graph",
+      "knowledge_graph",
+      "asset_library",
+      "project_usage",
+      "source_notes"
+    ],
+    "pending_changes": [
+      {
+        "change_id": "chg_sample_story_update",
+        "type": "add_story",
+        "operation": "append",
+        "target_path": "narrative_engine.story_provenance",
+        "proposed_by": "sample-editor",
+        "status": "reviewer_pending",
+        "submitted_at": "2026-06-01",
+        "summary": "Add a public-safe WCCC hallway story.",
+        "visibility": "project_only",
+        "payload_notes": "Story is sample lore only; confirm before export in a real record.",
+        "payload_json": "{\"story_id_title\":\"story_wccc_hallway\",\"who_told_it\":\"sample-editor\",\"source_type\":\"Self-Reported\",\"confidence_canon\":\"Likely\",\"witnesses\":[\"Kai\"],\"notes\":\"Public-safe hallway story.\"}"
+      }
+    ],
+    "applied_versions": [
+      {
+        "version": "1.0.0",
+        "date": "2026-06-01",
+        "modified_by": "sample reviewer",
+        "change_summary": "Created sample profile with living-record governance.",
+        "source_change_id": "initial_review",
+        "exportable": "yes"
+      }
+    ],
+    "audit_events": [
+      {
+        "date": "2026-06-01",
+        "actor": "sample reviewer",
+        "action": "created_profile",
+        "target": "example-person",
+        "summary": "Initialized public-safe sample profile.",
+        "notes": "No real private data included."
+      }
     ]
   },
   "generated_content": {

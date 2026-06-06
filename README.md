@@ -4,6 +4,8 @@ A static, project-agnostic, group-centric profile database for collecting struct
 
 The current person profile schema is `kstreet_person_profile.v3` version `3.0.0`. The app also includes the additive `kstreet_knowledge_graph.v4_foundation` layer for graph-aware people, relationships, organizations, locations, events, assets, projects, factions, story objects, and concepts.
 
+Profiles are now treated as living records. Ownership, profile claims, granular change requests, relationship approvals, version history, and audit trail data live in the additive `governance` and `profile_evolution` layers so contributors can suggest updates without resubmitting the whole profile.
+
 ## What This Is For
 
 This tool prioritizes the parts of a person that make a character recognizable and reusable: motivation, behavior, decision-making, strengths, flaws, communication style, social energy, boundaries, habits, and visual cues.
@@ -33,6 +35,7 @@ It can support:
 - `docs/asset-management-guide.md` - static asset management workflow
 - `docs/visual-reference-workflow.md` - artist/image/sprite reference workflow
 - `docs/knowledge-graph-v4-foundation.md` - v4 entity framework, graph links, timeline, and graph exports
+- `docs/profile-ownership-evolution.md` - ownership, claiming, granular updates, version history, review queues, and migration plan
 - `docs/workflow.md` - recommended HTF / K Street cloud-drive workflow
 - `examples/example-descriptor-intake.json` - safe example record
 
@@ -52,6 +55,8 @@ Use the buttons at the top of the form to:
 - Generate a character summary, AI context, art prompt, dialogue prompt, NPC summary, and relationship summary
 - Manage a canonical asset library with gallery/table views, uploads-to-metadata, filters, bulk tagging/editing/delete, preview, and visual reference generation
 - Build a static Knowledge Graph with entity rows, relationship entities, graph links, a node browser, relationship browser, entity inspector, search/filter controls, timeline view, and SVG network view
+- Add ownership, claim requests, pending change requests, relationship approvals, version history, and audit trail entries under Governance
+- Export full private review data, project-scoped packages, or public/exportable packages with visibility filtering
 - Generate graph-aware Character Context, Relationship Summary, Organization Summary, Project Summary, Timeline Summary, Lore Summary, and AI Agent Context
 - Copy one bundled agent-ready context package for AI/game/dev workflows
 - Generate AI context
@@ -73,8 +78,10 @@ Reviewer workflow:
 2. Import downloaded Formspree/profile JSON files.
 3. Select each submission and set status to `raw`, `reviewed`, or `approved`.
 4. Add reviewer notes, confidence level, canon level, and consent status.
-5. Download review JSON/Markdown or an approved package.
-6. Store exported packages in the private HTF / K Street cloud drive, not the public repo.
+5. Review pending claims, relationship approvals, and granular profile changes.
+6. Approve, reject, or apply individual pending changes in the local queue.
+7. Download review JSON/Markdown or an approved package.
+8. Store exported packages in the private HTF / K Street cloud drive, not the public repo.
 
 The JSON preview updates live as fields change. The app warns before closing when there are unsaved changes.
 
@@ -185,7 +192,7 @@ Supported entity types are `person`, `relationship`, `organization`, `location`,
 
 Existing v3 exports automatically become `entity_type: "person"` on import. Unknown fields are still preserved under `extensions`.
 
-Recent UX/schema additions include `identity.short_bio`, `identity.profile_classification` / `entity.profile_classification`, `identity.entity_subtype` / `entity.entity_subtype`, first-class simple relationship rows, story provenance fields, `social_model.relationship_to_group_network` for group/project/community relationship context, revocation and consent-basis fields, minor/guardian safeguards, global restricted uses, relationship visibility, `project_usage.project_relevance_notes`, `project_usage.canon_truth_status`, `specialized_profiles` for agents/historical figures/pets, `governance` lifecycle fields, per-asset `linked_entity_id` / `linked_project`, and relationship metadata for confidence, canon, and consent.
+Recent UX/schema additions include `identity.short_bio`, `identity.profile_classification` / `entity.profile_classification`, `identity.entity_subtype` / `entity.entity_subtype`, first-class simple relationship rows, story provenance fields, `social_model.relationship_to_group_network` for group/project/community relationship context, revocation and consent-basis fields, minor/guardian safeguards, global restricted uses, relationship visibility, structured `payload_json` change requests, `project_usage.project_relevance_notes`, `project_usage.canon_truth_status`, `specialized_profiles` for agents/historical figures/pets, `governance` lifecycle fields, per-asset `linked_entity_id` / `linked_project`, and relationship metadata for confidence, canon, consent, visibility, and bilateral approval.
 
 For Oregon Fail / West Coast Crypto Cruise, future schema work should favor events, stories, relationships, provenance, consent, and graph memory over adding more personality fields. The profile is the entry point; the durable project memory is the graph of people, events, projects, locations, and stories.
 

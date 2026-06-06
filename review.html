@@ -154,6 +154,7 @@
         confidence_level: normalized.source_notes?.accuracy_confidence || "Unreviewed",
         canon_level: normalized.project_usage?.canon_level || "Raw",
         consent_status: consentStatus(normalized),
+        pending_change_count: pendingChanges(normalized).length,
         imported_at: nowIso(),
         updated_at: nowIso(),
         profile: normalized
@@ -176,6 +177,7 @@
         confidence_level: record.confidence_level,
         canon_level: record.canon_level,
         consent_status: record.consent_status,
+        pending_change_count: pendingChanges(record.profile).length,
         source_file: record.file_name,
         profile: record.profile
       };
@@ -223,7 +225,7 @@
         <div class="record-card ${record.id === selectedId ? "active" : ""}" data-record-id="${escapeHtml(record.id)}">
           <strong>${escapeHtml(profileName(record.profile))}</strong>
           <div><span class="badge ${statusClass(record.status)}">${escapeHtml(record.status)}</span> <span class="hint">${escapeHtml(record.profile_id)}</span></div>
-          <div class="hint">${escapeHtml(record.consent_status)} · ${escapeHtml(record.canon_level)}</div>
+          <div class="hint">${escapeHtml(record.consent_status)} · ${escapeHtml(record.canon_level)} · ${pendingChanges(record.profile).length} pending changes</div>
         </div>
       `).join("") || "<p class='hint'>No profiles loaded yet.</p>";
       document.querySelectorAll("[data-record-id]").forEach(card => card.addEventListener("click", () => selectRecord(card.getAttribute("data-record-id"))));
@@ -283,8 +285,12 @@
           <li>Short bio: ${escapeHtml(profile.identity?.short_bio || profile.generated_content?.character_summary || "")}</li>
           <li>Projects: ${escapeHtml((profile.project_usage?.approved_projects || []).join(", "))}</li>
           <li>Truth status: ${escapeHtml(profile.project_usage?.canon_truth_status || profile.narrative_engine?.story_canon_status || "")}</li>
+          <li>Pending changes: ${pendingChanges(profile).length}</li>
+          <li>Claim status: ${escapeHtml(profile.governance?.claim_status || "")}</li>
           <li>Relationship/project context: ${escapeHtml(profile.social_model?.relationship_to_group_network || profile.social_model?.relationship_to_kstreet_circle || profile.social_model?.relationship_to_lonnie_kstreet || "")}</li>
         </ul>
+        ${renderPendingChanges(record)}
+        ${renderClaimRequests(record)}
         <h3>Profile Preview</h3>
         <pre>${escapeHtml(JSON.stringify(profile, null, 2))}</pre>
       `;
@@ -295,6 +301,72 @@
       el("downloadReviewJsonBtn").addEventListener("click", () => downloadText(`${record.profile_id}.${record.status}.review.json`, JSON.stringify(reviewEnvelope(record), null, 2), "application/json"));
       el("downloadReviewMdBtn").addEventListener("click", () => downloadText(`${record.profile_id}.${record.status}.review.md`, reviewMarkdown(record), "text/markdown"));
       el("downloadApprovedPackageBtn").addEventListener("click", () => downloadApprovedPackage(record));
+      if (el("approvePendingChangesBtn")) el("approvePendingChangesBtn").addEventListener("click", () => setPendingChangeStatuses("approved"));
+      if (el("rejectPendingChangesBtn")) el("rejectPendingChangesBtn").addEventListener("click", () => setPendingChangeStatuses("rejected"));
+      document.querySelectorAll("[data-change-action]").forEach(button => button.addEventListener("click", () => reviewChange(button.getAttribute("data-change-id"), button.getAttribute("data-change-action"))));
+      document.querySelectorAll("[data-claim-action]").forEach(button => button.addEventListener("click", () => reviewClaim(button.getAttribute("data-claim-id"), button.getAttribute("data-claim-action"))));
+    }
+
+    function pendingChanges(profile) {
+      const changes = profile?.governance?.change_requests || profile?.profile_evolution?.pending_changes || [];
+      return changes.filter(change => !["approved", "applied", "rejected", "withdrawn"].includes(change.status));
+    }
+
+    function renderPendingChanges(record) {
+      const changes = pendingChanges(record.profile);
+      if (!changes.length) return "";
+      return `
+        <h3>Pending Changes Queue</h3>
+        <div class="stack">
+          ${changes.map(change => {
+            const id = change.change_id || change.type || "change";
+            return `<div class="record-card">
+              <strong>${escapeHtml(id)}</strong>
+              <div class="hint">${escapeHtml(change.type || "")} · ${escapeHtml(change.operation || "")} · ${escapeHtml(change.target_path || "")} · ${escapeHtml(change.visibility || "")}</div>
+              <p>${escapeHtml(change.summary || change.payload_notes || "")}</p>
+              <label>Decision reason
+                <textarea id="change_reason_${escapeHtml(id)}" placeholder="Reviewer notes for this decision">${escapeHtml(change.decision_reason || "")}</textarea>
+              </label>
+              <div class="toolbar">
+                <button type="button" data-change-action="approved" data-change-id="${escapeHtml(id)}">Approve</button>
+                <button type="button" class="primary" data-change-action="apply" data-change-id="${escapeHtml(id)}">Apply / Approve</button>
+                <button type="button" class="warning" data-change-action="rejected" data-change-id="${escapeHtml(id)}">Reject</button>
+              </div>
+            </div>`;
+          }).join("")}
+        </div>
+        <div class="toolbar">
+          <button type="button" id="approvePendingChangesBtn">Bulk Approve Pending Changes</button>
+          <button type="button" class="warning" id="rejectPendingChangesBtn">Bulk Reject Pending Changes</button>
+        </div>
+      `;
+    }
+
+    function renderClaimRequests(record) {
+      const claims = record.profile?.governance?.claim_requests || [];
+      const openClaims = claims.filter(claim => !["approved", "rejected", "withdrawn"].includes(claim.status));
+      if (!openClaims.length) return "";
+      return `
+        <h3>Claim Requests</h3>
+        <div class="stack">
+          ${openClaims.map(claim => {
+            const id = claim.claim_id || claim.claimant || "claim";
+            return `<div class="record-card">
+              <strong>${escapeHtml(id)}</strong>
+              <div class="hint">${escapeHtml(claim.claimant || "")} · ${escapeHtml(claim.status || "")} · ${escapeHtml(claim.verification_method || "")}</div>
+              <p>${escapeHtml(claim.evidence_summary || "")}</p>
+              <label>Claim decision reason
+                <textarea id="claim_reason_${escapeHtml(id)}" placeholder="Reviewer notes for this claim">${escapeHtml(claim.reviewer_notes || "")}</textarea>
+              </label>
+              <div class="toolbar">
+                <button type="button" class="primary" data-claim-action="approved" data-claim-id="${escapeHtml(id)}">Approve Claim</button>
+                <button type="button" data-claim-action="needs_verification" data-claim-id="${escapeHtml(id)}">Needs Verification</button>
+                <button type="button" class="warning" data-claim-action="rejected" data-claim-id="${escapeHtml(id)}">Reject Claim</button>
+              </div>
+            </div>`;
+          }).join("")}
+        </div>
+      `;
     }
 
     function reviewWarnings(record) {
@@ -311,11 +383,22 @@
       if (p?.consent?.relationship_visibility === "exportable" && !p?.consent?.permission_for_relationship_simulation) warnings.push("Relationship details are exportable but relationship permission is not checked.");
       if (p?.narrative_engine?.legendary_story && !p?.narrative_engine?.story_teller && !p?.narrative_engine?.story_provenance?.length) warnings.push("Legendary story exists without a teller/source.");
       if (p?.relationship_graph?.length && p?.consent?.relationship_visibility === "private") warnings.push("Relationship graph entries exist but relationship visibility is private; keep out of public exports.");
+      if (pendingChanges(p).some(change => change.status === "needs_bilateral_approval")) warnings.push("One or more relationship changes needs bilateral approval before export.");
+      unresolvedRelationshipApprovals(p).forEach(approval => warnings.push(`Relationship ${approval.relationship_id || ""} needs approval before ${approval.requested_visibility || "restricted"} export.`));
+      if ((p?.governance?.claim_requests || []).some(claim => ["submitted", "needs_verification", "reviewer_pending"].includes(claim.status))) warnings.push("Profile has an unresolved ownership claim request.");
       if (!p?.identity?.display_name) warnings.push("Missing display name.");
       if (!p?.project_usage?.approved_projects?.length) warnings.push("No approved projects selected.");
       if ((p?.source_notes?.source_images || []).length) warnings.push("Source image references may be private; keep actual files in the private project archive.");
       if (record.status === "approved" && record.consent_status !== "usable_with_limits") warnings.push("Approved status conflicts with missing consent.");
       return warnings;
+    }
+
+    function unresolvedRelationshipApprovals(profile) {
+      const sensitiveVisibility = new Set(["project_only", "exportable"]);
+      return (profile?.governance?.relationship_approvals || []).filter(approval => {
+        if (!sensitiveVisibility.has(approval.requested_visibility)) return false;
+        return approval.reviewer_status === "needs_bilateral_approval" || approval.person_a_approval !== "approved" || approval.person_b_approval !== "approved";
+      });
     }
 
     function updateSelectedFromPanel() {
@@ -333,6 +416,280 @@
       record.profile.source_notes.accuracy_confidence = record.confidence_level;
       renderList();
       setStatus("Review changes staged in browser memory.", "ok");
+    }
+
+    const APPLICABLE_CHANGE_PATHS = new Set([
+      "narrative_engine.story_provenance",
+      "knowledge_graph.events",
+      "knowledge_graph.relationship_entities",
+      "knowledge_graph.timeline",
+      "knowledge_graph.links",
+      "relationship_graph",
+      "asset_library.assets",
+      "knowledge_graph.projects",
+      "project_usage.approved_projects",
+      "project_usage.project_specific_notes",
+      "source_notes.unresolved_questions"
+    ]);
+
+    function reviewChange(changeId, action) {
+      const record = selectedRecord();
+      if (!record) return;
+      const changes = record.profile?.governance?.change_requests || record.profile?.profile_evolution?.pending_changes || [];
+      const index = changes.findIndex(change => (change.change_id || change.type || "change") === changeId);
+      if (index === -1) return;
+      const reason = (el(`change_reason_${changeId}`)?.value || "").trim();
+      try {
+        if (action === "apply") {
+          changes[index] = applyChangeRequest(changes[index], record, reason);
+        } else {
+          changes[index] = decideChangeRequest(changes[index], record, action, reason);
+        }
+        record.profile.governance = record.profile.governance || {};
+        record.profile.governance.change_requests = changes;
+        syncEvolution(record.profile);
+        record.updated_at = nowIso();
+        renderList();
+        renderPanel();
+        setStatus(`Change ${changeId} ${action === "apply" ? "applied" : action}.`, "ok");
+      } catch (error) {
+        setStatus(`Could not ${action} ${changeId}: ${error.message}`, "warn");
+      }
+    }
+
+    function decideChangeRequest(change, record, status, decisionReason = "") {
+      const reviewedAt = nowIso();
+      const reviewer = record.reviewer || change.reviewer || "local reviewer";
+      const next = { ...change, status, reviewer, reviewed_at: reviewedAt, decision_reason: decisionReason };
+      appendAudit(record.profile, {
+        date: reviewedAt,
+        actor: reviewer,
+        action: `${status}_change`,
+        target: change.change_id || change.target_path || "change",
+        summary: change.summary || `${status} ${change.target_path || "change"}`,
+        notes: decisionReason,
+        change_id: change.change_id || "",
+        target_path: change.target_path || "",
+        operation: change.operation || "",
+        proposed_by: change.proposed_by || "",
+        reviewer,
+        reviewed_at: reviewedAt,
+        decision_reason: decisionReason,
+        payload_digest: payloadDigest(change)
+      });
+      return next;
+    }
+
+    function applyChangeRequest(change, record, decisionReason = "") {
+      const targetPath = change.target_path || "";
+      if (!APPLICABLE_CHANGE_PATHS.has(targetPath)) throw new Error(`Target path is not apply-whitelisted: ${targetPath}`);
+      const operation = change.operation || "append";
+      const payload = structuredPayload(change);
+      const before = cloneJson(valueAtPath(record.profile, targetPath));
+      applyOperation(record.profile, targetPath, operation, payload);
+      const after = cloneJson(valueAtPath(record.profile, targetPath));
+      const reviewedAt = nowIso();
+      const reviewer = record.reviewer || change.reviewer || "local reviewer";
+      const next = { ...change, status: "applied", reviewer, reviewed_at: reviewedAt, decision_reason: decisionReason };
+      appendAudit(record.profile, {
+        date: reviewedAt,
+        actor: reviewer,
+        action: "applied_change",
+        target: change.change_id || targetPath,
+        summary: change.summary || `Applied ${operation} to ${targetPath}`,
+        notes: decisionReason,
+        change_id: change.change_id || "",
+        target_path: targetPath,
+        operation,
+        proposed_by: change.proposed_by || "",
+        reviewer,
+        reviewed_at: reviewedAt,
+        decision_reason: decisionReason,
+        before_snapshot: before,
+        after_snapshot: after,
+        payload_digest: payloadDigest(change)
+      });
+      appendVersion(record.profile, {
+        version: nextVersion(record.profile),
+        date: reviewedAt,
+        modified_by: reviewer,
+        change_summary: change.summary || `Applied ${operation} to ${targetPath}`,
+        source_change_id: change.change_id || "",
+        exportable: change.visibility === "exportable" ? "yes" : "review_required",
+        change_id: change.change_id || "",
+        target_path: targetPath,
+        operation,
+        proposed_by: change.proposed_by || "",
+        reviewer,
+        reviewed_at: reviewedAt,
+        decision_reason: decisionReason,
+        payload_digest: payloadDigest(change)
+      });
+      return next;
+    }
+
+    function structuredPayload(change) {
+      if (change.payload && typeof change.payload === "object") return cloneJson(change.payload);
+      if (change.payload_json) {
+        try { return JSON.parse(change.payload_json); } catch (error) { throw new Error(`Invalid payload_json: ${error.message}`); }
+      }
+      throw new Error("Structured payload_json or payload is required to apply a change.");
+    }
+
+    function applyOperation(profile, targetPath, operation, payload) {
+      const parent = parentAtPath(profile, targetPath, true);
+      const key = targetPath.split(".").pop();
+      const current = parent[key];
+      if (operation === "append" || operation === "add") {
+        if (!Array.isArray(current)) throw new Error(`${targetPath} is not an array.`);
+        current.push(payload);
+        return;
+      }
+      if (operation === "replace") {
+        parent[key] = payload;
+        return;
+      }
+      if (operation === "merge") {
+        if (!current || typeof current !== "object" || Array.isArray(current) || !payload || typeof payload !== "object" || Array.isArray(payload)) throw new Error(`${targetPath} merge requires object payload and object target.`);
+        parent[key] = { ...current, ...payload };
+        return;
+      }
+      if (operation === "remove") {
+        if (Array.isArray(current)) {
+          const match = payload?.match || payload;
+          parent[key] = current.filter(item => !matchesPayload(item, match));
+          return;
+        }
+        parent[key] = "";
+        return;
+      }
+      throw new Error(`Unsupported operation: ${operation}`);
+    }
+
+    function matchesPayload(item, match) {
+      if (!match || typeof match !== "object") return JSON.stringify(item) === JSON.stringify(match);
+      return Object.entries(match).every(([key, value]) => item?.[key] === value);
+    }
+
+    function valueAtPath(root, path) {
+      return path.split(".").reduce((node, key) => node?.[key], root);
+    }
+
+    function parentAtPath(root, path, create = false) {
+      const keys = path.split(".");
+      const leaf = keys.pop();
+      let node = root;
+      keys.forEach(key => {
+        if (!node[key] && create) node[key] = {};
+        node = node[key];
+      });
+      if (!node || !(leaf in node)) {
+        if (!create) return undefined;
+        node[leaf] = [];
+      }
+      return node;
+    }
+
+    function payloadDigest(change) {
+      const payload = change.payload || change.payload_json || change.payload_notes || "";
+      return JSON.stringify(payload).slice(0, 500);
+    }
+
+    function cloneJson(value) {
+      return value === undefined ? undefined : JSON.parse(JSON.stringify(value));
+    }
+
+    function appendAudit(profile, event) {
+      profile.governance = profile.governance || {};
+      profile.governance.audit_trail = profile.governance.audit_trail || [];
+      profile.governance.audit_trail.push(event);
+    }
+
+    function appendVersion(profile, version) {
+      profile.governance = profile.governance || {};
+      profile.governance.version_history = profile.governance.version_history || [];
+      profile.governance.version_history.push(version);
+    }
+
+    function nextVersion(profile) {
+      const count = (profile.governance?.version_history || []).length + 1;
+      return `1.0.${count}`;
+    }
+
+    function syncEvolution(profile) {
+      profile.governance = profile.governance || {};
+      profile.profile_evolution = profile.profile_evolution || {};
+      profile.profile_evolution.model_version = profile.profile_evolution.model_version || "1.0.0";
+      profile.profile_evolution.stable_identity_paths = profile.profile_evolution.stable_identity_paths || ["profile_id", "entity.entity_id", "identity.display_name", "identity.profile_classification", "identity.entity_subtype"];
+      profile.profile_evolution.living_record_paths = profile.profile_evolution.living_record_paths || ["narrative_engine", "relationship_graph", "knowledge_graph", "asset_library", "project_usage", "source_notes"];
+      profile.profile_evolution.pending_changes = (profile.governance.change_requests || []).filter(change => !["approved", "applied", "rejected", "withdrawn"].includes(change.status));
+      profile.profile_evolution.applied_versions = profile.governance.version_history || [];
+      profile.profile_evolution.audit_events = profile.governance.audit_trail || [];
+    }
+
+    function reviewClaim(claimId, action) {
+      const record = selectedRecord();
+      if (!record) return;
+      record.profile.governance = record.profile.governance || {};
+      const claims = record.profile.governance.claim_requests || [];
+      const index = claims.findIndex(claim => (claim.claim_id || claim.claimant || "claim") === claimId);
+      if (index === -1) return;
+      const reviewedAt = nowIso();
+      const reviewer = record.reviewer || "local reviewer";
+      const reason = (el(`claim_reason_${claimId}`)?.value || "").trim();
+      const claim = claims[index];
+      claims[index] = { ...claim, status: action, reviewed_by: reviewer, reviewed_at: reviewedAt, reviewer_notes: reason };
+      if (action === "approved") {
+        record.profile.governance.profile_owner = claim.claimant || record.profile.governance.profile_owner || "";
+        record.profile.governance.claim_status = "approved";
+        appendVersion(record.profile, {
+          version: nextVersion(record.profile),
+          date: reviewedAt,
+          modified_by: reviewer,
+          change_summary: `Approved profile claim for ${claim.claimant || claimId}`,
+          source_change_id: claim.claim_id || claimId,
+          exportable: "review_required",
+          decision_reason: reason
+        });
+      } else {
+        record.profile.governance.claim_status = action;
+      }
+      appendAudit(record.profile, {
+        date: reviewedAt,
+        actor: reviewer,
+        action: `${action}_claim`,
+        target: claim.claim_id || claimId,
+        summary: `${action} claim from ${claim.claimant || claimId}`,
+        notes: reason,
+        claim_id: claim.claim_id || claimId,
+        reviewer,
+        reviewed_at: reviewedAt,
+        decision_reason: reason
+      });
+      record.profile.governance.claim_requests = claims;
+      syncEvolution(record.profile);
+      record.updated_at = reviewedAt;
+      renderList();
+      renderPanel();
+      setStatus(`Claim ${claimId} marked ${action}.`, "ok");
+    }
+
+    function setPendingChangeStatuses(status) {
+      const record = selectedRecord();
+      if (!record) return;
+      record.profile.governance = record.profile.governance || {};
+      const changes = record.profile.governance.change_requests || record.profile.profile_evolution?.pending_changes || [];
+      const changedCount = changes.filter(change => !["approved", "applied", "rejected", "withdrawn"].includes(change.status)).length;
+      record.profile.governance.change_requests = changes.map(change => {
+        if (["approved", "applied", "rejected", "withdrawn"].includes(change.status)) return change;
+        return decideChangeRequest(change, record, status, record.reviewer_notes || "");
+      });
+      syncEvolution(record.profile);
+      record.pending_change_count = pendingChanges(record.profile).length;
+      record.updated_at = nowIso();
+      renderList();
+      renderPanel();
+      setStatus(`${status === "approved" ? "Approved" : "Rejected"} ${changedCount} pending change${changedCount === 1 ? "" : "s"} in browser memory. Export to persist.`, "ok");
     }
 
     function setSelectedStatus(status) {

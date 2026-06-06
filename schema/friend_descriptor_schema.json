@@ -113,7 +113,8 @@
     "project_usage": { "$ref": "#/$defs/object" },
     "source_notes": { "$ref": "#/$defs/object" },
     "specialized_profiles": { "$ref": "#/$defs/object" },
-    "governance": { "$ref": "#/$defs/object" },
+    "governance": { "$ref": "#/$defs/governance" },
+    "profile_evolution": { "$ref": "#/$defs/profile_evolution" },
     "generated_content": { "$ref": "#/$defs/object" },
     "extensions": {
       "type": "object",
@@ -176,7 +177,11 @@
         "relationship_notes": { "type": "string" },
         "confidence_level": { "type": "string" },
         "canon_level": { "type": "string" },
-        "consent_status": { "type": "string" }
+        "consent_status": { "type": "string" },
+        "requested_visibility": { "$ref": "#/$defs/visibility" },
+        "person_a_approval": { "type": "string" },
+        "person_b_approval": { "type": "string" },
+        "reviewer_status": { "type": "string" }
       },
       "additionalProperties": true
     },
@@ -314,7 +319,12 @@
         "influence_level": { "type": "string" },
         "emotional_tone": { "type": "string" },
         "running_dynamic": { "type": "string" },
-        "notes": { "type": "string" }
+        "notes": { "type": "string" },
+        "story_source": { "type": "string" },
+        "confidence_canon": { "type": "string" },
+        "visibility": { "$ref": "#/$defs/visibility" },
+        "bilateral_approval_required": { "type": "boolean" },
+        "approval_status": { "type": "string" }
       },
       "additionalProperties": true
     },
@@ -394,6 +404,184 @@
         "asset_ids": { "type": "array", "items": { "type": "string" } },
         "prompt_notes": { "type": "string" },
         "negative_prompt_notes": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "visibility": {
+      "type": "string",
+      "enum": ["private", "reviewer_only", "project_only", "exportable"]
+    },
+    "profile_evolution": {
+      "type": "object",
+      "description": "Additive living-record layer for stable identity, pending changes, applied versions, and audit events. This lets profiles evolve without resubmitting or replacing the whole profile.",
+      "properties": {
+        "model_version": { "type": "string" },
+        "stable_identity_paths": { "type": "array", "items": { "type": "string" } },
+        "living_record_paths": { "type": "array", "items": { "type": "string" } },
+        "pending_changes": { "type": "array", "items": { "$ref": "#/$defs/change_request" } },
+        "applied_versions": { "type": "array", "items": { "$ref": "#/$defs/version_history_entry" } },
+        "audit_events": { "type": "array", "items": { "$ref": "#/$defs/audit_event" } }
+      },
+      "additionalProperties": true
+    },
+    "governance": {
+      "type": "object",
+      "description": "Ownership, editor/reviewer permissions, claims, change review, relationship approval, lifecycle, and export controls.",
+      "properties": {
+        "profile_owner": { "type": "string" },
+        "owner_contact": { "type": "string" },
+        "review_owner": { "type": "string" },
+        "editors": { "type": "array", "items": { "$ref": "#/$defs/profile_actor" } },
+        "reviewers": { "type": "array", "items": { "$ref": "#/$defs/profile_actor" } },
+        "permission_rules": { "type": "array", "items": { "$ref": "#/$defs/permission_rule" } },
+        "claim_status": {
+          "type": "string",
+          "enum": ["draft", "submitted", "needs_verification", "reviewer_pending", "approved", "rejected", "withdrawn"]
+        },
+        "claim_requests": { "type": "array", "items": { "$ref": "#/$defs/claim_request" } },
+        "change_requests": { "type": "array", "items": { "$ref": "#/$defs/change_request" } },
+        "relationship_approvals": { "type": "array", "items": { "$ref": "#/$defs/relationship_approval" } },
+        "version_history": { "type": "array", "items": { "$ref": "#/$defs/version_history_entry" } },
+        "audit_trail": { "type": "array", "items": { "$ref": "#/$defs/audit_event" } },
+        "approval_history": { "type": "array", "items": { "$ref": "#/$defs/object" } },
+        "change_log": { "type": "array", "items": { "$ref": "#/$defs/object" } },
+        "retention_policy": { "type": "string" },
+        "expiration_date": { "type": "string" },
+        "archive_status": { "type": "string" },
+        "export_permissions": { "type": "array", "items": { "type": "string" } },
+        "allowed_export_targets": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "profile_actor": {
+      "type": "object",
+      "properties": {
+        "editor_id": { "type": "string" },
+        "reviewer_id": { "type": "string" },
+        "role": {
+          "type": "string",
+          "enum": ["owner", "editor", "reviewer", "project_viewer", "exporter"]
+        },
+        "permissions": { "type": "array", "items": { "type": "string" } },
+        "scope": { "type": "string" },
+        "added_by": { "type": "string" },
+        "added_at": { "type": "string" },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "permission_rule": {
+      "type": "object",
+      "properties": {
+        "role": { "type": "string" },
+        "action": { "type": "string" },
+        "scope": { "type": "string" },
+        "review_required": { "type": "string" },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "claim_request": {
+      "type": "object",
+      "properties": {
+        "claim_id": { "type": "string" },
+        "claimant": { "type": "string" },
+        "verification_method": { "type": "string" },
+        "evidence_summary": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "submitted", "needs_verification", "reviewer_pending", "approved", "rejected", "withdrawn"]
+        },
+        "submitted_at": { "type": "string" },
+        "reviewed_by": { "type": "string" },
+        "reviewed_at": { "type": "string" },
+        "reviewer_notes": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "change_request": {
+      "type": "object",
+      "properties": {
+        "change_id": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": ["field_update", "add_story", "add_event", "add_relationship", "add_asset", "add_project_participation", "visibility_change", "consent_update", "ownership_update", "correction", "archive_request"]
+        },
+        "operation": {
+          "type": "string",
+          "enum": ["add", "replace", "append", "remove", "merge"]
+        },
+        "target_path": { "type": "string" },
+        "proposed_by": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "submitted", "needs_owner_review", "needs_bilateral_approval", "reviewer_pending", "approved", "rejected", "applied", "withdrawn"]
+        },
+        "submitted_at": { "type": "string" },
+        "reviewer": { "type": "string" },
+        "reviewed_at": { "type": "string" },
+        "summary": { "type": "string" },
+        "visibility": { "$ref": "#/$defs/visibility" },
+        "payload_notes": { "type": "string" },
+        "payload_json": { "type": "string" },
+        "payload": { "$ref": "#/$defs/object" }
+      },
+      "additionalProperties": true
+    },
+    "relationship_approval": {
+      "type": "object",
+      "properties": {
+        "relationship_id": { "type": "string" },
+        "person_a": { "type": "string" },
+        "person_b": { "type": "string" },
+        "requested_visibility": { "$ref": "#/$defs/visibility" },
+        "person_a_approval": { "type": "string" },
+        "person_b_approval": { "type": "string" },
+        "reviewer_status": { "type": "string" },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "version_history_entry": {
+      "type": "object",
+      "properties": {
+        "version": { "type": "string" },
+        "date": { "type": "string" },
+        "modified_by": { "type": "string" },
+        "change_summary": { "type": "string" },
+        "source_change_id": { "type": "string" },
+        "exportable": { "type": "string" },
+        "change_id": { "type": "string" },
+        "target_path": { "type": "string" },
+        "operation": { "type": "string" },
+        "proposed_by": { "type": "string" },
+        "reviewer": { "type": "string" },
+        "reviewed_at": { "type": "string" },
+        "decision_reason": { "type": "string" },
+        "payload_digest": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "audit_event": {
+      "type": "object",
+      "properties": {
+        "date": { "type": "string" },
+        "actor": { "type": "string" },
+        "action": { "type": "string" },
+        "target": { "type": "string" },
+        "summary": { "type": "string" },
+        "notes": { "type": "string" },
+        "change_id": { "type": "string" },
+        "claim_id": { "type": "string" },
+        "target_path": { "type": "string" },
+        "operation": { "type": "string" },
+        "proposed_by": { "type": "string" },
+        "reviewer": { "type": "string" },
+        "reviewed_at": { "type": "string" },
+        "decision_reason": { "type": "string" },
+        "payload_digest": { "type": "string" },
+        "before_snapshot": {},
+        "after_snapshot": {}
       },
       "additionalProperties": true
     }

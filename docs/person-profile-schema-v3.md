@@ -44,6 +44,7 @@ Prompt labels, placeholders, and sample values should sound native to the actual
 - `source_notes`
 - `specialized_profiles`
 - `governance`
+- `profile_evolution`
 - `generated_content`
 - `extensions`
 
@@ -89,8 +90,21 @@ Consent is not one-way. Profiles should support withdrawal, lifecycle review, an
 - Deceased people, historical figures, and public figures need a clear `consent_basis` and stronger source notes.
 - Relationship graph details should default to private or reviewer-only unless explicitly approved for export.
 - `governance.approval_history` and `governance.change_log` track who approved or changed a profile.
+- `governance.profile_owner`, `editors`, `reviewers`, and `permission_rules` define who can claim, propose, review, approve, and export profile material.
+- `governance.claim_requests`, `change_requests`, `relationship_approvals`, `version_history`, and `audit_trail` support long-term profile evolution without resubmitting the entire profile.
+- `profile_evolution.stable_identity_paths` and `profile_evolution.living_record_paths` separate durable identity from growing lore/history data.
 - `governance.retention_policy`, `expiration_date`, and `archive_status` define when a profile should be re-reviewed, archived, or withdrawn.
 - `governance.export_permissions` and `allowed_export_targets` define where profile data may go.
+
+## Living Record Model
+
+Profiles should evolve through granular change requests, not full replacement. Import the current JSON, add rows under `governance.change_requests`, and let a reviewer approve or reject those rows in the local review dashboard.
+
+Stable identity fields, such as `profile_id`, `entity.entity_id`, display name, classification, subtype, and owner information, should be changed rarely and reviewed carefully. Living history fields, such as stories, events, relationships, assets, project participation, and source notes, can grow over time through append-style changes.
+
+Relationship changes involving multiple real people should use `governance.relationship_approvals` and default to private, reviewer-only, or project-only until both sides approve export.
+
+Change requests that reviewers are expected to apply should include structured `payload_json` or `payload`, not only prose notes. The review dashboard applies changes only to whitelisted living-record paths and records per-change audit/version metadata.
 
 ## Specialized Profiles
 
