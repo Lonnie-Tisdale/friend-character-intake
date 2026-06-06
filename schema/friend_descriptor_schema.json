@@ -146,6 +146,7 @@
           "type": "string",
           "enum": ["person", "relationship", "organization", "location", "event", "asset", "story_object", "project", "faction", "concept"]
         },
+        "profile_classification": { "type": "string" },
         "entity_subtype": { "type": "string" },
         "display_name": { "type": "string" },
         "created_at": { "type": "string" },

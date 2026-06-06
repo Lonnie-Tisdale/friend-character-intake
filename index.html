@@ -362,20 +362,23 @@
     const ASSET_CONSENT_STATUSES = ["approved", "limited_use", "private_only", "internal_only", "do_not_use", "unknown"];
     const ASSET_USE_CASES = ["portrait_generation", "art_generation", "sprite_generation", "npc_generation", "dialogue_generation", "relationship_system", "historical_reference", "worldbuilding", "animation_reference", "voice_reference", "3d_model_reference", "marketing", "documentation"];
     const ENTITY_TYPES = ["person", "relationship", "organization", "location", "event", "asset", "story_object", "project", "faction", "concept"];
+    const PROFILE_CLASSIFICATIONS = ["Real Person", "Fictionalized Person", "NPC", "Organization", "Location", "Event", "Concept", "AI Agent"];
     const ENTITY_SUBTYPES = ["real_person", "fictional_character", "npc", "ai_agent", "organization", "pet", "historical_figure", "deceased_person", "public_figure", "family_member", "partner_spouse", "child_minor", "collaborator", "other"];
     const CONSENT_BASES = ["self_submitted", "guardian_submitted", "public_domain_person", "historical_record", "estate_permission", "community_documentation", "fictional_creation", "organization_authorized", "unknown"];
     const MINOR_STATUSES = ["not_minor", "minor", "unknown"];
     const RELATIONSHIP_VISIBILITY = ["private", "reviewer_only", "project_only", "exportable"];
+    const STORY_SOURCE_TYPES = ["Witnessed", "Self-Reported", "Second-Hand", "Running Joke", "Community Lore", "Public Source", "Composite", "Unknown"];
+    const CANON_TRUTH_STATUSES = ["Verified", "Likely", "Community Lore", "Running Joke", "Parody", "Unknown"];
     const RELATIONSHIP_TYPES = ["friend", "family", "collaborator", "mentor", "rival", "ex", "project_member", "location_association", "event_participant", "organization_member", "inspiration_source", "fictionalized_as"];
-    const SIMPLE_SECTION_IDS = new Set(["consent", "identity", "appearance", "personality", "social_model", "humor_and_voice", "project_usage", "source_notes", "generated_content"]);
+    const SIMPLE_SECTION_IDS = new Set(["consent", "identity", "appearance", "personality", "social_model", "relationship_graph", "humor_and_voice", "narrative_engine", "project_usage", "source_notes", "generated_content"]);
     const SIMPLE_FIELD_IDS = new Set([
       "permission_to_store", "permission_to_fictionalize", "permission_for_ai_dialogue", "permission_for_art_generation", "permission_for_cross_project_reuse", "permission_for_relationship_simulation", "consent_basis", "minor_status", "guardian_consent_required", "guardian_consent_confirmed", "consent_source", "consent_date", "consent_method", "restricted_uses", "relationship_visibility", "consent_notes",
-      "display_name", "entity_subtype", "optional_contact", "in_world_name", "pronouns", "short_bio", "three_word_vibe", "animal_affinity", "current_obsession", "current_location",
+      "display_name", "profile_classification", "optional_contact", "in_world_name", "pronouns", "short_bio", "three_word_vibe", "animal_affinity", "current_obsession", "current_location",
       "image_prompt_notes", "everyday_clothing", "default_expression", "movement_body_language", "signature_item", "source_images",
       "primary_social_energy", "secondary_social_energy", "personality_traits", "custom_traits", "strengths", "flaws", "character_archetype", "signature_ability",
       "voice_rhythm", "typical_phrases", "example_quotes", "battle_intro_quote", "battle_victory_quote", "dialogue_dos", "dialogue_donts",
-      "relationship_to_group_network", "how_they_show_care", "friendship_style",
-      "approved_projects", "project_relevance_notes", "legendary_story", "most_chaotic_moment", "topics_they_bring_up", "canon_level",
+      "relationship_to_group_network", "relationship_entries", "how_they_show_care", "friendship_style",
+      "approved_projects", "project_relevance_notes", "legendary_story", "story_teller", "story_source_type", "story_confidence", "story_canon_status", "story_provenance_entries", "most_chaotic_moment", "topics_they_bring_up", "canon_level", "canon_truth_status",
       "character_summary", "ai_context_output"
     ]);
 
@@ -413,7 +416,8 @@
         note: "The public-safe handle, vibe, obsessions, and table-intro version of the person.",
         fields: [
           f("display_name", "What should we call you?", "text", "Public-safe display name, handle, or nickname.", "Maya / @packetghost / whatever people actually call me"),
-          s("entity_subtype", "What kind of profile is this?", ENTITY_SUBTYPES, "Helps the database handle real people, fictional characters, NPCs, AI agents, pets, historical figures, family members, children, and organizations differently."),
+          s("profile_classification", "Profile classification", PROFILE_CLASSIFICATIONS, "Start here so WCCC/Oregon Fail can collect people, fictionalized people, NPCs, organizations, locations, events, concepts, and AI agents without forcing everything into a person shape."),
+          s("entity_subtype", "Advanced profile subtype", ENTITY_SUBTYPES, "More specific subtype for privacy, review, and export rules."),
           f("real_name_optional", "Real name, only if you want it stored", "text", "Only collect if useful and approved. Keep private.", "Full legal name optional, usually not needed"),
           f("optional_contact", "Best way to ask follow-up questions", "text", "Private follow-up contact if the person permits clarification.", "Discord handle, Signal, email, or 'ask me in the group chat'"),
           f("in_world_name", "Optional nickname, codename, or fictional version", "text", "Reusable nickname or adaptation handle for fiction, games, and prompts. Leave blank if there is not one.", "Terminal Wizard, Roadtrip Bard, Meme Archaeologist"),
@@ -577,9 +581,9 @@
       {
         id: "relationship_graph",
         title: "Relationship Graph",
-        note: "Repeatable relationship entries for future graph and simulation systems.",
+        note: "Who knows whom, who trusts whom, who collaborates, who causes trouble together, and who always ends up in the same side quest. For WCCC/Oregon Fail, this may be more important than biography.",
         fields: [
-          rows("relationship_entries", "Relationship entries", "related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes", "Kai | collaborator | 8 | 2 | 7 | 6 | loyal chaos | starts projects from jokes | old Discord-to-road-trip friend")
+          rows("relationship_entries", "Relationship entries", "related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes | story source | confidence/canon | visibility", "Kai | collaborator | 8 | 2 | 7 | 6 | loyal chaos | starts projects from jokes | old Discord-to-road-trip friend | self-reported + witnessed | Community Lore | project_only\nRin | side quest magnet | 7 | 4 | 6 | 8 | brilliant trouble | somehow always at the same afterparty | causes useful chaos together | second-hand | Likely | reviewer_only")
         ]
       },
       {
@@ -640,6 +644,11 @@
           f("personal_quest", "What are you usually chasing?", "textarea", "What they would pursue in story terms.", "Build something that probably should not work, make it useful, then accidentally turn it into a community."),
           f("growth_arc", "Growth arc", "textarea", "Change over time.", "Learns to stop treating burnout as proof of commitment."),
           f("legendary_story", "Legendary story people tell about you", "textarea", "A story that already sounds like a side quest.", "Accidentally slept through a conference and still made the keynote. Drove across three states for a single taco recommendation. Started a business from a Discord joke."),
+          f("story_teller", "Who told this version?", "text", "Story provenance: who supplied or remembers this version.", "self, Kai, conference hallway crew, Discord thread"),
+          s("story_source_type", "Story source type", STORY_SOURCE_TYPES, "Whether this was witnessed, self-reported, second-hand, a running joke, community lore, public source, or composite."),
+          s("story_confidence", "Story confidence", CANON_TRUTH_STATUSES, "How true-ish the story is: verified, likely, community lore, running joke, parody, or unknown."),
+          s("story_canon_status", "Story canon status", CANON_TRUTH_STATUSES, "How this story should be treated inside WCCC/Oregon Fail continuity."),
+          rows("story_provenance_entries", "Story provenance entries", "story id/title | who told it | source type | confidence/canon | witnesses comma-list | notes", "story_conference_sleep | slept through conference, made keynote | self + two witnesses | Likely | Kai,Rin | details vary by teller\nstory_taco_drive | drove three states for tacos | running joke | Community Lore | hallway crew | exact number of states disputed"),
           f("most_chaotic_moment", "Most chaotic moment", "textarea", "A memorable moment where the plan became lore.", "Missed a flight and accidentally joined a startup. Lost a wallet, found a friend. Ended up at Burning Man with 24 hours notice."),
           f("recurring_internal_conflict", "Recurring internal conflict", "textarea", "Inner contradiction.", "Wants peace but keeps volunteering for impossible projects because the group needs someone with a spreadsheet and a car."),
           f("shadow_version", "Shadow version", "textarea", "Unhealthy extreme.", "Becomes a sleep-deprived chaos engine who mistakes urgency for meaning."),
@@ -703,7 +712,8 @@
           l("approved_projects", "Where can this be used?", "One per line.", "HTF\nK Street\nWest Coast Crypto Cruise\nShared Person Database\nAI Dialogue Agent\nArt Generation\nGroup Memory\nPrivate Review\nFuture Weird Project"),
           f("project_relevance_notes", "Why do you belong in the database?", "textarea", "Why this person/entity matters to one or more projects.", "Good for cruise NPC energy, group memory, social cameos, late-night dialogue, and support-character writing."),
           f("project_specific_notes", "Project-specific notes / boundaries", "textarea", "Usage notes per project.", "Okay as a background NPC on West Coast Crypto Cruise; ask before making me a main character or romance subplot."),
-          s("canon_level", "Canon level", ["Raw", "Semi Canon", "Canon", "Parody Only", "Private Reference Only"], "How authoritative the profile is.")
+          s("canon_level", "Project canon level", ["Raw", "Semi Canon", "Canon", "Parody Only", "Private Reference Only"], "How authoritative the profile is for project use."),
+          s("canon_truth_status", "Real / project / comedy truth status", CANON_TRUTH_STATUSES, "Separates literal truth from community mythology, running jokes, and parody.")
         ]
       },
       {
@@ -823,7 +833,7 @@
     }
     function rowKeys(id) {
       return {
-        relationship_entries: ["related_person", "relationship_type", "trust_level", "conflict_level", "history_level", "influence_level", "emotional_tone", "running_dynamic", "notes"],
+        relationship_entries: ["related_person", "relationship_type", "trust_level", "conflict_level", "history_level", "influence_level", "emotional_tone", "running_dynamic", "notes", "story_source", "confidence_canon", "visibility"],
         knowledge_domain_entries: ["domain", "expertise_level", "confidence_level", "lived_experience", "public_authority", "notes", "dialogue_use"],
         signature_behavior_entries: ["behavior", "context", "frequency", "comedic_exaggeration_potential", "game_use_notes", "dialogue_use_notes"],
         asset_entries: assetObjectKeys,
@@ -840,6 +850,7 @@
         project_entity_entries: ["entity_id", "project_name", "description", "contributors", "organizations", "assets", "related_people", "related_events", "status", "repository_links"],
         concept_entity_entries: ["entity_id", "concept_name", "definition", "summary", "related_people", "related_projects", "related_stories", "related_assets"],
         timeline_entries: ["date", "entity_id", "timeline_type", "title", "summary", "related_entities"],
+        story_provenance_entries: ["story_id_title", "who_told_it", "source_type", "confidence_canon", "witnesses", "notes"],
         approval_history_entries: ["date", "reviewer", "status", "notes"],
         change_log_entries: ["date", "editor", "change_summary", "reason"]
       }[id] || ["value"];
@@ -925,7 +936,7 @@
           sensitive_topics_to_avoid: values.sensitive_topics_to_avoid,
           consent_notes: values.consent_notes
         },
-        identity: pick(values, ["display_name", "entity_subtype", "real_name_optional", "optional_contact", "in_world_name", "short_bio", "three_word_vibe", "animal_affinity", "current_obsession", "nicknames", "pronouns", "age_range", "current_location", "origin_location", "communities", "roles", "professions", "identity_tags"]),
+        identity: pick(values, ["display_name", "profile_classification", "entity_subtype", "real_name_optional", "optional_contact", "in_world_name", "short_bio", "three_word_vibe", "animal_affinity", "current_obsession", "nicknames", "pronouns", "age_range", "current_location", "origin_location", "communities", "roles", "professions", "identity_tags"]),
         appearance: pick(values, ["height_build", "hair", "eyes", "face_features", "skin_tone", "distinguishing_marks", "silhouette", "everyday_clothing", "iconic_outfit", "accessories", "carried_items", "signature_item", "default_expression", "movement_body_language", "image_prompt_notes", "negative_image_prompt_notes"]),
         asset_library: {
           primary_reference_asset_id: values.primary_reference_asset_id,
@@ -952,10 +963,13 @@
         humor_and_voice: pick(values, ["communication_modes", "humor_types", "voice_rhythm", "typical_phrases", "vocabulary", "topics_they_bring_up", "topics_they_avoid", "example_quotes", "battle_intro_quote", "battle_victory_quote", "dialogue_dos", "dialogue_donts"]),
         conflict_and_stress: pick(values, ["when_challenged", "stress_signals", "escalation_triggers", "deescalation_methods", "conflict_strengths", "conflict_weaknesses", "repair_pattern", "pressure_dialogue_style"]),
         signature_behaviors: values.signature_behavior_entries,
-        narrative_engine: pick(values, ["personal_quest", "growth_arc", "legendary_story", "most_chaotic_moment", "recurring_internal_conflict", "shadow_version", "best_self_version", "running_joke", "symbolic_motifs", "character_themes", "dramatic_question", "what_changes_them", "what_never_changes", "role_in_group_story", "ideal_scene", "nightmare_scene"]),
+        narrative_engine: {
+          ...pick(values, ["personal_quest", "growth_arc", "legendary_story", "story_teller", "story_source_type", "story_confidence", "story_canon_status", "most_chaotic_moment", "recurring_internal_conflict", "shadow_version", "best_self_version", "running_joke", "symbolic_motifs", "character_themes", "dramatic_question", "what_changes_them", "what_never_changes", "role_in_group_story", "ideal_scene", "nightmare_scene"]),
+          story_provenance: values.story_provenance_entries
+        },
         game_mechanics: pick(values, ["suggested_class_role", "potential_party_roles", "passive_abilities", "active_abilities", "traversal_abilities", "support_abilities", "social_abilities", "research_abilities", "weaknesses", "status_effects", "special_dialogue_triggers", "failure_comedy_mechanics", "power_curve", "balance_notes"]),
         ai_generation: pick(values, ["canonical_short_description", "canonical_long_description", "art_prompt_summary", "dialogue_prompt_summary", "behavioral_prompt_summary", "game_design_summary", "do_not_misrepresent", "sensitive_topics", "safe_exaggerations", "unsafe_exaggerations", "prompt_tags", "negative_prompt_tags"]),
-        project_usage: pick(values, ["approved_projects", "project_relevance_notes", "project_specific_notes", "canon_level"]),
+        project_usage: pick(values, ["approved_projects", "project_relevance_notes", "project_specific_notes", "canon_level", "canon_truth_status"]),
         source_notes: pick(values, ["source_images", "source_interviews", "source_notes", "contributors", "reviewers", "last_reviewed", "accuracy_confidence", "unresolved_questions"]),
         specialized_profiles: pick(values, ["agent_capabilities", "agent_limitations", "agent_memory_scope", "agent_tool_access", "agent_operating_instructions", "historical_sources", "historical_confidence", "contested_claims", "scholarly_consensus", "species", "breed", "handler_relationship", "behavioral_traits", "care_requirements"]),
         governance: {
@@ -981,6 +995,7 @@
       return {
         entity_id: personEntityId,
         entity_type: values.entity_type || "person",
+        profile_classification: values.profile_classification || "",
         entity_subtype: values.entity_subtype || "",
         display_name: values.display_name || values.in_world_name || personEntityId,
         created_at: createdAt,
@@ -1936,6 +1951,8 @@
       }
       if (["deceased_person", "historical_figure", "public_figure"].includes(profile.identity?.entity_subtype) && !profile.consent?.consent_basis) warnings.push("Consent: public/deceased/historical profiles need a consent basis or source basis.");
       if (profile.consent?.relationship_visibility === "exportable" && !profile.consent?.permission_for_relationship_simulation) warnings.push("Consent: relationship details are exportable but relationship permission is not checked.");
+      if (profile.narrative_engine?.legendary_story && !profile.narrative_engine?.story_teller && !profile.narrative_engine?.story_provenance?.length) warnings.push("Story provenance: legendary story is present but no teller/source is listed.");
+      if (profile.relationship_graph?.length && profile.consent?.relationship_visibility === "private") warnings.push("Relationship graph: entries exist but relationship visibility is private; keep out of public exports.");
       if (!profile.project_usage?.approved_projects?.length) warnings.push("Project usage: no approved projects listed.");
       return warnings;
     }
@@ -2028,6 +2045,7 @@
       if (source.entity) {
         set.entity_id = source.entity.entity_id || "";
         set.entity_type = source.entity.entity_type || "person";
+        set.profile_classification = source.entity.profile_classification || set.profile_classification || "";
         set.entity_subtype = source.entity.entity_subtype || set.entity_subtype || "";
         set.graph_tags = source.entity.tags || [];
         set.graph_notes = source.entity.notes || "";
@@ -2058,6 +2076,7 @@
         set.ai_agent_context = graph.generated?.ai_agent_context || source.generated_content?.ai_agent_context || "";
       }
       set.relationship_entries = source.relationship_graph || source.social_relationship_model?.relationship_graph || [];
+      set.story_provenance_entries = source.narrative_engine?.story_provenance || [];
       set.knowledge_domain_entries = Array.isArray(source.knowledge_domains) ? source.knowledge_domains : (source.knowledge_domains?.domains || []);
       set.signature_behavior_entries = Array.isArray(source.signature_behaviors) ? source.signature_behaviors : (source.signature_behaviors?.behaviors || []);
       set.consent_notes = source.consent?.consent_notes || source.consent?.notes || source.consent?.permission_notes || "";

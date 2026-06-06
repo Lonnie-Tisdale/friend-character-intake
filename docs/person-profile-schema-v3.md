@@ -54,6 +54,7 @@ Unknown imported fields must be preserved under `extensions`.
 UX-facing additions that remain JSON-portable:
 
 - `identity.short_bio` - friendly intake bio for nontechnical submitters
+- `identity.profile_classification` / `entity.profile_classification` - simple first-pass classification for WCCC/Oregon Fail memory work: Real Person, Fictionalized Person, NPC, Organization, Location, Event, Concept, or AI Agent
 - `identity.entity_subtype` / `entity.entity_subtype` - explicit profile subtype such as `real_person`, `fictional_character`, `npc`, `ai_agent`, `pet`, `historical_figure`, `deceased_person`, `public_figure`, `family_member`, `partner_spouse`, or `child_minor`
 - `identity.three_word_vibe` - quick recognizable vibe phrase
 - `identity.animal_affinity` - optional mascot/totem/group-bit field
@@ -63,6 +64,7 @@ UX-facing additions that remain JSON-portable:
 - `personality.signature_ability` - the thing friends always joke they can do
 - `humor_and_voice.battle_intro_quote` and `humor_and_voice.battle_victory_quote` - heightened game lines that still sound like the real person
 - `narrative_engine.legendary_story` and `narrative_engine.most_chaotic_moment` - public-safe lore people retell
+- `narrative_engine.story_teller`, `story_source_type`, `story_confidence`, `story_canon_status`, and `story_provenance` - provenance for true-ish stories and conflicting memories
 - `social_model.relationship_to_group_network` - plain-language group/project/community relationship context
 - `consent.consent_basis` - why the profile is allowed to exist, such as self submission, guardian submission, public-domain/historical record, estate permission, community documentation, fictional creation, or organization authorization
 - `consent.withdrawal_requested` / `consent.withdrawal_date` - revocation/removal tracking
@@ -70,6 +72,7 @@ UX-facing additions that remain JSON-portable:
 - `consent.restricted_uses` - global restrictions such as romance, advertising, political content, training data, public release, or commercial use
 - `consent.relationship_visibility` - relationship data visibility: private, reviewer-only, project-only, or exportable
 - `project_usage.project_relevance_notes` - why the profile matters to projects
+- `project_usage.canon_truth_status` - separates verified reality, likely stories, community lore, running jokes, parody, and unknown claims
 - `asset_library.assets[].linked_entity_id`
 - `asset_library.assets[].linked_project`
 - `knowledge_graph.relationship_entities[].confidence_level`
@@ -96,6 +99,21 @@ Consent is not one-way. Profiles should support withdrawal, lifecycle review, an
 - AI agents: `agent_capabilities`, `agent_limitations`, `agent_memory_scope`, `agent_tool_access`, and `agent_operating_instructions`
 - Historical/public/deceased profiles: `historical_sources`, `historical_confidence`, `contested_claims`, and `scholarly_consensus`
 - Pets/non-human profiles: `species`, `breed`, `handler_relationship`, `behavioral_traits`, and `care_requirements`
+
+## Oregon Fail / WCCC Memory Layer
+
+For Oregon Fail and West Coast Crypto Cruise, the long-term value is not only the person profile. The system should increasingly capture:
+
+- people
+- relationships
+- events
+- locations
+- projects
+- stories
+- concepts
+- provenance
+
+Use `profile_classification` early so the intake layer can create non-person records without fighting the schema. Treat relationship entries and story provenance as first-class material: who knows whom, who told the story, whether it was witnessed or second-hand, and whether it is verified, likely, community lore, a running joke, or parody.
 
 ## Repeatable Entries
 

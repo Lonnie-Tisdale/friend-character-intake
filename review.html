@@ -278,9 +278,11 @@
         <h3>Quick Read</h3>
         <ul class="summary-list">
           <li>Profile type: ${escapeHtml(profile.entity?.entity_type || profile.metadata?.profile_type || profile.identity?.profile_type || "profile")}</li>
+          <li>Classification: ${escapeHtml(profile.identity?.profile_classification || profile.entity?.profile_classification || "")}</li>
           <li>Display name: ${escapeHtml(profile.identity?.display_name || "")}</li>
           <li>Short bio: ${escapeHtml(profile.identity?.short_bio || profile.generated_content?.character_summary || "")}</li>
           <li>Projects: ${escapeHtml((profile.project_usage?.approved_projects || []).join(", "))}</li>
+          <li>Truth status: ${escapeHtml(profile.project_usage?.canon_truth_status || profile.narrative_engine?.story_canon_status || "")}</li>
           <li>Relationship/project context: ${escapeHtml(profile.social_model?.relationship_to_group_network || profile.social_model?.relationship_to_kstreet_circle || profile.social_model?.relationship_to_lonnie_kstreet || "")}</li>
         </ul>
         <h3>Profile Preview</h3>
@@ -307,6 +309,8 @@
       }
       if (["deceased_person", "historical_figure", "public_figure"].includes(p?.identity?.entity_subtype) && !p?.consent?.consent_basis) warnings.push("Public/deceased/historical profile needs a consent or source basis.");
       if (p?.consent?.relationship_visibility === "exportable" && !p?.consent?.permission_for_relationship_simulation) warnings.push("Relationship details are exportable but relationship permission is not checked.");
+      if (p?.narrative_engine?.legendary_story && !p?.narrative_engine?.story_teller && !p?.narrative_engine?.story_provenance?.length) warnings.push("Legendary story exists without a teller/source.");
+      if (p?.relationship_graph?.length && p?.consent?.relationship_visibility === "private") warnings.push("Relationship graph entries exist but relationship visibility is private; keep out of public exports.");
       if (!p?.identity?.display_name) warnings.push("Missing display name.");
       if (!p?.project_usage?.approved_projects?.length) warnings.push("No approved projects selected.");
       if ((p?.source_notes?.source_images || []).length) warnings.push("Source image references may be private; keep actual files in the private project archive.");

@@ -8,10 +8,10 @@ You are reviewing a static, local-first universal profile intake and review syst
 
 ## Public Links
 
-- Intake form: https://lonnie-tisdale.github.io/friend-character-intake/index.html?cachebust=ef2cea3
-- Review dashboard: https://lonnie-tisdale.github.io/friend-character-intake/review.html?cachebust=ef2cea3
-- Markdown packet: https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.md?cachebust=ef2cea3
-- JSON packet: https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.json?cachebust=ef2cea3
+- Intake form: https://lonnie-tisdale.github.io/friend-character-intake/index.html?cachebust=2d6dbe1
+- Review dashboard: https://lonnie-tisdale.github.io/friend-character-intake/review.html?cachebust=2d6dbe1
+- Markdown packet: https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.md?cachebust=2d6dbe1
+- JSON packet: https://lonnie-tisdale.github.io/friend-character-intake/exports/chatgpt-review-packet.json?cachebust=2d6dbe1
 
 ## App Summary
 
@@ -269,25 +269,19 @@ Example / placeholder:
 Maya / @packetghost / whatever people actually call me
 ```
 
-### What kind of profile is this?
-Field ID: `entity_subtype`
+### Profile classification
+Field ID: `profile_classification`
 Type: `select`
 
 Options:
-- real_person
-- fictional_character
-- npc
-- ai_agent
-- organization
-- pet
-- historical_figure
-- deceased_person
-- public_figure
-- family_member
-- partner_spouse
-- child_minor
-- collaborator
-- other
+- Real Person
+- Fictionalized Person
+- NPC
+- Organization
+- Location
+- Event
+- Concept
+- AI Agent
 
 ### Best way to ask follow-up questions
 Field ID: `optional_contact`
@@ -594,6 +588,23 @@ Example / placeholder:
 Makes the plan easier, remembers who needed a ride, checks on basics, sends the useful link at exactly the right time.
 ```
 
+## Relationship Graph
+
+Who knows whom, who trusts whom, who collaborates, who causes trouble together, and who always ends up in the same side quest. For WCCC/Oregon Fail, this may be more important than biography.
+
+### Relationship entries
+Field ID: `relationship_entries`
+Type: `rows`
+
+Example / placeholder:
+
+```text
+Kai | collaborator | 8 | 2 | 7 | 6 | loyal chaos | starts projects from jokes | old Discord-to-road-trip friend | self-reported + witnessed | Community Lore | project_only
+Rin | side quest magnet | 7 | 4 | 6 | 8 | brilliant trouble | somehow always at the same afterparty | causes useful chaos together | second-hand | Likely | reviewer_only
+```
+
+Row format: `related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes | story source | confidence/canon | visibility`
+
 ## Humor And Voice
 
 How they sound in the group chat, on a road trip, during a build sprint, and after the plan has obviously gone sideways.
@@ -704,6 +715,91 @@ do not turn every line into a pitch
 do not make private lore public
 ```
 
+## Narrative Engine
+
+The lore layer: stories people retell, chaos patterns, running bits, and what changes over time.
+
+### Legendary story people tell about you
+Field ID: `legendary_story`
+Type: `textarea`
+
+Example / placeholder:
+
+```text
+Accidentally slept through a conference and still made the keynote. Drove across three states for a single taco recommendation. Started a business from a Discord joke.
+```
+
+### Who told this version?
+Field ID: `story_teller`
+Type: `text`
+
+Example / placeholder:
+
+```text
+self, Kai, conference hallway crew, Discord thread
+```
+
+### Story source type
+Field ID: `story_source_type`
+Type: `select`
+
+Options:
+- Witnessed
+- Self-Reported
+- Second-Hand
+- Running Joke
+- Community Lore
+- Public Source
+- Composite
+- Unknown
+
+### Story confidence
+Field ID: `story_confidence`
+Type: `select`
+
+Options:
+- Verified
+- Likely
+- Community Lore
+- Running Joke
+- Parody
+- Unknown
+
+### Story canon status
+Field ID: `story_canon_status`
+Type: `select`
+
+Options:
+- Verified
+- Likely
+- Community Lore
+- Running Joke
+- Parody
+- Unknown
+
+### Story provenance entries
+Field ID: `story_provenance_entries`
+Type: `rows`
+
+Example / placeholder:
+
+```text
+story_conference_sleep | slept through conference, made keynote | self + two witnesses | Likely | Kai,Rin | details vary by teller
+story_taco_drive | drove three states for tacos | running joke | Community Lore | hallway crew | exact number of states disputed
+```
+
+Row format: `story id/title | who told it | source type | confidence/canon | witnesses comma-list | notes`
+
+### Most chaotic moment
+Field ID: `most_chaotic_moment`
+Type: `textarea`
+
+Example / placeholder:
+
+```text
+Missed a flight and accidentally joined a startup. Lost a wallet, found a friend. Ended up at Burning Man with 24 hours notice.
+```
+
 ## Project Usage
 
 Where this profile can show up: cruise NPC, Discord lore, art prompts, internal memory, game systems, or future chaos.
@@ -736,7 +832,7 @@ Example / placeholder:
 Good for cruise NPC energy, group memory, social cameos, late-night dialogue, and support-character writing.
 ```
 
-### Canon level
+### Project canon level
 Field ID: `canon_level`
 Type: `select`
 
@@ -746,6 +842,18 @@ Options:
 - Canon
 - Parody Only
 - Private Reference Only
+
+### Real / project / comedy truth status
+Field ID: `canon_truth_status`
+Type: `select`
+
+Options:
+- Verified
+- Likely
+- Community Lore
+- Running Joke
+- Parody
+- Unknown
 
 ## Source Notes
 
@@ -946,7 +1054,21 @@ Example / placeholder:
 Maya / @packetghost / whatever people actually call me
 ```
 
-### What kind of profile is this?
+### Profile classification
+Field ID: `profile_classification`
+Type: `select`
+
+Options:
+- Real Person
+- Fictionalized Person
+- NPC
+- Organization
+- Location
+- Event
+- Concept
+- AI Agent
+
+### Advanced profile subtype
 Field ID: `entity_subtype`
 Type: `select`
 
@@ -2153,7 +2275,7 @@ using someone as a tool
 
 ## Relationship Graph
 
-Repeatable relationship entries for future graph and simulation systems.
+Who knows whom, who trusts whom, who collaborates, who causes trouble together, and who always ends up in the same side quest. For WCCC/Oregon Fail, this may be more important than biography.
 
 ### Relationship entries
 Field ID: `relationship_entries`
@@ -2162,10 +2284,11 @@ Type: `rows`
 Example / placeholder:
 
 ```text
-Kai | collaborator | 8 | 2 | 7 | 6 | loyal chaos | starts projects from jokes | old Discord-to-road-trip friend
+Kai | collaborator | 8 | 2 | 7 | 6 | loyal chaos | starts projects from jokes | old Discord-to-road-trip friend | self-reported + witnessed | Community Lore | project_only
+Rin | side quest magnet | 7 | 4 | 6 | 8 | brilliant trouble | somehow always at the same afterparty | causes useful chaos together | second-hand | Likely | reviewer_only
 ```
 
-Row format: `related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes`
+Row format: `related person | relationship type | trust 1-10 | conflict 1-10 | history 1-10 | influence 1-10 | emotional tone | running dynamic | notes | story source | confidence/canon | visibility`
 
 ## Knowledge Domains
 
@@ -2502,6 +2625,67 @@ Example / placeholder:
 ```text
 Accidentally slept through a conference and still made the keynote. Drove across three states for a single taco recommendation. Started a business from a Discord joke.
 ```
+
+### Who told this version?
+Field ID: `story_teller`
+Type: `text`
+
+Example / placeholder:
+
+```text
+self, Kai, conference hallway crew, Discord thread
+```
+
+### Story source type
+Field ID: `story_source_type`
+Type: `select`
+
+Options:
+- Witnessed
+- Self-Reported
+- Second-Hand
+- Running Joke
+- Community Lore
+- Public Source
+- Composite
+- Unknown
+
+### Story confidence
+Field ID: `story_confidence`
+Type: `select`
+
+Options:
+- Verified
+- Likely
+- Community Lore
+- Running Joke
+- Parody
+- Unknown
+
+### Story canon status
+Field ID: `story_canon_status`
+Type: `select`
+
+Options:
+- Verified
+- Likely
+- Community Lore
+- Running Joke
+- Parody
+- Unknown
+
+### Story provenance entries
+Field ID: `story_provenance_entries`
+Type: `rows`
+
+Example / placeholder:
+
+```text
+story_conference_sleep | slept through conference, made keynote | self + two witnesses | Likely | Kai,Rin | details vary by teller
+story_taco_drive | drove three states for tacos | running joke | Community Lore | hallway crew | exact number of states disputed
+```
+
+Row format: `story id/title | who told it | source type | confidence/canon | witnesses comma-list | notes`
 
 ### Most chaotic moment
 Field ID: `most_chaotic_moment`
@@ -3012,7 +3196,7 @@ Example / placeholder:
 Okay as a background NPC on West Coast Crypto Cruise; ask before making me a main character or romance subplot.
 ```
 
-### Canon level
+### Project canon level
 Field ID: `canon_level`
 Type: `select`
 
@@ -3022,6 +3206,18 @@ Options:
 - Canon
 - Parody Only
 - Private Reference Only
+
+### Real / project / comedy truth status
+Field ID: `canon_truth_status`
+Type: `select`
+
+Options:
+- Verified
+- Likely
+- Community Lore
+- Running Joke
+- Parody
+- Unknown
 
 ## Source Notes
 
@@ -3453,6 +3649,16 @@ Type: `textarea`
     "faction",
     "concept"
   ],
+  "profile_classifications": [
+    "Real Person",
+    "Fictionalized Person",
+    "NPC",
+    "Organization",
+    "Location",
+    "Event",
+    "Concept",
+    "AI Agent"
+  ],
   "entity_subtypes": [
     "real_person",
     "fictional_character",
@@ -3491,6 +3697,24 @@ Type: `textarea`
     "project_only",
     "exportable"
   ],
+  "story_source_types": [
+    "Witnessed",
+    "Self-Reported",
+    "Second-Hand",
+    "Running Joke",
+    "Community Lore",
+    "Public Source",
+    "Composite",
+    "Unknown"
+  ],
+  "canon_truth_statuses": [
+    "Verified",
+    "Likely",
+    "Community Lore",
+    "Running Joke",
+    "Parody",
+    "Unknown"
+  ],
   "relationship_types": [
     "friend",
     "family",
@@ -3520,6 +3744,7 @@ Type: `textarea`
   "entity": {
     "entity_id": "person_example",
     "entity_type": "person",
+    "profile_classification": "Fictionalized Person",
     "entity_subtype": "real_person",
     "display_name": "Packet Ghost",
     "created_at": "2026-06-01T00:00:00.000Z",
@@ -3572,6 +3797,7 @@ Type: `textarea`
   },
   "identity": {
     "display_name": "Packet Ghost",
+    "profile_classification": "Fictionalized Person",
     "entity_subtype": "real_person",
     "real_name_optional": "",
     "optional_contact": "",
@@ -3722,6 +3948,7 @@ Type: `textarea`
       {
         "entity_id": "person_example",
         "entity_type": "person",
+        "profile_classification": "Fictionalized Person",
         "entity_subtype": "real_person",
         "display_name": "Packet Ghost",
         "created_at": "2026-06-01T00:00:00.000Z",
@@ -4053,7 +4280,22 @@ Type: `textarea`
       "using someone as a tool"
     ]
   },
-  "relationship_graph": [],
+  "relationship_graph": [
+    {
+      "related_person": "Kai",
+      "relationship_type": "collaborator",
+      "trust_level": "8",
+      "conflict_level": "2",
+      "history_level": "7",
+      "influence_level": "6",
+      "emotional_tone": "loyal chaos",
+      "running_dynamic": "starts projects from jokes",
+      "notes": "old Discord-to-road-trip friend",
+      "story_source": "self-reported plus witnessed",
+      "confidence_canon": "Community Lore",
+      "visibility": "project_only"
+    }
+  ],
   "knowledge_domains": [
     {
       "domain": "Weird Internet Archaeology",
@@ -4174,6 +4416,33 @@ Type: `textarea`
     "personal_quest": "build something that probably should not work, make it useful, then accidentally turn it into a community",
     "growth_arc": "learns to stop treating burnout as proof of commitment",
     "legendary_story": "Accidentally slept through a conference and still made the keynote. Later drove across three states for a single taco recommendation.",
+    "story_teller": "self plus hallway crew",
+    "story_source_type": "Composite",
+    "story_confidence": "Likely",
+    "story_canon_status": "Community Lore",
+    "story_provenance": [
+      {
+        "story_id_title": "story_conference_sleep",
+        "who_told_it": "self plus two witnesses",
+        "source_type": "Composite",
+        "confidence_canon": "Likely",
+        "witnesses": [
+          "Kai",
+          "Rin"
+        ],
+        "notes": "Details vary by teller; keep as true-ish Oregon Fail lore."
+      },
+      {
+        "story_id_title": "story_taco_drive",
+        "who_told_it": "conference hallway crew",
+        "source_type": "Running Joke",
+        "confidence_canon": "Community Lore",
+        "witnesses": [
+          "hallway crew"
+        ],
+        "notes": "Exact number of states disputed."
+      }
+    ],
     "most_chaotic_moment": "Missed a flight and accidentally joined a startup.",
     "recurring_internal_conflict": "wants peace but keeps volunteering for impossible projects because the group needs someone with a spreadsheet and a car",
     "shadow_version": "sleep-deprived chaos engine who mistakes urgency for meaning",
@@ -4326,7 +4595,8 @@ Type: `textarea`
     ],
     "project_relevance_notes": "Good sample for cruise NPC energy, group memory, social cameos, late-night dialogue, and support-character writing.",
     "project_specific_notes": "Okay as a background NPC on West Coast Crypto Cruise; ask before making this sample a main character or romance subplot.",
-    "canon_level": "Raw"
+    "canon_level": "Raw",
+    "canon_truth_status": "Community Lore"
   },
   "source_notes": {
     "source_images": [],

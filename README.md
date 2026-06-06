@@ -185,7 +185,9 @@ Supported entity types are `person`, `relationship`, `organization`, `location`,
 
 Existing v3 exports automatically become `entity_type: "person"` on import. Unknown fields are still preserved under `extensions`.
 
-Recent UX/schema additions include `identity.short_bio`, `identity.entity_subtype` / `entity.entity_subtype`, `social_model.relationship_to_group_network` for group/project/community relationship context, revocation and consent-basis fields, minor/guardian safeguards, global restricted uses, relationship visibility, `project_usage.project_relevance_notes`, `specialized_profiles` for agents/historical figures/pets, `governance` lifecycle fields, per-asset `linked_entity_id` / `linked_project`, and relationship metadata for confidence, canon, and consent.
+Recent UX/schema additions include `identity.short_bio`, `identity.profile_classification` / `entity.profile_classification`, `identity.entity_subtype` / `entity.entity_subtype`, first-class simple relationship rows, story provenance fields, `social_model.relationship_to_group_network` for group/project/community relationship context, revocation and consent-basis fields, minor/guardian safeguards, global restricted uses, relationship visibility, `project_usage.project_relevance_notes`, `project_usage.canon_truth_status`, `specialized_profiles` for agents/historical figures/pets, `governance` lifecycle fields, per-asset `linked_entity_id` / `linked_project`, and relationship metadata for confidence, canon, and consent.
+
+For Oregon Fail / West Coast Crypto Cruise, future schema work should favor events, stories, relationships, provenance, consent, and graph memory over adding more personality fields. The profile is the entry point; the durable project memory is the graph of people, events, projects, locations, and stories.
 
 ## Migration
 

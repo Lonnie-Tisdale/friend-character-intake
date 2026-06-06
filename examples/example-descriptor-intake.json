@@ -7,6 +7,7 @@
   "entity": {
     "entity_id": "person_example",
     "entity_type": "person",
+    "profile_classification": "Fictionalized Person",
     "entity_subtype": "real_person",
     "display_name": "Packet Ghost",
     "created_at": "2026-06-01T00:00:00.000Z",
@@ -46,6 +47,7 @@
   },
   "identity": {
     "display_name": "Packet Ghost",
+    "profile_classification": "Fictionalized Person",
     "entity_subtype": "real_person",
     "real_name_optional": "",
     "optional_contact": "",
@@ -149,6 +151,7 @@
       {
         "entity_id": "person_example",
         "entity_type": "person",
+        "profile_classification": "Fictionalized Person",
         "entity_subtype": "real_person",
         "display_name": "Packet Ghost",
         "created_at": "2026-06-01T00:00:00.000Z",
@@ -375,7 +378,22 @@
     "loyalty_triggers": ["shared work", "protecting someone vulnerable"],
     "betrayal_triggers": ["using someone as a tool"]
   },
-  "relationship_graph": [],
+  "relationship_graph": [
+    {
+      "related_person": "Kai",
+      "relationship_type": "collaborator",
+      "trust_level": "8",
+      "conflict_level": "2",
+      "history_level": "7",
+      "influence_level": "6",
+      "emotional_tone": "loyal chaos",
+      "running_dynamic": "starts projects from jokes",
+      "notes": "old Discord-to-road-trip friend",
+      "story_source": "self-reported plus witnessed",
+      "confidence_canon": "Community Lore",
+      "visibility": "project_only"
+    }
+  ],
   "knowledge_domains": [
     {
       "domain": "Weird Internet Archaeology",
@@ -425,6 +443,28 @@
     "personal_quest": "build something that probably should not work, make it useful, then accidentally turn it into a community",
     "growth_arc": "learns to stop treating burnout as proof of commitment",
     "legendary_story": "Accidentally slept through a conference and still made the keynote. Later drove across three states for a single taco recommendation.",
+    "story_teller": "self plus hallway crew",
+    "story_source_type": "Composite",
+    "story_confidence": "Likely",
+    "story_canon_status": "Community Lore",
+    "story_provenance": [
+      {
+        "story_id_title": "story_conference_sleep",
+        "who_told_it": "self plus two witnesses",
+        "source_type": "Composite",
+        "confidence_canon": "Likely",
+        "witnesses": ["Kai", "Rin"],
+        "notes": "Details vary by teller; keep as true-ish Oregon Fail lore."
+      },
+      {
+        "story_id_title": "story_taco_drive",
+        "who_told_it": "conference hallway crew",
+        "source_type": "Running Joke",
+        "confidence_canon": "Community Lore",
+        "witnesses": ["hallway crew"],
+        "notes": "Exact number of states disputed."
+      }
+    ],
     "most_chaotic_moment": "Missed a flight and accidentally joined a startup.",
     "recurring_internal_conflict": "wants peace but keeps volunteering for impossible projects because the group needs someone with a spreadsheet and a car",
     "shadow_version": "sleep-deprived chaos engine who mistakes urgency for meaning",
@@ -473,7 +513,8 @@
     "approved_projects": ["HTF", "K Street", "West Coast Crypto Cruise", "Shared Person Database", "AI Dialogue Agent", "Art Generation"],
     "project_relevance_notes": "Good sample for cruise NPC energy, group memory, social cameos, late-night dialogue, and support-character writing.",
     "project_specific_notes": "Okay as a background NPC on West Coast Crypto Cruise; ask before making this sample a main character or romance subplot.",
-    "canon_level": "Raw"
+    "canon_level": "Raw",
+    "canon_truth_status": "Community Lore"
   },
   "source_notes": {
     "source_images": [],
